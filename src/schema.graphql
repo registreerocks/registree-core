@@ -1,0 +1,13 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Customer {
+  id: ID!
+  description: String!
+  name: String!
+}
+
+type Query {
+  customer(id: ID!): Customer!
+}
