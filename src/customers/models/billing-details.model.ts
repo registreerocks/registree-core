@@ -1,13 +1,25 @@
-import { Field, ObjectType, ID } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class BillingDetails {
-  @Field(_type => ID)
-  id!: string;
+  @Field({ nullable: true })
+  city?: string;
 
-  @Field()
-  description!: string;
+  @Field({ nullable: true })
+  country?: string;
 
-  @Field()
-  name!: string;
+  @Field({ nullable: true })
+  line1?: string;
+
+  @Field({ nullable: true })
+  line2?: string;
+
+  @Field({ nullable: true })
+  province?: string;
+
+  @Field({ nullable: true })
+  zip?: string;
+
+  @Field({ nullable: true })
+  vat?: string;
 }
