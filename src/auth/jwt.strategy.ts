@@ -23,7 +23,6 @@ export class JwtStrategy extends PassportStrategy(BaseStrategy) {
       audience: configService.get<string>('auth.audience'),
       issuer: `https://${configService.get<string>('auth.domain')}/`,
       algorithms: ['RS256'],
-      ignoreExpiration: true,
     });
   }
 
