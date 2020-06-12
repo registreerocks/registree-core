@@ -6,6 +6,7 @@ import { join } from 'path';
 import { CustomersModule } from './customers/customers.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { QueriesModule } from './queries/queries.module';
 import appConfig from './config/app.config';
 
 @Module({
@@ -16,9 +17,12 @@ import appConfig from './config/app.config';
     GraphQLModule.forRoot({
       context: ({ req }) => ({ req }),
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
+      uploads: true,
+      introspection: true,
     }),
     CustomersModule,
     AuthModule,
+    QueriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

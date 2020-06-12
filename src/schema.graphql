@@ -25,6 +25,40 @@ type Customer {
   contact: Contact!
 }
 
+type EventQuery {
+  file: String!
+}
+
 type Query {
   customer(id: ID!): Customer!
 }
+
+type Mutation {
+  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+}
+
+input CreateEventQueryInput {
+  name: String!
+  address: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  info: String!
+  message: String!
+  degrees: [DegreeInput!]!
+  eventType: String!
+  flyer: Upload
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DegreeInput {
+  degreeId: String!
+  absolute: Int
+  percentage: Int
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
