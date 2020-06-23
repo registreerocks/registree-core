@@ -2,10 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type BillingDetails {
+  city: String
+  country: String
+  line1: String
+  line2: String
+  province: String
+  zip: String
+  vat: String
+}
+
+type Contact {
+  email: String
+  name: String
+}
+
 type Customer {
   id: ID!
   description: String!
   name: String!
+  billingDetails: BillingDetails!
+  contact: Contact!
 }
 
 type Query {
