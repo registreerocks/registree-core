@@ -1,5 +1,11 @@
 export type JsonValue = string | number | boolean;
 
 export interface JsonObject {
-  [k: string]: JsonValue | JsonValue[] | JsonObject | undefined | null;
+  [k: string]:
+    | JsonValue
+    | JsonValue[]
+    | JsonObject
+    | JsonObject[]
+    | undefined
+    | null;
 }

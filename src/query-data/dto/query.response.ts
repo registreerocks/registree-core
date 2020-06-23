@@ -1,45 +1,51 @@
 import { JsonObject } from 'src/common/interfaces/json-object.interface';
 
 export interface QueryResponse extends JsonObject {
-  details: [];
-  metrics: Metrics;
-  responses: Responses;
-  results: Results;
+  details: DetailsDto[];
+  metrics: MetricsDto;
+  responses: ResponsesDto;
+  results: ResultsDto;
   timestamp: string;
 }
 
-type Metrics = {
+export type MetricsDto = {
   accepted: number;
   attended: number;
   responded: number;
   viewed: number;
 };
 
-type Responses = {
-  [k: string]: Response;
+export type ResponsesDto = {
+  [k: string]: ResponseDto;
 };
 
-type Response = {
+export type ResponseDto = {
   accepted: boolean;
   attended: boolean;
   responded: string;
   sent: string;
   viewed: string;
+  student_info: {
+    first_name: string;
+    last_name: string;
+    student_id: string;
+  };
 };
 
-type Results = {
-  [k: string]: Result;
+export type ResultsDto = {
+  [k: string]: ResultDto;
 };
 
-type Result = {
+export type ResultDto = {
   avg: string;
   complete: boolean;
   degree_name: string;
+  degree_id: string;
   term: number;
   timestamp: string;
 };
 
-type Details = {
+export type DetailsDto = {
   absolute: number;
   course_id: string;
   course_name: string;

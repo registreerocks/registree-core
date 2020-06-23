@@ -25,28 +25,20 @@ type Customer {
   contact: Contact!
 }
 
-type EventQuery {
-  file: String!
+type UploadedFile {
+  filename: String!
+  mimetype: String!
+  url: String!
 }
 
-type Query {
-  customer(id: ID!): Customer!
-}
-
-type Mutation {
-  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
-}
-
-input CreateEventQueryInput {
-  name: String!
+type EventDetails {
   address: String!
   startDate: DateTime!
   endDate: DateTime!
-  info: String!
-  message: String!
-  degrees: [DegreeInput!]!
+  attachments: [UploadedFile!]!
+  information: String!
+  name: String!
   eventType: String!
-  flyer: Upload
 }
 
 """
@@ -54,11 +46,86 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-input DegreeInput {
-  degreeId: String!
-  absolute: Int
-  percentage: Int
+type Degree {
+  id: ID!
+  degreeName: String!
 }
 
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
+type QueryTranscript {
+  id: ID!
+  degreeAverage: Float!
+  degreeCompleted: Boolean!
+  latestTerm: Float!
+}
+
+type QueryInvitation {
+  accepted: Boolean!
+  attended: Boolean!
+  respondedAt: DateTime!
+  sentAt: DateTime!
+  viewedAt: DateTime!
+}
+
+type QueryStudent {
+  firstName: String!
+  lastName: String!
+  studentId: String!
+}
+
+type Result {
+  transcript: QueryTranscript!
+  invite: QueryInvitation!
+  studentInformation: QueryStudent!
+}
+
+type DegreeSelection {
+  amount: Amount!
+  degree: Degree!
+  results: [Result!]!
+}
+
+union Amount = Absolute | Percentage
+
+type Absolute {
+  amount: Int!
+}
+
+type Percentage {
+  percentage: Int!
+}
+
+type QueryDetails {
+  selection: [DegreeSelection!]!
+  updatedAt: DateTime!
+}
+
+type EventQuery {
+  id: ID!
+  customerId: ID!
+  eventDetails: EventDetails!
+  queryDetails: QueryDetails!
+}
+
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
+type EventQueryEdge {
+  cursor: String!
+  node: EventQuery!
+}
+
+type EventQueryConnection {
+  edges: [EventQueryEdge!]
+  nodes: [EventQuery!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type Query {
+  customer(id: ID!): Customer!
+  getQueries(customerId: ID!, skip: Int, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+}

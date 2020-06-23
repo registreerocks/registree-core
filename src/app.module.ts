@@ -7,6 +7,7 @@ import { CustomersModule } from './customers/customers.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { QueriesModule } from './queries/queries.module';
+import { DegreesModule } from './degrees/degrees.module';
 import appConfig from './config/app.config';
 
 @Module({
@@ -23,6 +24,7 @@ import appConfig from './config/app.config';
     CustomersModule,
     AuthModule,
     QueriesModule,
+    DegreesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
