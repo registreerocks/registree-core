@@ -107,10 +107,10 @@ type EventQuery {
 }
 
 type PageInfo {
-  endCursor: String!
+  endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
-  startCursor: String!
+  startCursor: String
 }
 
 type EventQueryEdge {

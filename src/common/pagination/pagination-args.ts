@@ -1,5 +1,4 @@
 import { Field, ArgsType, Int } from '@nestjs/graphql';
-import { PageInfo } from './page-info';
 
 @ArgsType()
 export class PaginationArgs {
