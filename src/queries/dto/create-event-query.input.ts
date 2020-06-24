@@ -38,6 +38,6 @@ export class CreateEventQueryInput {
   @IsNotEmpty()
   eventType!: string;
 
-  @Field(_type => GraphQLUpload, { nullable: true })
-  flyer?: FileUpload;
+  @Field(_type => [GraphQLUpload], { nullable: true })
+  attachments?: FileUpload[];
 }

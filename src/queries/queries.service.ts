@@ -17,20 +17,48 @@ export class QueriesService {
     return response.map(mapEventQuery);
   }
 
-  // async createEventQuery(input: CreateEventQueryInput): Promise<EventQuery> {
-  //   if (input.flyer) {
-  //     const { createReadStream, filename, mimetype } = await input.flyer;
-  //     const key = await this.uploadService.saveFile(createReadStream, filename);
-  //     const flyer = { filename, mimetype, key };
-  //     return {
-  //       id: 'x',
-  //       file: key,
-  //     };
-  //   } else {
-  //     return {
-  //       id: 'dx',
-  //       file: 'dasf',
-  //     };
-  //   }
-  // }
+  async createEventQuery(
+    input: CreateEventQueryInput,
+    customerId: string,
+  ): Promise<EventQuery> {
+    const queryId = await this.queryDataService.createQuery({
+      customer_id: customerId,
+      event: {
+        address: input.address,
+        end_date: input.endDate.toISOString(),
+        info: input.info,
+        message: input.message,
+        name: input.name,
+        start_date: input.startDate.toISOString(),
+        type: input.eventType,
+      },
+      query: {
+        details: input.degrees.map(d => ({
+          degree_id: d.degreeId,
+          absolute: d.absolute,
+          percentage: d.percentage,
+          degree_name: d.degreeName,
+        })),
+      },
+    });
+
+    const response = await this.queryDataService.getQuery(queryId);
+
+    return mapEventQuery(response);
+  }
 }
+
+// if (input.flyer) {
+//   const { createReadStream, filename, mimetype } = await input.flyer;
+//   const key = await this.uploadService.saveFile(createReadStream, filename);
+//   const flyer = { filename, mimetype, key };
+//   return {
+//     id: 'x',
+//     file: key,
+//   };
+// } else {
+//   return {
+//     id: 'dx',
+//     file: 'dasf',
+//   };
+// }

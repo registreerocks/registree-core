@@ -10,28 +10,22 @@ import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import _ from 'lodash';
 import { EventQueryConnection } from './models/pagination/event-query-connection.model';
 import { paginateArray } from 'src/common/pagination/paginate-array';
+import { User } from 'src/common/interfaces/user.interface';
 
 @Resolver(_of => EventQuery)
 export class QueriesResolver {
   constructor(private readonly queriesService: QueriesService) {}
 
-  // @Mutation(_returns => EventQuery)
-  // @UseGuards(GqlAuthGuard)
-  // async createQuery(
-  //   @Args({ name: 'createEventQueryInput', type: () => CreateEventQueryInput })
-  //   input: CreateEventQueryInput,
-  //   @CurrentUser()
-  //   user: Object,
-  // ): Promise<EventQuery> {
-  //   console.log(user);
-  //   //this.queriesService.createEventQuery(input);
-  //   // const { createReadStream, filename, mimetype } = await input.flyer!;
-  //   // const res = await this.uploadService.saveFile(createReadStream, filename);
-  //   return {
-  //     id: 'asdf',
-  //     file: 'asdf',
-  //   };
-  // }
+  @Mutation(_returns => EventQuery)
+  @UseGuards(GqlAuthGuard)
+  async createQuery(
+    @Args({ name: 'createEventQueryInput', type: () => CreateEventQueryInput })
+    input: CreateEventQueryInput,
+    @CurrentUser()
+    user: User,
+  ): Promise<EventQuery> {
+    return this.queriesService.createEventQuery(input, user.dbId);
+  }
 
   @Query(_returns => EventQueryConnection)
   async getQueries(
@@ -39,7 +33,6 @@ export class QueriesResolver {
     @Args({ name: 'customerId', type: () => ID }) customerId: string,
   ): Promise<EventQueryConnection> {
     const queries = await this.queriesService.getCustomerQueries(customerId);
-    console.log(queries.map(q => q.queryDetails.selection));
     const paginatedQueries = await findManyCursor(
       args => {
         return Promise.resolve(paginateArray(queries, args));

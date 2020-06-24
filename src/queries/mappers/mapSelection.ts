@@ -11,7 +11,6 @@ export const mapSelection = (
   responses: ResponsesDto,
   results: ResultsDto,
 ): DegreeSelection[] => {
-  console.log('results: ', results);
   const mergedResults = mapResults(responses, results);
   return details.map(d => ({
     amount:

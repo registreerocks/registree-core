@@ -10,12 +10,12 @@ export class UploadService {
     @Inject('IObjectStorageProvider')
     private readonly objectStorageProvider: IObjectStorageProvider,
   ) {}
+
   async saveFile(
     readStreamCreator: () => ReadStream,
     filename: string,
   ): Promise<string> {
     const buffer = await this.streamToBuffer(readStreamCreator());
-    console.log(buffer);
     const fileHash = hasha(buffer, {
       algorithm: 'sha256',
     });
@@ -23,7 +23,6 @@ export class UploadService {
     const res = await this.objectStorageProvider
       .putObject(buffer, fileKey)
       .then(() => fileKey);
-    console.log('UploadServ: ', res);
     return res;
   }
 

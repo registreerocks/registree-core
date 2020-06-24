@@ -129,3 +129,29 @@ type Query {
   customer(id: ID!): Customer!
   getQueries(customerId: ID!, skip: Int, after: String, before: String, first: Int, last: Int): EventQueryConnection!
 }
+
+type Mutation {
+  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+}
+
+input CreateEventQueryInput {
+  name: String!
+  address: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  info: String!
+  message: String!
+  degrees: [DegreeInput!]!
+  eventType: String!
+  attachments: [Upload!]
+}
+
+input DegreeInput {
+  degreeId: String!
+  degreeName: String!
+  absolute: Int
+  percentage: Int
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
