@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy as BaseStrategy, ExtractJwt } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { User } from 'src/common/interfaces/user.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(BaseStrategy) {
@@ -26,7 +27,15 @@ export class JwtStrategy extends PassportStrategy(BaseStrategy) {
     });
   }
 
-  validate(payload: JwtPayload): JwtPayload {
-    return payload;
+  validate(payload: JwtPayload): User {
+    const dbId = payload['https://registree.com/db_id'];
+    if (!dbId) {
+      throw new UnauthorizedException(
+        'JWT does not have the required database id.',
+      );
+    }
+    return {
+      dbId,
+    };
   }
 }
