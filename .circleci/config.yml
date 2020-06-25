@@ -20,6 +20,8 @@ workflows:
       jobs:
         - build
         - docker/publish:
+            requires:
+              - build
             image: $DOCKER_REGISTRY/registree-core
             registry: $DOCKER_REGISTRY
             docker-password: DOCKER_LOGIN
