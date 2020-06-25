@@ -14,6 +14,12 @@ jobs:
           pkg-manager: yarn
       - run:
           command: yarn build
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - node_modules
+            - package.json
+            - dist
 
 workflows:
     build-and-push:
@@ -22,6 +28,10 @@ workflows:
         - docker/publish:
             requires:
               - build
+            after_checkout:
+              - attach_workspace:
+                  at: ./
+                
             image: $DOCKER_REGISTRY/registree-core
             registry: $DOCKER_REGISTRY
             docker-password: DOCKER_LOGIN
