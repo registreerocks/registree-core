@@ -14,8 +14,10 @@ jobs:
           pkg-manager: yarn
       - run:
           command: yarn build
+      - run: pwd
+      - run: ls
       - persist_to_workspace:
-          root: ~/project
+          root: .
           paths:
             - node_modules
             - package.json
@@ -30,8 +32,9 @@ workflows:
               - build
             after_checkout:
               - attach_workspace:
-                  at: ./
-                
+                  at: .
+              - run: pwd
+              - run: ls
             image: $DOCKER_REGISTRY/registree-core
             registry: $DOCKER_REGISTRY
             docker-password: DOCKER_LOGIN
