@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  node: circleci/node@3.0.0
+  docker: circleci/docker@1.2.1
+
+jobs:
+  build: 
+    executor: 
+      name: node/default
+      tag: current
+    steps: 
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn build
+
+workflows:
+    build-and-push:
+      jobs:
+        - build
+        - docker/publish:
+            image: $DOCKER_REGISTRY/registree-core
+            registry: $DOCKER_REGISTRY
+            docker-password: DOCKER_LOGIN
+            docker-username: DOCKER_PASSWORD
+            tag: $CIRCLE_SHA1
