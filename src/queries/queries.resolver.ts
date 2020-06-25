@@ -7,7 +7,6 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { findManyCursor } from 'src/common/pagination/find-many-cursors';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
-import _ from 'lodash';
 import { EventQueryConnection } from './models/pagination/event-query-connection.model';
 import { paginateArray } from 'src/common/pagination/paginate-array';
 import { User } from 'src/common/interfaces/user.interface';
@@ -33,6 +32,7 @@ export class QueriesResolver {
     @Args({ name: 'customerId', type: () => ID }) customerId: string,
   ): Promise<EventQueryConnection> {
     const queries = await this.queriesService.getCustomerQueries(customerId);
+    // TODO: Default sorting
     const paginatedQueries = await findManyCursor(
       args => {
         return Promise.resolve(paginateArray(queries, args));

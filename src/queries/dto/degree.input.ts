@@ -16,6 +16,8 @@ export class DegreeInput {
   @Min(1)
   absolute?: number;
 
+  // TODO: fail if both absolute and percentage
+
   @Field(_type => Int, { nullable: true })
   @ValidateIf((o: DegreeInput) => !o.absolute && o.percentage !== undefined)
   @IsDefined()

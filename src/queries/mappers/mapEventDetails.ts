@@ -7,7 +7,7 @@ export const mapEventDetails = (
   address: eventResponse.address,
   startDate: new Date(eventResponse.start_date),
   endDate: new Date(eventResponse.end_date),
-  attachments: [], // TODO: Add mappings
+  attachments: [], // TODO: Add mapping
   eventType: eventResponse.type,
   information: eventResponse.info,
   name: eventResponse.name,

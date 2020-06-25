@@ -4,6 +4,8 @@ import { CreateEventQueryInput } from './dto/create-event-query.input';
 import { UploadService } from 'src/upload/upload.service';
 import { QueryDataService } from 'src/query-data/query-data.service';
 import { mapEventQuery } from './mappers/mapEventQuery';
+import format from 'date-fns/format';
+import { appConstants } from '../constants';
 
 @Injectable()
 export class QueriesService {
@@ -25,11 +27,11 @@ export class QueriesService {
       customer_id: customerId,
       event: {
         address: input.address,
-        end_date: input.endDate.toISOString(),
+        end_date: format(input.endDate, appConstants.dateFormat),
         info: input.info,
         message: input.message,
         name: input.name,
-        start_date: input.startDate.toISOString(),
+        start_date: format(input.startDate, appConstants.dateFormat),
         type: input.eventType,
       },
       query: {

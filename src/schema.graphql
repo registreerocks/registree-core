@@ -26,6 +26,7 @@ type Customer {
 }
 
 type UploadedFile {
+  id: ID!
   filename: String!
   mimetype: String!
   url: String!
