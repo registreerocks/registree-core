@@ -54,5 +54,9 @@ workflows:
             docker-username: DOCKER_PASSWORD
             tag: $CIRCLE_SHA1
         - deploy-staging:
+            filters:
+              branches:
+                only:
+                  - staging
             requires:
               - docker/publish
