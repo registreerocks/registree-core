@@ -38,8 +38,16 @@ jobs:
 workflows:
     build-and-push:
       jobs:
+        - node/test:
+            pkg-manager: yarn
+            version: 14.4.0
         - build
         - docker/publish:
+            filters:
+              branches:
+                only:
+                  - staging
+                  - master
             executor:
                 name: docker/machine
                 # dlc: true
