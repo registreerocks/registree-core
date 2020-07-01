@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@3.0.0
   docker: circleci/docker@1.2.1
+  kube-orb: circleci/kubernetes@0.11.0
 
 jobs:
   build: 
@@ -20,6 +21,20 @@ jobs:
             - node_modules
             - package.json
             - dist
+  deploy-staging:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - checkout
+      - kube-orb/install-kubectl
+      - kube-orb/install-kubeconfig:
+          kubeconfig: KUBECONFIG_STAGING
+      - kube-orb/update-container-image:
+          container-image-updates: "$DOCKER_REGISTRY/registree-core=$DOCKER_REGISTRY/registree-core:$CIRCLE_SHA1"
+          get-rollout-status: true
+          record: true
+          resource-name: deployment/registree-core
+          show-kubectl-command: true
 
 workflows:
     build-and-push:
@@ -31,8 +46,11 @@ workflows:
             after_checkout:
               - attach_workspace:
                   at: .
-            image: $DOCKER_REGISTRY/registree-core
+            image: registree-core
             registry: $DOCKER_REGISTRY
             docker-password: DOCKER_LOGIN
             docker-username: DOCKER_PASSWORD
             tag: $CIRCLE_SHA1
+        - deploy-staging:
+            requires:
+              - docker/publish
