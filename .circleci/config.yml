@@ -34,13 +34,15 @@ jobs:
           get-rollout-status: true
           record: true
           resource-name: deployment/registree-core
-          show-kubectl-command: true
 
 workflows:
     build-and-push:
       jobs:
         - build
         - docker/publish:
+            executor:
+                name: docker/machine
+                dlc: true
             requires:
               - build
             after_checkout:
