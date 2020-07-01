@@ -42,7 +42,7 @@ workflows:
         - docker/publish:
             executor:
                 name: docker/machine
-                dlc: true
+                # dlc: true
             requires:
               - build
             after_checkout:
