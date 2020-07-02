@@ -72,11 +72,13 @@ export class QueryDataService {
       );
       return result.data;
     } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
       this.logger.error(
         { err },
         'Failed to get queries by customer id: %s',
         customerId,
       );
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
       throw err;
     }
   }

@@ -14,4 +14,4 @@ async function bootstrap() {
     configService.get<string>('app.host') ?? 'localhost',
   );
 }
-bootstrap();
+void bootstrap();

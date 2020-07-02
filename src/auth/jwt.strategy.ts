@@ -17,12 +17,13 @@ export class JwtStrategy extends PassportStrategy(BaseStrategy) {
         jwksRequestsPerMinute: 5,
         jwksUri: `https://${configService.get<string>(
           'auth.domain',
+          '',
         )}/.well-known/jwks.json`,
       }),
 
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       audience: configService.get<string>('auth.audience'),
-      issuer: `https://${configService.get<string>('auth.domain')}/`,
+      issuer: `https://${configService.get<string>('auth.domain', '')}/`,
       algorithms: ['RS256'],
     });
   }

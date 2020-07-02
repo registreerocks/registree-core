@@ -8,9 +8,10 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { QueriesModule } from './queries/queries.module';
 import { DegreesModule } from './degrees/degrees.module';
-import { LoggerModule, Logger } from 'nestjs-pino';
+import { LoggerModule } from 'nestjs-pino';
 import * as stdSerializers from 'pino-std-serializers';
 import appConfig from './config/app.config';
+import { IncomingMessage } from 'http';
 
 @Module({
   imports: [
@@ -36,7 +37,9 @@ import appConfig from './config/app.config';
       },
     }),
     GraphQLModule.forRoot({
-      context: ({ req }) => ({ req }),
+      context: ({ req }: { req: IncomingMessage }) => ({
+        req,
+      }),
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
       uploads: true,
       introspection: true,

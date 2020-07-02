@@ -2,6 +2,7 @@ import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { PageInfo } from './page-info';
 import { Type } from '@nestjs/common';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Need to help out typescript with any to prevent it from trying to infer a return type that is private
 export default function Paginated<TItem>(TItemClass: Type<TItem>): any {
   @ObjectType(`${TItemClass.name}Edge`)
   abstract class EdgeType {
