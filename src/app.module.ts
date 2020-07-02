@@ -5,15 +5,35 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { CustomersModule } from './customers/customers.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { QueriesModule } from './queries/queries.module';
 import { DegreesModule } from './degrees/degrees.module';
+import { LoggerModule, Logger } from 'nestjs-pino';
+import * as stdSerializers from 'pino-std-serializers';
 import appConfig from './config/app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [appConfig],
+    }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule.forRoot({ load: [appConfig] })],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          pinoHttp: {
+            serializers: {
+              err: stdSerializers.err,
+            },
+            redact: [
+              'err.config.headers.Authorization',
+              'err.config.headers.authorization',
+            ],
+            useLevel: configService.get<LogLevel>('app.httpLogLevel') || 'info',
+          },
+        };
+      },
     }),
     GraphQLModule.forRoot({
       context: ({ req }) => ({ req }),
@@ -30,3 +50,5 @@ import appConfig from './config/app.config';
   providers: [AppService],
 })
 export class AppModule {}
+
+type LogLevel = 'info' | 'debug' | 'warn' | 'error';
