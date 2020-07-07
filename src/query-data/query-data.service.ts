@@ -1,24 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
-import { ConfigService } from '@nestjs/config';
 import { EventQueryResponse } from './dto/event-query.response';
 import { AuthService } from 'src/auth/auth.service';
 import { CreateQueryRequest } from './dto/create-query.request';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { QueryDataOptions } from './query-data.options';
+import { QUERY_DATA_OPTIONS } from './query-data.constants';
 
 @Injectable()
 export class QueryDataService {
   private readonly axiosInstance: AxiosInstance;
 
   constructor(
-    private readonly configService: ConfigService,
+    @Inject(QUERY_DATA_OPTIONS) private readonly options: QueryDataOptions,
     private readonly authService: AuthService,
     @InjectPinoLogger(QueryDataService.name)
     private readonly logger: PinoLogger,
   ) {
-    const endpoint = this.configService.get<string>('api.queryApi', '');
     this.axiosInstance = axios.create({
-      baseURL: endpoint,
+      baseURL: options.queryApi,
     });
   }
 

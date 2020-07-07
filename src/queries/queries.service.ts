@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { EventQuery } from './models/event-query.model';
 import { CreateEventQueryInput } from './dto/create-event-query.input';
-import { UploadService } from 'src/upload/upload.service';
 import { QueryDataService } from 'src/query-data/query-data.service';
+import { UploadService } from 'src/upload/upload.service';
 import { mapEventQuery } from './mappers/mapEventQuery';
 import format from 'date-fns/format';
 import { appConstants } from '../constants';
