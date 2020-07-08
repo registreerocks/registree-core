@@ -63,7 +63,9 @@
     "eslint": "7.1.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
+    "husky": "^4.2.5",
     "jest": "26.0.1",
+    "lint-staged": "^10.2.11",
     "pino-pretty": "^4.0.0",
     "prettier": "^1.19.1",
     "supertest": "^4.0.2",
@@ -76,6 +78,20 @@
   "resolutions": {
     "**/**/fs-capacitor": "^6.2.0",
     "**/graphql-upload": "^11.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint --ext ts"
+    ],
+    "*.{md,html,json,js}": [
+      "prettier --write"
+    ]
   },
   "jest": {
     "moduleFileExtensions": [
