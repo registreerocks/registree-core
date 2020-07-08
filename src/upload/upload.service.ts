@@ -3,11 +3,12 @@ import { ReadStream } from 'fs';
 import { slugify } from 'transliteration';
 import hasha from 'hasha';
 import { IObjectStorageProvider } from './interfaces/object-storage-provider.interface';
+import { OBJECT_STORAGE } from './upload.constants';
 
 @Injectable()
 export class UploadService {
   constructor(
-    @Inject('IObjectStorageProvider')
+    @Inject(OBJECT_STORAGE)
     private readonly objectStorageProvider: IObjectStorageProvider,
   ) {}
 
