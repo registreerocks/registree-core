@@ -12,11 +12,14 @@ export class UploadService {
     private readonly objectStorageProvider: IObjectStorageProvider,
   ) {}
 
-  async saveFile(
-    readStreamCreator: () => ReadStream,
-    filename: string,
-  ): Promise<string> {
-    const buffer = await this.streamToBuffer(readStreamCreator());
+  async saveFile({
+    createReadStream,
+    filename,
+  }: {
+    createReadStream: () => ReadStream;
+    filename: string;
+  }): Promise<string> {
+    const buffer = await this.streamToBuffer(createReadStream());
     const fileHash = hasha(buffer, {
       algorithm: 'sha256',
     });
