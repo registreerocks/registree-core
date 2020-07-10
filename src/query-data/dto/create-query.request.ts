@@ -19,6 +19,7 @@ type Event = {
   address: string;
   end_date: string;
   //flyer: string;
+  attachments: { id: string; filename: string; mimetype: string }[];
   info: string;
   message: string;
   name: string;

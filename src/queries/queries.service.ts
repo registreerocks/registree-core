@@ -7,7 +7,6 @@ import { UploadService } from 'src/upload/upload.service';
 import { mapEventQuery } from './mappers/mapEventQuery';
 import format from 'date-fns/format';
 import { appConstants } from '../constants';
-import { UploadedFile } from 'src/common/uploaded-file.model';
 
 @Injectable()
 export class QueriesService {
@@ -34,6 +33,7 @@ export class QueriesService {
         end_date: format(input.endDate, appConstants.dateFormat),
         info: input.info,
         message: input.message,
+        attachments,
         name: input.name,
         start_date: format(input.startDate, appConstants.dateFormat),
         type: input.eventType,
@@ -49,19 +49,11 @@ export class QueriesService {
     });
 
     const response = await this.queryDataService.getQuery(queryId);
-    const eventQuery = mapEventQuery(response);
-
-    return {
-      ...eventQuery,
-      eventDetails: {
-        ...eventQuery.eventDetails,
-        attachments,
-      },
-    };
+    return mapEventQuery(response);
   }
   private async handleAttachments(
     files: Promise<FileUpload>[] = [],
-  ): Promise<UploadedFile[]> {
+  ): Promise<{ filename: string; id: string; mimetype: string }[]> {
     return Promise.all(
       files.map(async filePromise => {
         const file = await filePromise;
@@ -70,7 +62,6 @@ export class QueriesService {
           filename: file.filename,
           id: key,
           mimetype: file.mimetype,
-          url: 'test',
         };
       }),
     );
