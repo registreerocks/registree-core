@@ -23,6 +23,10 @@ export class FsStorageService implements IObjectStorageProvider {
     }
   }
 
+  getObjectUrl(fileKey: string): Promise<string> {
+    return Promise.resolve(path.resolve(uploadDir, fileKey));
+  }
+
   private async saveFile(file: Buffer, filePath: string): Promise<void> {
     return new Promise((resolve, reject) => {
       fs.writeFile(filePath, file, (errorWrite: Error | null) => {

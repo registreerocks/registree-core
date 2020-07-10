@@ -1,19 +1,23 @@
 import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
-import { EventQuery } from './models/event-query.model';
-import { CreateEventQueryInput } from './dto/create-event-query.input';
-import { QueriesService } from './queries.service';
+import { EventQuery } from '../models/event-query.model';
+import { CreateEventQueryInput } from '../dto/create-event-query.input';
+import { QueriesService } from '../queries.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { findManyCursor } from 'src/common/pagination/find-many-cursors';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
-import { EventQueryConnection } from './models/pagination/event-query-connection.model';
+import { EventQueryConnection } from '../models/pagination/event-query-connection.model';
 import { paginateArray } from 'src/common/pagination/paginate-array';
 import { User } from 'src/common/interfaces/user.interface';
+import { UploadService } from 'src/upload/upload.service';
 
 @Resolver(_of => EventQuery)
-export class QueriesResolver {
-  constructor(private readonly queriesService: QueriesService) {}
+export class EventQueriesResolver {
+  constructor(
+    private readonly queriesService: QueriesService,
+    private readonly uploadService: UploadService,
+  ) {}
 
   @Mutation(_returns => EventQuery)
   @UseGuards(GqlAuthGuard)

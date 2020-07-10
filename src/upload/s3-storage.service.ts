@@ -25,4 +25,12 @@ export class S3StorageService implements IObjectStorageProvider {
       .promise()
       .then(() => true);
   }
+
+  getObjectUrl(fileKey: string): Promise<string> {
+    return this.s3.getSignedUrlPromise('getObject', {
+      Bucket: 'dashboard-cdn',
+      Key: fileKey,
+      Expires: 60 * 5,
+    });
+  }
 }

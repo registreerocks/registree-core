@@ -1,13 +1,14 @@
 import { Module, DynamicModule } from '@nestjs/common';
-import { QueriesResolver } from './queries.resolver';
 import { QueriesService } from './queries.service';
 import { UploadModule } from 'src/upload/upload.module';
 import { QueryDataModule } from 'src/query-data/query-data.module';
 import { QueryDataAsyncOptions } from 'src/query-data/query-data.options';
 import { UploadAsyncOptions } from 'src/upload/upload.options';
+import { EventDetailsResolver } from './resolvers/event-details.resolver';
+import { EventQueriesResolver } from './resolvers/event-queries.resolver';
 
 @Module({
-  providers: [QueriesResolver, QueriesService],
+  providers: [EventQueriesResolver, EventDetailsResolver, QueriesService],
 })
 export class QueriesModule {
   static forRootAsync(

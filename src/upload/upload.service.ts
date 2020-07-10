@@ -30,6 +30,10 @@ export class UploadService {
     return res;
   }
 
+  getFileLink(fileKey: string): Promise<string> {
+    return this.objectStorageProvider.getObjectUrl(fileKey);
+  }
+
   private async streamToBuffer(stream: ReadStream): Promise<Buffer> {
     const buffer: any[] = [];
 
