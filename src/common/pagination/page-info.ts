@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import * as Relay from 'graphql-relay';
 
 @ObjectType()
-export class PageInfo {
+export class PageInfo implements Relay.PageInfo {
   @Field(_type => String, { nullable: true })
   endCursor?: string;
 
