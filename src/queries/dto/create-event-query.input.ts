@@ -2,7 +2,7 @@ import { InputType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { DegreeInput } from './degree.input';
 import { ValidateNested, IsNotEmpty } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Exclude } from 'class-transformer';
 
 @InputType()
 export class CreateEventQueryInput {
@@ -38,6 +38,7 @@ export class CreateEventQueryInput {
   @IsNotEmpty()
   eventType!: string;
 
+  @Exclude()
   @Field(_type => [GraphQLUpload], { nullable: true })
-  attachments?: FileUpload[];
+  attachments?: Promise<FileUpload>[];
 }

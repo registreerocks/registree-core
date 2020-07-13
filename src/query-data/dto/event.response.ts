@@ -7,5 +7,6 @@ export interface EventResponse extends JsonObject {
   info: string;
   name: string;
   start_date: string;
+  attachments?: { id: string; filename: string; mimetype: string }[];
   type: string;
 }
