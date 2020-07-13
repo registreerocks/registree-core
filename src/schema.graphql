@@ -121,14 +121,13 @@ type EventQueryEdge {
 
 type EventQueryConnection {
   edges: [EventQueryEdge!]
-  nodes: [EventQuery!]
   pageInfo: PageInfo!
   totalCount: Int!
 }
 
 type Query {
   customer(id: ID!): Customer!
-  getQueries(customerId: ID!, skip: Int, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
 }
 
 type Mutation {

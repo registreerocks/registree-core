@@ -5,12 +5,11 @@ import { QueriesService } from '../queries.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
-import { findManyCursor } from 'src/common/pagination/find-many-cursors';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import { EventQueryConnection } from '../models/pagination/event-query-connection.model';
-import { paginateArray } from 'src/common/pagination/paginate-array';
 import { User } from 'src/common/interfaces/user.interface';
 import { UploadService } from 'src/upload/upload.service';
+import { connectionFromArray } from 'graphql-relay';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
@@ -32,20 +31,16 @@ export class EventQueriesResolver {
 
   @Query(_returns => EventQueryConnection)
   async getQueries(
-    @Args() { after, before, first, last }: PaginationArgs,
+    @Args() args: PaginationArgs,
     @Args({ name: 'customerId', type: () => ID }) customerId: string,
   ): Promise<EventQueryConnection> {
     const queries = await this.queriesService.getCustomerQueries(customerId);
     // TODO: Default sorting
-    const paginatedQueries = await findManyCursor(
-      args => {
-        return Promise.resolve(paginateArray(queries, args));
-      },
-      _args => {
-        return Promise.resolve(queries.length);
-      },
-      { first, last, before, after },
-    );
-    return paginatedQueries;
+    const paginatedQueries = connectionFromArray(queries, args);
+
+    return {
+      ...paginatedQueries,
+      totalCount: queries.length,
+    };
   }
 }
