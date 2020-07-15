@@ -10,6 +10,7 @@ import { EventQueryConnection } from '../models/pagination/event-query-connectio
 import { User } from 'src/common/interfaces/user.interface';
 import { UploadService } from 'src/upload/upload.service';
 import { connectionFromArray } from 'graphql-relay';
+import { Quote } from 'src/pricing/models/quote.model';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
@@ -27,6 +28,14 @@ export class EventQueriesResolver {
     user: User,
   ): Promise<EventQuery> {
     return this.queriesService.createEventQuery(input, user.dbId);
+  }
+
+  @Query(_returns => Quote)
+  async getQuote(
+    @Args({ name: 'createEventQueryInput', type: () => CreateEventQueryInput })
+    input: CreateEventQueryInput,
+  ): Promise<Quote> {
+    return this.queriesService.getQuote(input);
   }
 
   @Query(_returns => EventQueryConnection)

@@ -10,10 +10,19 @@ import { ApiConfig } from './config/api.config';
 import { UploadOptionsFactory, UploadOptions } from 'src/upload/upload.options';
 import { StorageConfig } from './config/storage.config';
 import { AuthOptionsFactory, AuthOptions } from 'src/auth/auth.options';
+import { PricingConfig } from './config/pricing.config';
+import {
+  PricingOptionsFactory,
+  PricingOptions,
+} from 'src/pricing/pricing.options';
 
 @Injectable()
 export class AppConfigService
-  implements AuthOptionsFactory, QueryDataOptionsFactory, UploadOptionsFactory {
+  implements
+    AuthOptionsFactory,
+    QueryDataOptionsFactory,
+    UploadOptionsFactory,
+    PricingOptionsFactory {
   constructor(
     @Inject(AuthConfig.KEY)
     private readonly authConfig: ConfigType<typeof AuthConfig>,
@@ -26,6 +35,9 @@ export class AppConfigService
 
     @Inject(StorageConfig.KEY)
     private readonly storageConfig: ConfigType<typeof StorageConfig>,
+
+    @Inject(PricingConfig.KEY)
+    private readonly pricingConfig: ConfigType<typeof PricingConfig>,
   ) {}
 
   createAuthOptions(): AuthOptions {
@@ -46,7 +58,11 @@ export class AppConfigService
     };
   }
 
-    createAppParams(): ConfigType<typeof AppConfig> {
+  createAppParams(): ConfigType<typeof AppConfig> {
     return this.appConfig;
+  }
+
+  createPricingOptions(): PricingOptions {
+    return this.pricingConfig;
   }
 }

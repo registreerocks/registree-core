@@ -22,6 +22,22 @@ export class QueryDataService {
     });
   }
 
+  async getStudentCountForQuery(request: CreateQueryRequest): Promise<number> {
+    const accessToken = await this.authService.getAccessToken();
+
+    const result = await this.axiosInstance.post<number>(
+      '/dry_run/degree',
+      request,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return result.data;
+  }
+
   async createQuery(request: CreateQueryRequest): Promise<string> {
     const accessToken = await this.authService.getAccessToken();
 
