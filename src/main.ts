@@ -5,7 +5,9 @@ import { Logger } from 'nestjs-pino';
 import { AppConfigService } from './app-config/app-config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { logger: false });
+  const app = await NestFactory.create(AppModule, {
+    logger: process.env.NODE_ENV === 'develop' ? undefined : false,
+  });
   app.useLogger(app.get(Logger));
   const appConfig = app
     .get<AppConfigService>(AppConfigService)

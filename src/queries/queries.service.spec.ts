@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { QueriesService } from './queries.service';
 import { UploadService } from 'src/upload/upload.service';
 import { QueryDataService } from 'src/query-data/query-data.service';
+import { PricingService } from 'src/pricing/pricing.service';
 
 describe('QueriesService', () => {
   let service: QueriesService;
@@ -16,6 +17,10 @@ describe('QueriesService', () => {
         },
         {
           provide: QueryDataService,
+          useValue: {},
+        },
+        {
+          provide: PricingService,
           useValue: {},
         },
       ],

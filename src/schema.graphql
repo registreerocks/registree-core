@@ -25,6 +25,16 @@ type Customer {
   contact: Contact!
 }
 
+type RsvpCost {
+  cost: Float!
+  percent: Int!
+}
+
+type Quote {
+  numberOfStudents: Int!
+  rsvpCostBreakdown: [RsvpCost!]!
+}
+
 type UploadedFile {
   id: ID!
   filename: String!
@@ -127,11 +137,8 @@ type EventQueryConnection {
 
 type Query {
   customer(id: ID!): Customer!
+  getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
-}
-
-type Mutation {
-  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
 }
 
 input CreateEventQueryInput {
@@ -155,3 +162,7 @@ input DegreeInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+type Mutation {
+  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+}
