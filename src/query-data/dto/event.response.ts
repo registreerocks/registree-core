@@ -1,4 +1,5 @@
 import { JsonObject } from 'src/common/interfaces/json-object.interface';
+import { AttachmentDto } from './attachment.dto';
 
 export interface EventResponse extends JsonObject {
   address: string;
@@ -7,6 +8,6 @@ export interface EventResponse extends JsonObject {
   info: string;
   name: string;
   start_date: string;
-  attachments?: { id: string; filename: string; mimetype: string }[];
+  attachments?: AttachmentDto[];
   type: string;
 }
