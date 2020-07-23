@@ -17,7 +17,7 @@ export default function Paginated<TItem>(
 
   // `isAbstract` decorator option is mandatory to prevent registering in schema
   @ObjectType({ isAbstract: true })
-  class Cursor implements Relay.Connection<TItem> {
+  class Connection implements Relay.Connection<TItem> {
     @Field(_type => [Edge], { nullable: true })
     edges!: Edge[];
 
@@ -27,5 +27,5 @@ export default function Paginated<TItem>(
     // @Field(_type => Int)
     // totalCount!: number;
   }
-  return Cursor;
+  return Connection;
 }

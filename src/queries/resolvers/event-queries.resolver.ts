@@ -8,16 +8,12 @@ import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import { EventQueryConnection } from '../models/pagination/event-query-connection.model';
 import { User } from 'src/common/interfaces/user.interface';
-import { UploadService } from 'src/upload/upload.service';
 import { connectionFromArray } from 'graphql-relay';
 import { Quote } from 'src/pricing/models/quote.model';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
-  constructor(
-    private readonly queriesService: QueriesService,
-    private readonly uploadService: UploadService,
-  ) {}
+  constructor(private readonly queriesService: QueriesService) {}
 
   @Mutation(_returns => EventQuery)
   @UseGuards(GqlAuthGuard)

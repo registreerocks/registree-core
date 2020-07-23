@@ -10,6 +10,7 @@ import { appConstants } from '../constants';
 import { Quote } from 'src/pricing/models/quote.model';
 import { PricingService } from 'src/pricing/pricing.service';
 import { CreateQueryRequest } from 'src/query-data/dto/create-query.request';
+import { AttachmentDto } from 'src/query-data/dto/attachment.dto';
 
 @Injectable()
 export class QueriesService {
@@ -73,7 +74,7 @@ export class QueriesService {
 
   private async handleAttachments(
     files: Promise<FileUpload>[] = [],
-  ): Promise<{ filename: string; id: string; mimetype: string }[]> {
+  ): Promise<AttachmentDto[]> {
     return Promise.all(
       files.map(async filePromise => {
         const file = await filePromise;
