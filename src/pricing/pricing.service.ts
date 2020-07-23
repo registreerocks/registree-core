@@ -34,9 +34,7 @@ export class PricingService {
     return {
       numberOfStudents: totalStudents,
       rsvpCostBreakdown: [5, 10, 20, 50, 100].map(i => ({
-        cost:
-          this.options.baseCost +
-          this.calculatePrice(Math.floor((i / 100) * totalStudents)),
+        cost: this.calculatePrice(Math.floor((i / 100) * totalStudents)),
         percent: i,
       })),
     };
