@@ -32,6 +32,34 @@ describe('PricingService', () => {
     expect(service).toBeDefined();
   });
 
+  describe('getQuote', () => {
+    it('should return the cost for 100% equal to the cost given by calculatePrice', () => {
+      // Different paths, same destination
+      const rsvpCount = 12;
+      const expectedResult = service.calculatePrice(rsvpCount);
+      const result = service.getQuote(rsvpCount);
+      expect(result.rsvpCostBreakdown.find(c => c.percent === 100)?.cost).toBe(
+        expectedResult,
+      );
+    });
+
+    it('should return the cost given by calculate price for the correct percentages', () => {
+      const rsvpCount = 10;
+      const expectedResult = [
+        { cost: service.calculatePrice(0), percent: 5 },
+        { cost: service.calculatePrice(1), percent: 10 },
+        { cost: service.calculatePrice(2), percent: 20 },
+        { cost: service.calculatePrice(5), percent: 50 },
+        {
+          cost: service.calculatePrice(10),
+          percent: 100,
+        },
+      ];
+      const result = service.getQuote(rsvpCount);
+      expect(result.rsvpCostBreakdown).toEqual(expectedResult);
+    });
+  });
+
   describe('calculatePrice', () => {
     it('should return base cost when 0 RSVPs', () => {
       const price = service.calculatePrice(0);
