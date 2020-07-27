@@ -129,6 +129,7 @@ type EventQueryConnection {
 type Query {
   customer(id: ID!): Customer!
   getQueries(customerId: ID!, skip: Int, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getQuery(id: ID!): EventQuery!
 }
 
 type Mutation {

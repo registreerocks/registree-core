@@ -19,6 +19,11 @@ export class QueriesService {
     return response.map(mapEventQuery);
   }
 
+  async getQuery(queryId: string): Promise<EventQuery> {
+    const response = await this.queryDataService.getQuery(queryId);
+    return mapEventQuery(response);
+  }
+
   async createEventQuery(
     input: CreateEventQueryInput,
     customerId: string,
