@@ -142,10 +142,6 @@ type Query {
   getQuery(id: ID!): EventQuery!
 }
 
-type Mutation {
-  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
-}
-
 input CreateEventQueryInput {
   name: String!
   address: String!
