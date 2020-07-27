@@ -32,6 +32,11 @@ export class QueriesService {
     return this.pricingService.getQuote(studentCount);
   }
 
+  async getQuery(queryId: string): Promise<EventQuery> {
+    const response = await this.queryDataService.getQuery(queryId);
+    return mapEventQuery(response);
+  }
+
   async createEventQuery(
     input: CreateEventQueryInput,
     customerId: string,

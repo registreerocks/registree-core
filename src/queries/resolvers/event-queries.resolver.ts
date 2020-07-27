@@ -48,4 +48,12 @@ export class EventQueriesResolver {
       totalCount: queries.length,
     };
   }
+
+  @Query(_returns => EventQuery)
+  async getQuery(
+    @Args({ name: 'id', type: () => ID }) id: string,
+  ): Promise<EventQuery> {
+    const query = await this.queriesService.getQuery(id);
+    return query;
+  }
 }
