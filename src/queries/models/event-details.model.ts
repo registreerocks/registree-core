@@ -23,4 +23,7 @@ export class EventDetails {
 
   @Field()
   eventType!: string;
+
+  @Field()
+  password!: string;
 }

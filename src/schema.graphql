@@ -50,6 +50,7 @@ type EventDetails {
   information: String!
   name: String!
   eventType: String!
+  password: String!
 }
 
 """
@@ -152,6 +153,7 @@ input CreateEventQueryInput {
   degrees: [DegreeInput!]!
   eventType: String!
   attachments: [Upload!]
+  password: String!
 }
 
 input DegreeInput {
