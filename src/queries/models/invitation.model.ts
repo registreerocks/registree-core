@@ -1,7 +1,7 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
-export class QueryInvitation {
+export class Invitation {
   @Field()
   accepted!: boolean;
 
@@ -16,4 +16,7 @@ export class QueryInvitation {
 
   @Field()
   viewedAt!: Date;
+
+  @Field({ nullable: true })
+  email?: string;
 }
