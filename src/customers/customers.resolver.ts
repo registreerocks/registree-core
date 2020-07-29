@@ -13,7 +13,7 @@ export class CustomersResolver {
 
   @Query(_returns => Customer, { name: 'customer' })
   @UseGuards(GqlAuthGuard)
-  async getCustomer(
+  async getCurrentCustomer(
     @CurrentUser() user: User,
     @BearerToken() token: string,
   ): Promise<Customer> {
