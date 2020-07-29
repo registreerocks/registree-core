@@ -8,14 +8,14 @@ export class Invitation {
   @Field()
   attended!: boolean;
 
-  @Field()
-  respondedAt!: Date;
+  @Field({ nullable: true })
+  respondedAt?: Date;
 
-  @Field()
-  sentAt!: Date;
+  @Field({ nullable: true })
+  sentAt?: Date;
 
-  @Field()
-  viewedAt!: Date;
+  @Field({ nullable: true })
+  viewedAt?: Date;
 
   @Field({ nullable: true })
   email?: string;

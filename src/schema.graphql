@@ -45,9 +45,9 @@ type UploadedFile {
 type Invitation {
   accepted: Boolean!
   attended: Boolean!
-  respondedAt: DateTime!
-  sentAt: DateTime!
-  viewedAt: DateTime!
+  respondedAt: DateTime
+  sentAt: DateTime
+  viewedAt: DateTime
   email: String
 }
 

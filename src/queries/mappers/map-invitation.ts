@@ -3,9 +3,9 @@ import { Invitation } from '../models/invitation.model';
 
 export const mapInvitation = (response: ResponseDto): Invitation => ({
   accepted: response.accepted,
-  respondedAt: new Date(response.responded),
+  respondedAt: response.responded ? new Date(response.responded) : undefined,
   attended: response.attended,
-  sentAt: new Date(response.sent),
-  viewedAt: new Date(response.viewed),
+  sentAt: response.sent ? new Date(response.sent) : undefined,
+  viewedAt: response.viewed ? new Date(response.viewed) : undefined,
   email: '',
 });
