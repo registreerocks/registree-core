@@ -11,6 +11,7 @@ import { Quote } from 'src/pricing/models/quote.model';
 import { PricingService } from 'src/pricing/pricing.service';
 import { CreateQueryRequest } from 'src/query-data/dto/create-query.request';
 import { AttachmentDto } from 'src/query-data/dto/attachment.dto';
+import { sortBy } from 'lodash';
 
 @Injectable()
 export class QueriesService {
@@ -22,7 +23,8 @@ export class QueriesService {
 
   async getCustomerQueries(customerId: string): Promise<EventQuery[]> {
     const response = await this.queryDataService.getCustomerQueries(customerId);
-    return response.map(mapEventQuery);
+    const mappedResponse = response.map(mapEventQuery);
+    return sortBy(mappedResponse, 'eventDetails.startDate');
   }
 
   async getQuote(input: CreateEventQueryInput): Promise<Quote> {
