@@ -41,4 +41,8 @@ export class CreateEventQueryInput {
   @Exclude()
   @Field(_type => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[];
+
+  @Field()
+  @IsNotEmpty()
+  password!: string;
 }

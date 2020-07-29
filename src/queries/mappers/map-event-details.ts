@@ -19,4 +19,5 @@ export const mapEventDetails = (
   name: eventResponse.name,
   invites: Object.values(queryResponse.responses).map(mapInvitation),
   metrics: mapEventMetrics(queryResponse.metrics),
+  password: eventResponse.password,
 });

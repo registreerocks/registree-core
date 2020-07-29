@@ -26,4 +26,5 @@ type Event = {
   name: string;
   start_date: string;
   type: string;
+  password: string;
 };

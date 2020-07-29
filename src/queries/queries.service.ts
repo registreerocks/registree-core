@@ -66,6 +66,7 @@ export class QueriesService {
       name: input.name,
       start_date: format(input.startDate, appConstants.dateFormat),
       type: input.eventType,
+      password: input.password,
     },
     query: {
       details: input.degrees.map(d => ({
