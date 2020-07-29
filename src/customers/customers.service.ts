@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Customer } from './models/customer.model';
 import { CustomersDataProvider } from './customers.data-provider';
-import { mapCustomerDetails } from './mappers/mapCustomerDetails';
+import { mapCustomerDetails } from './mappers/map-customer-details';
 
 @Injectable()
 export class CustomersService {
