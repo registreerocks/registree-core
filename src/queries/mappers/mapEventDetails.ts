@@ -13,4 +13,5 @@ export const mapEventDetails = (
   eventType: eventResponse.type,
   information: eventResponse.info,
   name: eventResponse.name,
+  password: eventResponse.password,
 });
