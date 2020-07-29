@@ -137,7 +137,7 @@ type EventQueryConnection {
 }
 
 type Query {
-  customer(id: ID!): Customer!
+  customer: Customer!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
