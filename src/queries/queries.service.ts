@@ -86,7 +86,7 @@ export class QueriesService {
     return Promise.all(
       files.map(async filePromise => {
         const file = await filePromise;
-        if (appConstants.acceptedMimetypes.indexOf(file.mimetype) > -1) {
+        if (appConstants.acceptedMimetypes.includes(file.mimetype)) {
           const key = await this.uploadService.saveFile(file);
           return {
             filename: file.filename,
