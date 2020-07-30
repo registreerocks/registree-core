@@ -4,13 +4,13 @@ import { CreateEventQueryInput } from './dto/create-event-query.input';
 import { FileUpload } from 'graphql-upload';
 import { QueryDataService } from 'src/query-data/query-data.service';
 import { UploadService } from 'src/upload/upload.service';
-import { mapEventQuery } from './mappers/mapEventQuery';
 import format from 'date-fns/format';
 import { appConstants } from '../constants';
 import { Quote } from 'src/pricing/models/quote.model';
 import { PricingService } from 'src/pricing/pricing.service';
 import { CreateQueryRequest } from 'src/query-data/dto/create-query.request';
 import { AttachmentDto } from 'src/query-data/dto/attachment.dto';
+import { mapEventQuery } from './mappers/map-event-query';
 import { orderBy } from 'lodash';
 
 @Injectable()

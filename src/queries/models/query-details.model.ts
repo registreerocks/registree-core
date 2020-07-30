@@ -1,13 +1,15 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { QueryMetrics } from './query-metrics.model';
 import { DegreeSelection } from './degree-selection.model';
+import { QueryTranscript } from './query-transcript.model';
 
 @ObjectType()
 export class QueryDetails {
   @Field(_type => [DegreeSelection])
-  selection!: DegreeSelection[];
+  parameters!: DegreeSelection[];
 
-  metrics!: QueryMetrics;
+  @Field(_type => [QueryTranscript])
+  results!: QueryTranscript[];
+
   @Field()
   updatedAt!: Date;
 }
