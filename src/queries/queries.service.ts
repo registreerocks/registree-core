@@ -86,12 +86,18 @@ export class QueriesService {
     return Promise.all(
       files.map(async filePromise => {
         const file = await filePromise;
-        const key = await this.uploadService.saveFile(file);
-        return {
-          filename: file.filename,
-          id: key,
-          mimetype: file.mimetype,
-        };
+        if (appConstants.acceptedMimetypes.includes(file.mimetype)) {
+          const key = await this.uploadService.saveFile(file);
+          return {
+            filename: file.filename,
+            id: key,
+            mimetype: file.mimetype,
+          };
+        } else {
+          throw new Error(
+            `The following mimetype is not accepted: ${file.mimetype}`,
+          );
+        }
       }),
     );
   }
