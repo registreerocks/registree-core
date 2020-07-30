@@ -8,7 +8,7 @@ export class Customer {
   id!: string;
 
   @Field()
-  description!: string;
+  description?: string;
 
   @Field()
   name!: string;
