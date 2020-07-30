@@ -3,7 +3,7 @@ import { EventQuery } from '../models/event-query.model';
 import { CreateEventQueryInput } from '../dto/create-event-query.input';
 import { QueriesService } from '../queries.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UnauthorizedException } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import { EventQueryConnection } from '../models/pagination/event-query-connection.model';
@@ -27,6 +27,7 @@ export class EventQueriesResolver {
   }
 
   @Query(_returns => Quote)
+  @UseGuards(GqlAuthGuard)
   async getQuote(
     @Args({ name: 'createEventQueryInput', type: () => CreateEventQueryInput })
     input: CreateEventQueryInput,
@@ -35,25 +36,38 @@ export class EventQueriesResolver {
   }
 
   @Query(_returns => EventQueryConnection)
+  @UseGuards(GqlAuthGuard)
   async getQueries(
     @Args() args: PaginationArgs,
     @Args({ name: 'customerId', type: () => ID }) customerId: string,
+    @CurrentUser() user: User,
   ): Promise<EventQueryConnection> {
-    const queries = await this.queriesService.getCustomerQueries(customerId);
-    // TODO: Default sorting
-    const paginatedQueries = connectionFromArray(queries, args);
+    if (user.dbId === customerId) {
+      const queries = await this.queriesService.getCustomerQueries(customerId);
+      // TODO: Default sorting
+      const paginatedQueries = connectionFromArray(queries, args);
 
-    return {
-      ...paginatedQueries,
-      totalCount: queries.length,
-    };
+      return {
+        ...paginatedQueries,
+        totalCount: queries.length,
+      };
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   @Query(_returns => EventQuery)
+  @UseGuards(GqlAuthGuard)
   async getQuery(
     @Args({ name: 'id', type: () => ID }) id: string,
+    @CurrentUser() user: User,
   ): Promise<EventQuery> {
     const query = await this.queriesService.getQuery(id);
-    return query;
+    // TODO: Move the Authorization into a different layer
+    if (query.customerId === user.dbId) {
+      return query;
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 }

@@ -5,6 +5,7 @@ export interface AuthOptions {
   clientId: string;
   clientSecret: string;
   audience: string;
+  ignoreExpiration: boolean;
 }
 
 export interface AuthAsyncOptions {
