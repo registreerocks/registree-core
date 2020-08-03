@@ -39,7 +39,10 @@ import { AppConfigService } from './app-config/app-config.service';
         req,
       }),
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
-      uploads: true,
+      uploads: {
+        maxFileSize: 20 * 1000 * 1000,
+        maxFiles: 5,
+      },
       introspection: true,
     }),
     CustomersModule,
