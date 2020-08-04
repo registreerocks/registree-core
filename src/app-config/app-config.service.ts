@@ -15,6 +15,7 @@ import {
   PricingOptionsFactory,
   PricingOptions,
 } from 'src/pricing/pricing.options';
+import { StudentDataOptions } from 'src/student-data/student-data.options';
 
 @Injectable()
 export class AppConfigService
@@ -49,6 +50,13 @@ export class AppConfigService
       queryApi: this.apiConfig.queryApi,
     };
   }
+
+  createStudentDataOptions(): StudentDataOptions {
+    return {
+      studentApis: this.apiConfig.studentApis,
+    };
+  }
+
   createUploadOptions(): UploadOptions {
     return {
       accessKeyId: this.storageConfig.accessKeyId,
