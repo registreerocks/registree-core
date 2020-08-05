@@ -25,11 +25,42 @@ type Customer {
   contact: Contact!
 }
 
+type RsvpCost {
+  cost: Float!
+  percent: Int!
+}
+
+type Quote {
+  numberOfStudents: Int!
+  rsvpCostBreakdown: [RsvpCost!]!
+}
+
 type UploadedFile {
   id: ID!
   filename: String!
   mimetype: String!
   url: String!
+}
+
+type Invitation {
+  accepted: Boolean!
+  attended: Boolean!
+  respondedAt: DateTime
+  sentAt: DateTime
+  viewedAt: DateTime
+  email: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type EventMetrics {
+  acceptedCount: Int!
+  attendedCount: Int!
+  respondedCount: Int!
+  viewedCount: Int!
 }
 
 type EventDetails {
@@ -40,49 +71,19 @@ type EventDetails {
   information: String!
   name: String!
   eventType: String!
+  invites: [Invitation!]!
+  metrics: EventMetrics!
+  password: String!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Degree {
   id: ID!
   degreeName: String!
 }
 
-type QueryTranscript {
-  id: ID!
-  degreeAverage: Float!
-  degreeCompleted: Boolean!
-  latestTerm: Float!
-}
-
-type QueryInvitation {
-  accepted: Boolean!
-  attended: Boolean!
-  respondedAt: DateTime!
-  sentAt: DateTime!
-  viewedAt: DateTime!
-}
-
-type QueryStudent {
-  firstName: String!
-  lastName: String!
-  studentId: String!
-}
-
-type Result {
-  transcript: QueryTranscript!
-  invite: QueryInvitation!
-  studentInformation: QueryStudent!
-}
-
 type DegreeSelection {
   amount: Amount!
   degree: Degree!
-  results: [Result!]!
 }
 
 union Amount = Absolute | Percentage
@@ -95,8 +96,27 @@ type Percentage {
   percentage: Int!
 }
 
+type Student {
+  name: String!
+}
+
+type StudentLink {
+  id: ID!
+  student: Student
+}
+
+type QueryTranscript {
+  id: ID!
+  degreeAverage: Float!
+  degreeCompleted: Boolean!
+  latestTerm: Float!
+  degree: Degree!
+  studentLink: StudentLink!
+}
+
 type QueryDetails {
-  selection: [DegreeSelection!]!
+  parameters: [DegreeSelection!]!
+  results: [QueryTranscript!]!
   updatedAt: DateTime!
 }
 
@@ -121,18 +141,15 @@ type EventQueryEdge {
 
 type EventQueryConnection {
   edges: [EventQueryEdge!]
-  nodes: [EventQuery!]
   pageInfo: PageInfo!
   totalCount: Int!
 }
 
 type Query {
-  customer(id: ID!): Customer!
-  getQueries(customerId: ID!, skip: Int, after: String, before: String, first: Int, last: Int): EventQueryConnection!
-}
-
-type Mutation {
-  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+  customer: Customer!
+  getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
+  getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getQuery(id: ID!): EventQuery!
 }
 
 input CreateEventQueryInput {
@@ -145,6 +162,7 @@ input CreateEventQueryInput {
   degrees: [DegreeInput!]!
   eventType: String!
   attachments: [Upload!]
+  password: String!
 }
 
 input DegreeInput {
@@ -156,3 +174,7 @@ input DegreeInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+type Mutation {
+  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+}

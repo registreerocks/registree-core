@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import addSeconds from 'date-fns/addSeconds';
 import axios, { AxiosInstance } from 'axios';
 import { AccessTokenResponse } from './dto/access-token.response';
 import isAfter from 'date-fns/isAfter';
-import { ConfigService } from '@nestjs/config';
+import { AuthOptions } from './auth.options';
+import { AUTH_OPTIONS } from './auth.constants';
 
 @Injectable()
 export class AuthService {
@@ -14,18 +15,13 @@ export class AuthService {
   private readonly audience: string;
   private tokenExpiry: Date = new Date();
 
-  constructor(private readonly configService: ConfigService) {
-    this.clientId = configService.get<string>('auth.clientId', '');
-    this.clientSecret = configService.get<string>('auth.clientSecret', '');
-    this.audience = configService.get<string>('auth.audience', '');
-    const domain = configService.get<string>('auth.domain', '');
-
-    if (!this.clientId || !this.clientSecret || !this.audience || !domain) {
-      throw new Error('Confidential client details were not provided');
-    }
+  constructor(@Inject(AUTH_OPTIONS) private readonly options: AuthOptions) {
+    this.clientId = options.clientId;
+    this.clientSecret = options.clientSecret;
+    this.audience = options.audience;
 
     this.axiosInstance = axios.create({
-      baseURL: `https://${domain}/oauth`,
+      baseURL: `https://${options.domain}/oauth`,
       headers: {
         'content-type': 'application/json',
       },

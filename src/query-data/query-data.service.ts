@@ -1,22 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
-import { ConfigService } from '@nestjs/config';
 import { EventQueryResponse } from './dto/event-query.response';
 import { AuthService } from 'src/auth/auth.service';
 import { CreateQueryRequest } from './dto/create-query.request';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { QueryDataOptions } from './query-data.options';
+import { QUERY_DATA_OPTIONS } from './query-data.constants';
 
 @Injectable()
 export class QueryDataService {
   private readonly axiosInstance: AxiosInstance;
 
   constructor(
-    private readonly configService: ConfigService,
+    @Inject(QUERY_DATA_OPTIONS) private readonly options: QueryDataOptions,
     private readonly authService: AuthService,
+    @InjectPinoLogger(QueryDataService.name)
+    private readonly logger: PinoLogger,
   ) {
-    const endpoint = this.configService.get<string>('api.queryApi', '');
     this.axiosInstance = axios.create({
-      baseURL: endpoint,
+      baseURL: options.queryApi,
     });
+  }
+
+  async getStudentCountForQuery(request: CreateQueryRequest): Promise<number> {
+    const accessToken = await this.authService.getAccessToken();
+
+    const result = await this.axiosInstance.post<number>(
+      '/dry_run/degree',
+      request,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return result.data;
   }
 
   async createQuery(request: CreateQueryRequest): Promise<string> {
@@ -55,18 +74,28 @@ export class QueryDataService {
 
   async getCustomerQueries(customerId: string): Promise<EventQueryResponse[]> {
     const accessToken = await this.authService.getAccessToken();
-
-    const result = await this.axiosInstance.get<EventQueryResponse[]>(
-      `/query/get_by_customer`,
-      {
-        params: {
-          customer_id: customerId,
+    try {
+      const result = await this.axiosInstance.get<EventQueryResponse[]>(
+        `/query/get_by_customer`,
+        {
+          params: {
+            customer_id: customerId,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
-    return result.data;
+      );
+      return result.data;
+    } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      this.logger.error(
+        { err },
+        'Failed to get queries by customer id: %s',
+        customerId,
+      );
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      throw err;
+    }
   }
 }

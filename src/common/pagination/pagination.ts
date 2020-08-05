@@ -1,10 +1,13 @@
-import { Field, ObjectType, Int } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import * as Relay from 'graphql-relay';
 import { PageInfo } from './page-info';
 import { Type } from '@nestjs/common';
 
-export default function Paginated<TItem>(TItemClass: Type<TItem>): any {
+export default function Paginated<TItem>(
+  TItemClass: Type<TItem>,
+): Type<Relay.Connection<TItem>> {
   @ObjectType(`${TItemClass.name}Edge`)
-  abstract class EdgeType {
+  class Edge implements Relay.Edge<TItem> {
     @Field(_type => String)
     cursor!: string;
 
@@ -14,18 +17,15 @@ export default function Paginated<TItem>(TItemClass: Type<TItem>): any {
 
   // `isAbstract` decorator option is mandatory to prevent registering in schema
   @ObjectType({ isAbstract: true })
-  abstract class PaginatedType {
-    @Field(_type => [EdgeType], { nullable: true })
-    edges?: Array<EdgeType>;
-
-    @Field(_type => [TItemClass], { nullable: true })
-    nodes?: Array<TItem>;
+  class Connection implements Relay.Connection<TItem> {
+    @Field(_type => [Edge], { nullable: true })
+    edges!: Edge[];
 
     @Field(_type => PageInfo)
     pageInfo!: PageInfo;
 
-    @Field(_type => Int)
-    totalCount!: number;
+    // @Field(_type => Int)
+    // totalCount!: number;
   }
-  return PaginatedType;
+  return Connection;
 }

@@ -41,6 +41,7 @@ workflows:
         - node/test:
             pkg-manager: yarn
             version: 14.4.0
+            run-command: "test -w 1"
         - build
         - docker/publish:
             filters:

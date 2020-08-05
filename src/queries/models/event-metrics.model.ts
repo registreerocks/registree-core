@@ -1,7 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
-export class QueryMetrics {
+export class EventMetrics {
   @Field(_type => Int)
   acceptedCount!: number;
 

@@ -1,26 +1,17 @@
 import S3 from 'aws-sdk/clients/s3';
 import { IObjectStorageProvider } from './interfaces/object-storage-provider.interface';
-import { ConfigService } from '@nestjs/config';
+import { UploadOptions } from './upload.options';
+import { UPLOAD_OPTIONS } from './upload.constants';
+import { Inject } from '@nestjs/common';
 
 export class S3StorageService implements IObjectStorageProvider {
   private readonly s3: S3;
-  constructor(private readonly configService: ConfigService) {
-    const endpoint = this.configService.get<string>('storage.endpoint');
-    const accessKeyId = this.configService.get<string>('storage.accessKeyId');
-    const secretAccessKey = this.configService.get<string>(
-      'storage.secretAccessKey',
-    );
-    if (endpoint && accessKeyId && secretAccessKey) {
-      this.s3 = new S3({
-        endpoint,
-        accessKeyId,
-        secretAccessKey,
-      });
-    } else {
-      throw new Error(
-        'S3StorageService failed to iniitalize: invalid configuration provided',
-      );
-    }
+  constructor(@Inject(UPLOAD_OPTIONS) private readonly options: UploadOptions) {
+    this.s3 = new S3({
+      endpoint: options.endpoint,
+      accessKeyId: options.accessKeyId,
+      secretAccessKey: options.secretAccessKey,
+    });
   }
   async putObject(buffer: Buffer, fileKey: string): Promise<boolean> {
     const params = {
@@ -33,5 +24,13 @@ export class S3StorageService implements IObjectStorageProvider {
       .putObject(params)
       .promise()
       .then(() => true);
+  }
+
+  getObjectUrl(fileKey: string): Promise<string> {
+    return this.s3.getSignedUrlPromise('getObject', {
+      Bucket: 'dashboard-cdn',
+      Key: fileKey,
+      Expires: 60 * 5,
+    });
   }
 }

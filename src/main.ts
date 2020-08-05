@@ -1,15 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
+import { AppConfigService } from './app-config/app-config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const configService = app.get<ConfigService>(ConfigService);
+  const app = await NestFactory.create(AppModule, {
+    logger: process.env.NODE_ENV === 'develop' ? undefined : false,
+  });
+  app.useLogger(app.get(Logger));
+  const appConfig = app
+    .get<AppConfigService>(AppConfigService)
+    .createAppParams();
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(
-    configService.get<number>('app.port') ?? '3000',
-    configService.get<string>('app.host') ?? 'localhost',
-  );
+  await app.listen(appConfig.port ?? '3000', appConfig.host ?? 'localhost');
 }
-bootstrap();
+void bootstrap();
