@@ -12,6 +12,7 @@ import * as stdSerializers from 'pino-std-serializers';
 import { IncomingMessage } from 'http';
 import { AppConfigModule } from './app-config/app-config.module';
 import { AppConfigService } from './app-config/app-config.service';
+import { appConstants } from './constants';
 
 @Module({
   imports: [
@@ -40,7 +41,7 @@ import { AppConfigService } from './app-config/app-config.service';
       }),
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
       uploads: {
-        maxFileSize: 20 * 1000 * 1000,
+        maxFileSize: appConstants.fileSize * 1000 * 1000,
         maxFiles: 5,
       },
       introspection: true,
