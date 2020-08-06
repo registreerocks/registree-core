@@ -6,12 +6,12 @@ import { join } from 'path';
 import { CustomersModule } from './customers/customers.module';
 import { AuthModule } from './auth/auth.module';
 import { QueriesModule } from './queries/queries.module';
-import { DegreesModule } from './degrees/degrees.module';
 import { LoggerModule } from 'nestjs-pino';
 import * as stdSerializers from 'pino-std-serializers';
 import { IncomingMessage } from 'http';
 import { AppConfigModule } from './app-config/app-config.module';
 import { AppConfigService } from './app-config/app-config.service';
+import { UniversitiesModule } from './universities/universities.module';
 import { appConstants } from './constants';
 
 @Module({
@@ -53,7 +53,9 @@ import { appConstants } from './constants';
     QueriesModule.forRootAsync({
       useExisting: AppConfigService,
     }),
-    DegreesModule,
+    UniversitiesModule.forRootAsync({
+      useExisting: AppConfigService,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

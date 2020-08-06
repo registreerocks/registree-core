@@ -76,14 +76,14 @@ type EventDetails {
   password: String!
 }
 
-type Degree {
+type QueryDegree {
   id: ID!
   degreeName: String!
 }
 
 type DegreeSelection {
   amount: Amount!
-  degree: Degree!
+  degree: QueryDegree!
 }
 
 union Amount = Absolute | Percentage
@@ -110,7 +110,7 @@ type QueryTranscript {
   degreeAverage: Float!
   degreeCompleted: Boolean!
   latestTerm: Float!
-  degree: Degree!
+  degree: QueryDegree!
   studentLink: StudentLink!
 }
 
@@ -145,11 +145,43 @@ type EventQueryConnection {
   totalCount: Int!
 }
 
+type Degree {
+  id: ID!
+  name: String!
+  description: String!
+  faculty: Faculty!
+  level: String!
+}
+
+type GroupedDegrees {
+  name: String!
+  degrees: [Degree!]!
+}
+
+type Faculty {
+  id: ID!
+  name: String!
+  description: String!
+  university: University!
+  groupedDegrees: [GroupedDegrees!]!
+  degrees: [Degree!]!
+}
+
+type University {
+  id: ID!
+  country: String!
+  name: String!
+  physicalAddress: String!
+  shortName: String!
+  faculties: [Faculty!]!
+}
+
 type Query {
   customer: Customer!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
+  getUniversities: [University!]!
 }
 
 input CreateEventQueryInput {

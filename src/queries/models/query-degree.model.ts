@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 
 @ObjectType()
-export class Degree {
+export class QueryDegree {
   @Field(_type => ID)
   id!: string;
 
