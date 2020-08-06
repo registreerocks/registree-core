@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EventQuery } from './models/event-query.model';
+import { EventQueryWithPricing } from './models/event-query.model';
 import { CreateEventQueryInput } from './dto/create-event-query.input';
 import { FileUpload } from 'graphql-upload';
 import { QueryDataService } from 'src/query-data/query-data.service';
@@ -21,10 +21,25 @@ export class QueriesService {
     private readonly pricingService: PricingService,
   ) {}
 
-  async getCustomerQueries(customerId: string): Promise<EventQuery[]> {
+  async getCustomerQueries(
+    customerId: string,
+  ): Promise<EventQueryWithPricing[]> {
     const response = await this.queryDataService.getCustomerQueries(customerId);
     const mappedResponse = response.map(mapEventQuery);
-    return orderBy(mappedResponse, [r => r.eventDetails.startDate], ['desc']);
+    const pricedResponse = mappedResponse.map(resp => {
+      return {
+        ...resp,
+        ...{
+          quoteDetails: this.pricingService.getQuote(
+            resp.eventDetails.invites.length,
+          ),
+          currentPrice: this.pricingService.calculatePrice(
+            resp.eventDetails.metrics.acceptedCount,
+          ),
+        },
+      };
+    });
+    return orderBy(pricedResponse, [r => r.eventDetails.startDate], ['desc']);
   }
 
   async getQuote(input: CreateEventQueryInput): Promise<Quote> {
@@ -34,15 +49,26 @@ export class QueriesService {
     return this.pricingService.getQuote(studentCount);
   }
 
-  async getQuery(queryId: string): Promise<EventQuery> {
+  async getQuery(queryId: string): Promise<EventQueryWithPricing> {
     const response = await this.queryDataService.getQuery(queryId);
-    return mapEventQuery(response);
+    const mappedResponse = mapEventQuery(response);
+    return {
+      ...mappedResponse,
+      ...{
+        quoteDetails: this.pricingService.getQuote(
+          mappedResponse.eventDetails.invites.length,
+        ),
+        currentPrice: this.pricingService.calculatePrice(
+          mappedResponse.eventDetails.metrics.acceptedCount,
+        ),
+      },
+    };
   }
 
   async createEventQuery(
     input: CreateEventQueryInput,
     customerId: string,
-  ): Promise<EventQuery> {
+  ): Promise<EventQueryWithPricing> {
     const attachments = await this.handleAttachments(input.attachments);
 
     const queryId = await this.queryDataService.createQuery(
@@ -50,7 +76,18 @@ export class QueriesService {
     );
 
     const response = await this.queryDataService.getQuery(queryId);
-    return mapEventQuery(response);
+    const mappedResponse = mapEventQuery(response);
+    return {
+      ...mappedResponse,
+      ...{
+        quoteDetails: this.pricingService.getQuote(
+          mappedResponse.eventDetails.invites.length,
+        ),
+        currentPrice: this.pricingService.calculatePrice(
+          mappedResponse.eventDetails.metrics.acceptedCount,
+        ),
+      },
+    };
   }
 
   private createQueryRequestMapper = (
