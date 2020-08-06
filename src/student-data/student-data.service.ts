@@ -76,26 +76,6 @@ export class StudentDataService {
     return results.flat();
   }
 
-  async getFaculties(): Promise<FacultyResponse[]> {
-    const accessToken = await this.authService.getAccessToken();
-    const results = await Promise.all(
-      this.axiosInstances.map(instance =>
-        instance
-          .get<FacultyResponse[]>('faculty/get_all', {
-            params: {
-              meta_flag: false,
-            },
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-          .then(result => result.data),
-      ),
-    );
-
-    return results.flat();
-  }
-
   async getFacultyDegrees(facultyId: string): Promise<DegreeResponse[]> {
     const accessToken = await this.authService.getAccessToken();
     const results = await Promise.all(
@@ -104,26 +84,6 @@ export class StudentDataService {
           .get<DegreeResponse[]>('faculty/get_degrees', {
             params: {
               id: facultyId,
-              meta_flag: false,
-            },
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-          .then(result => result.data),
-      ),
-    );
-
-    return results.flat();
-  }
-
-  async getDegrees(): Promise<DegreeResponse[]> {
-    const accessToken = await this.authService.getAccessToken();
-    const results = await Promise.all(
-      this.axiosInstances.map(instance =>
-        instance
-          .get<DegreeResponse[]>('degree/get_all', {
-            params: {
               meta_flag: false,
             },
             headers: {
