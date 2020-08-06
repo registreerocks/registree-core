@@ -12,6 +12,7 @@ import { IncomingMessage } from 'http';
 import { AppConfigModule } from './app-config/app-config.module';
 import { AppConfigService } from './app-config/app-config.service';
 import { UniversitiesModule } from './universities/universities.module';
+import { appConstants } from './constants';
 
 @Module({
   imports: [
@@ -39,7 +40,10 @@ import { UniversitiesModule } from './universities/universities.module';
         req,
       }),
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
-      uploads: true,
+      uploads: {
+        maxFileSize: appConstants.fileSize * 1000 * 1000,
+        maxFiles: 5,
+      },
       introspection: true,
     }),
     CustomersModule,
