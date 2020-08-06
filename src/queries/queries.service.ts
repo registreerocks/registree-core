@@ -87,12 +87,24 @@ export class QueriesService {
       files.map(async filePromise => {
         const file = await filePromise;
         if (appConstants.acceptedMimetypes.includes(file.mimetype)) {
-          const key = await this.uploadService.saveFile(file);
-          return {
-            filename: file.filename,
-            id: key,
-            mimetype: file.mimetype,
-          };
+          try {
+            const key = await this.uploadService.saveFile(file);
+            return {
+              filename: file.filename,
+              id: key,
+              mimetype: file.mimetype,
+            };
+          } catch (error) {
+            /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+            if (error.name === 'PayloadTooLargeError') {
+              throw new Error(
+                `The file size exceeds ${appConstants.fileSize} mb`,
+              );
+            } else {
+              throw error;
+            }
+            /* eslint-enable @typescript-eslint/no-unsafe-member-access */
+          }
         } else {
           throw new Error(
             `The following mimetype is not accepted: ${file.mimetype}`,
