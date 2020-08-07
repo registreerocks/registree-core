@@ -125,6 +125,8 @@ type EventQuery {
   customerId: ID!
   eventDetails: EventDetails!
   queryDetails: QueryDetails!
+  quoteDetails: Quote!
+  currentPrice: Float!
 }
 
 type PageInfo {
