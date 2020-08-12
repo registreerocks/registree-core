@@ -1,4 +1,13 @@
-import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Args,
+  Query,
+  ID,
+  Parent,
+  ResolveField,
+  Float,
+} from '@nestjs/graphql';
 import { EventQuery } from '../models/event-query.model';
 import { CreateEventQueryInput } from '../dto/create-event-query.input';
 import { QueriesService } from '../queries.service';
@@ -10,10 +19,14 @@ import { EventQueryConnection } from '../models/pagination/event-query-connectio
 import { User } from 'src/common/interfaces/user.interface';
 import { connectionFromArray } from 'graphql-relay';
 import { Quote } from 'src/pricing/models/quote.model';
+import { PricingService } from 'src/pricing/pricing.service';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
-  constructor(private readonly queriesService: QueriesService) {}
+  constructor(
+    private readonly queriesService: QueriesService,
+    private readonly pricingService: PricingService,
+  ) {}
 
   @Mutation(_returns => EventQuery)
   @UseGuards(GqlAuthGuard)
@@ -69,5 +82,17 @@ export class EventQueriesResolver {
     } else {
       throw new UnauthorizedException();
     }
+  }
+
+  @ResolveField('quoteDetails', _returns => Quote)
+  getQuoteDetails(@Parent() eventQuery: EventQuery): Quote {
+    return this.pricingService.getQuote(eventQuery.eventDetails.invites.length);
+  }
+
+  @ResolveField('currentPrice', _returns => Float)
+  getCurrentPrice(@Parent() eventQuery: EventQuery): number {
+    return this.pricingService.calculatePrice(
+      eventQuery.eventDetails.metrics.acceptedCount,
+    );
   }
 }
