@@ -1,11 +1,38 @@
-import { Resolver, Parent, ResolveField } from '@nestjs/graphql';
+import {
+  Resolver,
+  Parent,
+  ResolveField,
+  Mutation,
+  Args,
+} from '@nestjs/graphql';
 import { EventDetails } from '../models/event-details.model';
+import { Event } from '../models/event.model';
 import { UploadedFile } from 'src/common/uploaded-file.model';
 import { UploadService } from 'src/upload/upload.service';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
+import { QueriesService } from '../queries.service';
+import { UpdateEventDetailsInput } from '../dto/update-event-details.input';
 
 @Resolver(_of => EventDetails)
 export class EventDetailsResolver {
-  constructor(private readonly uploadService: UploadService) {}
+  constructor(
+    private readonly queriesService: QueriesService,
+    private readonly uploadService: UploadService,
+  ) {}
+
+  @Mutation(_returns => Event)
+  @UseGuards(GqlAuthGuard)
+  async updateEventDetails(
+    @Args({
+      name: 'updateEventDetailsInput',
+      type: () => UpdateEventDetailsInput,
+    })
+    queryId: string,
+    input: UpdateEventDetailsInput,
+  ): Promise<Event> {
+    return this.queriesService.updateEventDetails(queryId, input);
+  }
 
   @ResolveField('attachments', _returns => [UploadedFile])
   async getAttachments(

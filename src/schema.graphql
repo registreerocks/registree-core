@@ -76,6 +76,17 @@ type EventDetails {
   password: String!
 }
 
+type Event {
+  address: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  attachments: [UploadedFile!]!
+  information: String!
+  name: String!
+  eventType: String!
+  password: String!
+}
+
 type QueryDegree {
   id: ID!
   degreeName: String!
@@ -208,5 +219,18 @@ input DegreeInput {
 scalar Upload
 
 type Mutation {
+  updateEventDetails(updateEventDetailsInput: UpdateEventDetailsInput!): Event!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+}
+
+input UpdateEventDetailsInput {
+  name: String!
+  address: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  info: String!
+  message: String!
+  eventType: String!
+  attachments: [Upload!]
+  password: String!
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EventQuery } from './models/event-query.model';
+import { Event } from './models/event.model';
 import { CreateEventQueryInput } from './dto/create-event-query.input';
 import { FileUpload } from 'graphql-upload';
 import { QueryDataService } from 'src/query-data/query-data.service';
@@ -12,6 +13,9 @@ import { CreateQueryRequest } from 'src/query-data/dto/create-query.request';
 import { AttachmentDto } from 'src/query-data/dto/attachment.dto';
 import { mapEventQuery } from './mappers/map-event-query';
 import { orderBy } from 'lodash';
+import { UpdateEventDetailsInput } from './dto/update-event-details.input';
+import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
+import { mapEvent } from './mappers/map-event';
 
 @Injectable()
 export class QueriesService {
@@ -53,6 +57,19 @@ export class QueriesService {
     return mapEventQuery(response);
   }
 
+  async updateEventDetails(
+    queryId: string,
+    input: UpdateEventDetailsInput,
+  ): Promise<Event> {
+    const attachments = await this.handleAttachments(input.attachments);
+
+    const response = await this.queryDataService.updateEventDetails(
+      queryId,
+      this.updateEventRequestMapper(input, attachments),
+    );
+    return mapEvent(response);
+  }
+
   private createQueryRequestMapper = (
     input: CreateEventQueryInput,
     customerId: string,
@@ -78,6 +95,25 @@ export class QueriesService {
         degree_name: d.degreeName,
       })),
     },
+  });
+
+  private updateEventRequestMapper = (
+    input: UpdateEventDetailsInput,
+    attachments: { filename: string; id: string; mimetype: string }[] = [],
+  ): UpdateEventRequest => ({
+    address: input.address,
+    attachments,
+    end_date: input.endDate
+      ? format(input.endDate, appConstants.dateFormat)
+      : undefined,
+    info: input.info,
+    message: input.message,
+    name: input.name,
+    password: input.password,
+    start_date: input.startDate
+      ? format(input.startDate, appConstants.dateFormat)
+      : undefined,
+    type: input.eventType,
   });
 
   private async handleAttachments(
