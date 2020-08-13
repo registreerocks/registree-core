@@ -96,6 +96,13 @@ type Percentage {
   percentage: Int!
 }
 
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
 type Student {
   name: String!
 }
@@ -114,9 +121,20 @@ type QueryTranscript {
   studentLink: StudentLink!
 }
 
+type QueryTranscriptEdge {
+  cursor: String!
+  node: QueryTranscript!
+}
+
+type QueryTranscriptConnection {
+  edges: [QueryTranscriptEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type QueryDetails {
   parameters: [DegreeSelection!]!
-  results: [QueryTranscript!]!
+  results(after: String, before: String, first: Int, last: Int): QueryTranscriptConnection!
   updatedAt: DateTime!
 }
 
@@ -127,13 +145,6 @@ type EventQuery {
   queryDetails: QueryDetails!
   quoteDetails: Quote!
   currentPrice: Float!
-}
-
-type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
 }
 
 type EventQueryEdge {
