@@ -7,7 +7,6 @@ import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { QueryDataOptions } from './query-data.options';
 import { QUERY_DATA_OPTIONS } from './query-data.constants';
 import { UpdateEventRequest } from './dto/update-event.request';
-import { EventResponse } from './dto/event.response';
 
 @Injectable()
 export class QueryDataService {
@@ -104,13 +103,13 @@ export class QueryDataService {
   async updateEventInfo(
     queryId: string,
     request: UpdateEventRequest,
-  ): Promise<EventResponse> {
+  ): Promise<EventQueryResponse> {
     const accessToken = await this.authService.getAccessToken();
     try {
-      const result = await this.axiosInstance.put<EventResponse>(
+      const result = await this.axiosInstance.put<EventQueryResponse>(
         `/event/update_info/${queryId}`,
+        request,
         {
-          request,
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
