@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EventQuery } from './models/event-query.model';
-import { Event } from './models/event.model';
+import { EventInfo } from './models/event-info.model';
 import { CreateEventQueryInput } from './dto/create-event-query.input';
 import { FileUpload } from 'graphql-upload';
 import { QueryDataService } from 'src/query-data/query-data.service';
@@ -15,7 +15,7 @@ import { mapEventQuery } from './mappers/map-event-query';
 import { orderBy } from 'lodash';
 import { UpdateEventDetailsInput } from './dto/update-event-details.input';
 import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
-import { mapEvent } from './mappers/map-event';
+import { mapEventInfo } from './mappers/map-event-info';
 
 @Injectable()
 export class QueriesService {
@@ -57,17 +57,17 @@ export class QueriesService {
     return mapEventQuery(response);
   }
 
-  async updateEventDetails(
+  async updateEventInfo(
     queryId: string,
     input: UpdateEventDetailsInput,
-  ): Promise<Event> {
+  ): Promise<EventInfo> {
     const attachments = await this.handleAttachments(input.attachments);
 
-    const response = await this.queryDataService.updateEventDetails(
+    const response = await this.queryDataService.updateEventInfo(
       queryId,
       this.updateEventRequestMapper(input, attachments),
     );
-    return mapEvent(response);
+    return mapEventInfo(response);
   }
 
   private createQueryRequestMapper = (

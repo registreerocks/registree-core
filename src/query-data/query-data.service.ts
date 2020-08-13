@@ -101,7 +101,7 @@ export class QueryDataService {
     }
   }
 
-  async updateEventDetails(
+  async updateEventInfo(
     queryId: string,
     request: UpdateEventRequest,
   ): Promise<EventResponse> {

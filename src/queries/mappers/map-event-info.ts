@@ -1,7 +1,7 @@
 import { EventResponse } from 'src/query-data/dto/event.response';
-import { Event } from '../models/event.model';
+import { EventInfo } from '../models/event-info.model';
 
-export const mapEvent = (eventResponse: EventResponse): Event => ({
+export const mapEventInfo = (eventResponse: EventResponse): EventInfo => ({
   address: eventResponse.address,
   startDate: new Date(eventResponse.start_date),
   endDate: new Date(eventResponse.end_date),

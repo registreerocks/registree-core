@@ -2,7 +2,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { UploadedFile } from 'src/common/uploaded-file.model';
 
 @ObjectType()
-export class Event {
+export class EventInfo {
   @Field()
   address!: string;
 

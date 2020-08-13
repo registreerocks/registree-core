@@ -76,7 +76,7 @@ type EventDetails {
   password: String!
 }
 
-type Event {
+type EventInfo {
   address: String!
   startDate: DateTime!
   endDate: DateTime!
@@ -219,7 +219,7 @@ input DegreeInput {
 scalar Upload
 
 type Mutation {
-  updateEventDetails(updateEventDetailsInput: UpdateEventDetailsInput!): Event!
+  updateEventInfo(updateEventDetailsInput: UpdateEventDetailsInput!): EventInfo!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
 }
 

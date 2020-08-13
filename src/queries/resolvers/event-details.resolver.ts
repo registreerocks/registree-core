@@ -6,7 +6,7 @@ import {
   Args,
 } from '@nestjs/graphql';
 import { EventDetails } from '../models/event-details.model';
-import { Event } from '../models/event.model';
+import { EventInfo } from '../models/event-info.model';
 import { UploadedFile } from 'src/common/uploaded-file.model';
 import { UploadService } from 'src/upload/upload.service';
 import { UseGuards } from '@nestjs/common';
@@ -21,17 +21,17 @@ export class EventDetailsResolver {
     private readonly uploadService: UploadService,
   ) {}
 
-  @Mutation(_returns => Event)
+  @Mutation(_returns => EventInfo)
   @UseGuards(GqlAuthGuard)
-  async updateEventDetails(
+  async updateEventInfo(
     @Args({
       name: 'updateEventDetailsInput',
       type: () => UpdateEventDetailsInput,
     })
     queryId: string,
     input: UpdateEventDetailsInput,
-  ): Promise<Event> {
-    return this.queriesService.updateEventDetails(queryId, input);
+  ): Promise<EventInfo> {
+    return this.queriesService.updateEventInfo(queryId, input);
   }
 
   @ResolveField('attachments', _returns => [UploadedFile])
