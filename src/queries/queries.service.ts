@@ -12,6 +12,8 @@ import { CreateQueryRequest } from 'src/query-data/dto/create-query.request';
 import { AttachmentDto } from 'src/query-data/dto/attachment.dto';
 import { mapEventQuery } from './mappers/map-event-query';
 import { orderBy } from 'lodash';
+import { UpdateEventInfoInput } from './dto/update-event-info.input';
+import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
 
 @Injectable()
 export class QueriesService {
@@ -53,6 +55,19 @@ export class QueriesService {
     return mapEventQuery(response);
   }
 
+  async updateEventInfo(
+    queryId: string,
+    input: UpdateEventInfoInput,
+  ): Promise<EventQuery> {
+    const attachments = await this.handleAttachments(input.attachments);
+
+    const response = await this.queryDataService.updateEventInfo(
+      queryId,
+      this.updateEventRequestMapper(input, attachments),
+    );
+    return mapEventQuery(response);
+  }
+
   private createQueryRequestMapper = (
     input: CreateEventQueryInput,
     customerId: string,
@@ -78,6 +93,25 @@ export class QueriesService {
         degree_name: d.degreeName,
       })),
     },
+  });
+
+  private updateEventRequestMapper = (
+    input: UpdateEventInfoInput,
+    attachments: { filename: string; id: string; mimetype: string }[] = [],
+  ): UpdateEventRequest => ({
+    address: input.address,
+    attachments,
+    end_date: input.endDate
+      ? format(input.endDate, appConstants.dateFormat)
+      : undefined,
+    info: input.info,
+    message: input.message,
+    name: input.name,
+    password: input.password,
+    start_date: input.startDate
+      ? format(input.startDate, appConstants.dateFormat)
+      : undefined,
+    type: input.eventType,
   });
 
   private async handleAttachments(
