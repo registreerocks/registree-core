@@ -4,7 +4,7 @@ import { IsNotEmpty } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
 @InputType()
-export class UpdateEventDetailsInput {
+export class UpdateEventInfoInput {
   @Field()
   @IsNotEmpty()
   name?: string;

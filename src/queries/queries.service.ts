@@ -13,7 +13,7 @@ import { CreateQueryRequest } from 'src/query-data/dto/create-query.request';
 import { AttachmentDto } from 'src/query-data/dto/attachment.dto';
 import { mapEventQuery } from './mappers/map-event-query';
 import { orderBy } from 'lodash';
-import { UpdateEventDetailsInput } from './dto/update-event-details.input';
+import { UpdateEventInfoInput } from './dto/update-event-info.input';
 import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
 import { mapEventInfo } from './mappers/map-event-info';
 
@@ -59,7 +59,7 @@ export class QueriesService {
 
   async updateEventInfo(
     queryId: string,
-    input: UpdateEventDetailsInput,
+    input: UpdateEventInfoInput,
   ): Promise<EventInfo> {
     const attachments = await this.handleAttachments(input.attachments);
 
@@ -98,7 +98,7 @@ export class QueriesService {
   });
 
   private updateEventRequestMapper = (
-    input: UpdateEventDetailsInput,
+    input: UpdateEventInfoInput,
     attachments: { filename: string; id: string; mimetype: string }[] = [],
   ): UpdateEventRequest => ({
     address: input.address,

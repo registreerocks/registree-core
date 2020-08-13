@@ -12,7 +12,7 @@ import { UploadService } from 'src/upload/upload.service';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { QueriesService } from '../queries.service';
-import { UpdateEventDetailsInput } from '../dto/update-event-details.input';
+import { UpdateEventInfoInput } from '../dto/update-event-info.input';
 
 @Resolver(_of => EventDetails)
 export class EventDetailsResolver {
@@ -26,10 +26,10 @@ export class EventDetailsResolver {
   async updateEventInfo(
     @Args({
       name: 'updateEventDetailsInput',
-      type: () => UpdateEventDetailsInput,
+      type: () => UpdateEventInfoInput,
     })
     queryId: string,
-    input: UpdateEventDetailsInput,
+    input: UpdateEventInfoInput,
   ): Promise<EventInfo> {
     return this.queriesService.updateEventInfo(queryId, input);
   }
