@@ -108,7 +108,7 @@ export class QueryDataService {
     const accessToken = await this.authService.getAccessToken();
     try {
       const result = await this.axiosInstance.post<EventResponse>(
-        `/query/update/${queryId}`,
+        `/event/update_info/${queryId}`,
         {
           request,
           headers: {
