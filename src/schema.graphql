@@ -219,18 +219,18 @@ input DegreeInput {
 scalar Upload
 
 type Mutation {
-  updateEventInfo(updateEventDetailsInput: UpdateEventInfoInput!): EventInfo!
+  updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventInfo!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
 }
 
 input UpdateEventInfoInput {
-  name: String!
-  address: String!
-  startDate: DateTime!
-  endDate: DateTime!
-  info: String!
-  message: String!
-  eventType: String!
+  name: String
+  address: String
+  startDate: DateTime
+  endDate: DateTime
+  info: String
+  message: String
+  eventType: String
   attachments: [Upload!]
-  password: String!
+  password: String
 }

@@ -4,6 +4,7 @@ import {
   ResolveField,
   Mutation,
   Args,
+  ID,
 } from '@nestjs/graphql';
 import { EventDetails } from '../models/event-details.model';
 import { EventInfo } from '../models/event-info.model';
@@ -25,10 +26,14 @@ export class EventDetailsResolver {
   @UseGuards(GqlAuthGuard)
   async updateEventInfo(
     @Args({
-      name: 'updateEventDetailsInput',
-      type: () => UpdateEventInfoInput,
+      name: 'queryId',
+      type: () => ID,
     })
     queryId: string,
+    @Args({
+      name: 'updateEventInfoInput',
+      type: () => UpdateEventInfoInput,
+    })
     input: UpdateEventInfoInput,
   ): Promise<EventInfo> {
     return this.queriesService.updateEventInfo(queryId, input);

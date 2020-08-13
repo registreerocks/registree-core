@@ -1,42 +1,35 @@
 import { InputType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { IsNotEmpty } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
 @InputType()
 export class UpdateEventInfoInput {
-  @Field()
-  @IsNotEmpty()
+  @Field({ nullable: true })
   name?: string;
 
-  @Field()
-  @IsNotEmpty()
+  @Field({ nullable: true })
   address?: string;
 
-  @Field(_type => GraphQLISODateTime)
+  @Field(_type => GraphQLISODateTime, { nullable: true })
   startDate?: Date;
 
-  @Field(_type => GraphQLISODateTime)
+  @Field(_type => GraphQLISODateTime, { nullable: true })
   endDate?: Date;
 
-  @Field()
-  @IsNotEmpty()
+  @Field({ nullable: true })
   info?: string;
 
-  @Field()
-  @IsNotEmpty()
+  @Field({ nullable: true })
   message?: string;
 
   // TODO: Enum or | type
-  @Field()
-  @IsNotEmpty()
+  @Field({ nullable: true })
   eventType?: string;
 
   @Exclude()
   @Field(_type => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[];
 
-  @Field()
-  @IsNotEmpty()
+  @Field({ nullable: true })
   password?: string;
 }
