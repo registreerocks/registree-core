@@ -3,6 +3,7 @@ import { QueryTranscriptConnection } from '../models/pagination/query-transcript
 import { QueryDetails } from '../models/query-details.model';
 import { connectionFromArray } from 'graphql-relay';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
+import _ from 'lodash';
 
 @Resolver(_of => QueryDetails)
 export class QueryDetailsResolver {
@@ -11,7 +12,10 @@ export class QueryDetailsResolver {
     @Args() args: PaginationArgs,
     @Parent() queryDetails: QueryDetails,
   ): QueryTranscriptConnection {
-    const paginatedResults = connectionFromArray(queryDetails.rawResults, args);
+    const paginatedResults = connectionFromArray(
+      _.orderBy(queryDetails.rawResults, x => x.degreeAverage, 'desc'),
+      args,
+    );
 
     return {
       ...paginatedResults,
