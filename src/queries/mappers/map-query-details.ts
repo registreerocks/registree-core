@@ -14,7 +14,7 @@ export const mapQueryDetails = ({
       id: d.degree_id,
     },
     amount:
-      d.absolute > 0 ? { amount: d.absolute } : { percentage: d.percentage },
+      d.absolute > 0 ? { absolute: d.absolute } : { percentage: d.percentage },
   })),
   results: _.chain(results).mapValues(mapQueryResult).values().value(),
   updatedAt: new Date(timestamp),

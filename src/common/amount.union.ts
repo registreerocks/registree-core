@@ -6,7 +6,7 @@ export const AmountUnion = createUnionType({
   name: 'Amount',
   types: () => [Absolute, Percentage],
   resolveType(value) {
-    if ((value as Absolute).amount) {
+    if ((value as Absolute).absolute) {
       return Absolute;
     }
     if ((value as Percentage).percentage) {
