@@ -20,7 +20,7 @@ export class Customer extends Document {
   @Field()
   name!: string;
 
-  @Prop()
+  @Prop(BillingDetails)
   @Field(_type => BillingDetails)
   billingDetails!: BillingDetails;
 

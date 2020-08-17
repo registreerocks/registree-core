@@ -6,4 +6,6 @@ export class ContactInput {
   email!: string;
   @Field()
   name!: string;
+  @Field()
+  userId!: string;
 }

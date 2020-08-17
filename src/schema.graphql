@@ -235,6 +235,7 @@ input CreateCustomerInput {
 input ContactInput {
   email: String!
   name: String!
+  userId: String!
 }
 
 input UpdateEventInfoInput {

@@ -3,7 +3,6 @@ import { Customer } from './models/customer.model';
 import { CustomersService } from './customers.service';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { UseGuards, NotFoundException } from '@nestjs/common';
-import { BearerToken } from 'src/auth/bearer-token.decorator';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/common/interfaces/user.interface';
 import { CreateCustomerInput } from './dto/create-customer.input';
@@ -14,11 +13,8 @@ export class CustomersResolver {
 
   @Query(_returns => Customer, { name: 'customer' })
   @UseGuards(GqlAuthGuard)
-  async getCurrentCustomer(
-    @CurrentUser() user: User,
-    @BearerToken() token: string,
-  ): Promise<Customer> {
-    const result = await this.customersService.findOneById(user.dbId, token);
+  async getCurrentCustomer(@CurrentUser() user: User): Promise<Customer> {
+    const result = await this.customersService.findOneByUserId(user.dbId);
     if (result) {
       return result;
     } else {
