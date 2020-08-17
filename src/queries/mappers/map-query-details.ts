@@ -16,6 +16,6 @@ export const mapQueryDetails = ({
     amount:
       d.absolute > 0 ? { absolute: d.absolute } : { percentage: d.percentage },
   })),
-  results: _.chain(results).mapValues(mapQueryResult).values().value(),
+  rawResults: _.chain(results).mapValues(mapQueryResult).values().value(),
   updatedAt: new Date(timestamp),
 });

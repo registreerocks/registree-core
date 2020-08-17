@@ -8,9 +8,15 @@ import { EventDetailsResolver } from './resolvers/event-details.resolver';
 import { EventQueriesResolver } from './resolvers/event-queries.resolver';
 import { PricingModule } from 'src/pricing/pricing.module';
 import { PricingAsyncOptions } from 'src/pricing/pricing.options';
+import { QueryDetailsResolver } from './resolvers/query-details.resolver';
 
 @Module({
-  providers: [EventQueriesResolver, EventDetailsResolver, QueriesService],
+  providers: [
+    EventQueriesResolver,
+    EventDetailsResolver,
+    QueriesService,
+    QueryDetailsResolver,
+  ],
 })
 export class QueriesModule {
   static forRootAsync(
