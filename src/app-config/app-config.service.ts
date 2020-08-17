@@ -16,6 +16,10 @@ import {
   PricingOptions,
 } from 'src/pricing/pricing.options';
 import { StudentDataOptions } from 'src/student-data/student-data.options';
+import {
+  MongooseOptionsFactory,
+  MongooseModuleOptions,
+} from '@nestjs/mongoose';
 
 @Injectable()
 export class AppConfigService
@@ -23,7 +27,8 @@ export class AppConfigService
     AuthOptionsFactory,
     QueryDataOptionsFactory,
     UploadOptionsFactory,
-    PricingOptionsFactory {
+    PricingOptionsFactory,
+    MongooseOptionsFactory {
   constructor(
     @Inject(AuthConfig.KEY)
     private readonly authConfig: ConfigType<typeof AuthConfig>,
@@ -72,5 +77,9 @@ export class AppConfigService
 
   createPricingOptions(): PricingOptions {
     return this.pricingConfig;
+  }
+
+  createMongooseOptions(): MongooseModuleOptions {
+    return { uri: this.appConfig.mongoUri };
   }
 }
