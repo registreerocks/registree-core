@@ -11,11 +11,12 @@ import { PricingService } from 'src/pricing/pricing.service';
 import { CreateQueryRequest } from 'src/query-data/dto/create-query.request';
 import { AttachmentDto } from 'src/query-data/dto/attachment.dto';
 import { mapEventQuery } from './mappers/map-event-query';
-import { orderBy } from 'lodash';
+import { orderBy, intersection, isEqual } from 'lodash';
 import { UpdateEventInfoInput } from './dto/update-event-info.input';
 import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
 import { ExpandEventQueryInput } from './dto/expand-event-query.input';
 import { ExpandQueryRequest } from 'src/query-data/dto/expand-query.request';
+import { DegreeSelection } from './models/degree-selection.model';
 
 @Injectable()
 export class QueriesService {
@@ -86,8 +87,8 @@ export class QueriesService {
     queryId: string,
     input: ExpandEventQueryInput,
   ): Promise<void> {
-    const oldDegrees = await this.retrieveQueryParameters(queryId);
-    this.checkExpand(input, oldDegrees);
+    const prevQueryParameters = await this.retrieveQueryParameters(queryId);
+    this.checkExpand(input, prevQueryParameters);
   }
 
   private expandEventRequestMapper = (
@@ -149,42 +150,56 @@ export class QueriesService {
 
   private checkExpand(
     input: ExpandEventQueryInput,
-    oldDegrees: Record<string, unknown>,
+    prevQueryParameters: DegreeSelection[],
   ) {
+    const oldSelection = prevQueryParameters.reduce(
+      (obj, item) => ((obj[item.degree.id] = item.amount), obj),
+      {},
+    );
+    const newSelection = {};
     input.degrees.forEach(degree => {
-      if (!Object.keys(oldDegrees).includes(degree.degreeId)) return;
-      else {
-        const amountType =
-          degree.absolute && degree.absolute > 0 ? 'absolute' : 'percentage';
-        const amount =
-          degree.absolute && degree.absolute > 0
-            ? degree.absolute
-            : degree.percentage
-            ? degree.percentage
-            : 0;
-        if (
-          oldDegrees[degree.degreeId][amountType] &&
-          oldDegrees[degree.degreeId][amountType] > 0
-        ) {
-          if (oldDegrees[degree.degreeId][amountType] <= amount) return;
-          else {
-            throw new Error('Amount is smaller than in previous query.');
-          }
-        } else {
-          throw new Error('Amount type changed.');
-        }
-      }
+      if (degree.absolute)
+        newSelection[degree.degreeId] = { absolute: degree.absolute };
+      else newSelection[degree.degreeId] = { percentage: degree.percentage };
     });
+
+    if (
+      Object.keys(oldSelection).length ===
+      intersection(Object.keys(oldSelection), Object.keys(newSelection)).length
+    ) {
+      Object.keys(newSelection).forEach(degreeId => {
+        if (!Object.keys(oldSelection).includes(degreeId)) return;
+        else {
+          if (
+            isEqual(
+              Object.keys(oldSelection[degreeId]),
+              Object.keys(newSelection[degreeId]),
+            )
+          ) {
+            if (
+              Object.values(oldSelection[degreeId]) <=
+              Object.values(newSelection[degreeId])
+            )
+              return;
+            else {
+              throw new Error('Amount is smaller than in previous query.');
+            }
+          } else {
+            throw new Error('Amount type changed.');
+          }
+        }
+      });
+    } else {
+      throw new Error(
+        'Input does not contain all previously selected degrees.',
+      );
+    }
   }
 
   private async retrieveQueryParameters(queryId: string) {
     const oldQueryResponse = await this.queryDataService.getQuery(queryId);
     const oldDegrees = mapEventQuery(oldQueryResponse);
-    const oldDegreeList = oldDegrees.queryDetails.parameters.reduce(
-      (obj, item) => ((obj[item.degree.id] = item.amount), obj),
-      {},
-    );
-    return oldDegreeList;
+    return oldDegrees.queryDetails.parameters;
   }
 
   private async handleAttachments(
