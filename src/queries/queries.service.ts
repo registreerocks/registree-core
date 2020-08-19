@@ -17,6 +17,7 @@ import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
 import { ExpandEventQueryInput } from './dto/expand-event-query.input';
 import { ExpandQueryRequest } from 'src/query-data/dto/expand-query.request';
 import { DegreeSelection } from './models/degree-selection.model';
+import { ObjectLiteral } from 'src/common/interfaces/object-literal.interface';
 
 @Injectable()
 export class QueriesService {
@@ -75,20 +76,13 @@ export class QueriesService {
     queryId: string,
     input: ExpandEventQueryInput,
   ): Promise<EventQuery> {
-    await this.checkQueryParameters(queryId, input);
+    const prevQueryParameters = await this.retrieveQueryParameters(queryId);
+    this.checkInputQueryParameters(input, prevQueryParameters);
     const response = await this.queryDataService.expandQuery(
       queryId,
       this.expandEventRequestMapper(input),
     );
     return mapEventQuery(response);
-  }
-
-  private async checkQueryParameters(
-    queryId: string,
-    input: ExpandEventQueryInput,
-  ): Promise<void> {
-    const prevQueryParameters = await this.retrieveQueryParameters(queryId);
-    this.checkExpand(input, prevQueryParameters);
   }
 
   private expandEventRequestMapper = (
@@ -148,7 +142,7 @@ export class QueriesService {
     type: input.eventType,
   });
 
-  private checkExpand(
+  private checkInputQueryParameters(
     input: ExpandEventQueryInput,
     prevQueryParameters: DegreeSelection[],
   ) {
@@ -162,34 +156,46 @@ export class QueriesService {
         newSelection[degree.degreeId] = { absolute: degree.absolute };
       else newSelection[degree.degreeId] = { percentage: degree.percentage };
     });
+    this.checkIntersection(oldSelection, newSelection);
+    this.checkAmountTypeAndValue(newSelection, oldSelection);
+  }
 
+  private checkAmountTypeAndValue(
+    newSelection: ObjectLiteral,
+    oldSelection: ObjectLiteral,
+  ) {
+    Object.keys(newSelection).forEach(degreeId => {
+      if (!Object.keys(oldSelection).includes(degreeId)) return;
+      else {
+        if (
+          isEqual(
+            Object.keys(oldSelection[degreeId]),
+            Object.keys(newSelection[degreeId]),
+          )
+        ) {
+          if (
+            Object.values(oldSelection[degreeId]) <=
+            Object.values(newSelection[degreeId])
+          )
+            return;
+          else {
+            throw new Error('Amount is smaller than in previous query.');
+          }
+        } else {
+          throw new Error('Amount type changed.');
+        }
+      }
+    });
+  }
+
+  private checkIntersection(
+    newSelection: ObjectLiteral,
+    oldSelection: ObjectLiteral,
+  ) {
     if (
-      Object.keys(oldSelection).length ===
+      Object.keys(oldSelection).length !==
       intersection(Object.keys(oldSelection), Object.keys(newSelection)).length
     ) {
-      Object.keys(newSelection).forEach(degreeId => {
-        if (!Object.keys(oldSelection).includes(degreeId)) return;
-        else {
-          if (
-            isEqual(
-              Object.keys(oldSelection[degreeId]),
-              Object.keys(newSelection[degreeId]),
-            )
-          ) {
-            if (
-              Object.values(oldSelection[degreeId]) <=
-              Object.values(newSelection[degreeId])
-            )
-              return;
-            else {
-              throw new Error('Amount is smaller than in previous query.');
-            }
-          } else {
-            throw new Error('Amount type changed.');
-          }
-        }
-      });
-    } else {
       throw new Error(
         'Input does not contain all previously selected degrees.',
       );
