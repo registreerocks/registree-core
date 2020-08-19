@@ -1,6 +1,4 @@
 import { InputType, Field, GraphQLISODateTime } from '@nestjs/graphql';
-import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { Exclude } from 'class-transformer';
 
 @InputType()
 export class UpdateEventInfoInput {
@@ -25,10 +23,6 @@ export class UpdateEventInfoInput {
   // TODO: Enum or | type
   @Field({ nullable: true })
   eventType?: string;
-
-  @Exclude()
-  @Field(_type => [GraphQLUpload], { nullable: true })
-  attachments?: Promise<FileUpload>[];
 
   @Field({ nullable: true })
   password?: string;
