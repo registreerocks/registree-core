@@ -127,4 +127,60 @@ export class QueryDataService {
       throw err;
     }
   }
+
+  async addAttachments(
+    queryId: string,
+    attachments: { filename: string; id: string; mimetype: string }[],
+  ): Promise<EventQueryResponse> {
+    const accessToken = await this.authService.getAccessToken();
+    try {
+      const result = await this.axiosInstance.put<EventQueryResponse>(
+        `/event/add_attachments/${queryId}`,
+        attachments,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return result.data;
+    } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      this.logger.error(
+        { err },
+        'Failed to add attachments for id: %s',
+        queryId,
+      );
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      throw err;
+    }
+  }
+
+  async deleteAttachments(
+    queryId: string,
+    attachments: string[],
+  ): Promise<EventQueryResponse> {
+    const accessToken = await this.authService.getAccessToken();
+    try {
+      const result = await this.axiosInstance.put<EventQueryResponse>(
+        `/event/delete_attachments/${queryId}`,
+        attachments,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return result.data;
+    } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      this.logger.error(
+        { err },
+        'Failed to delete attachments for id: %s',
+        queryId,
+      );
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      throw err;
+    }
+  }
 }

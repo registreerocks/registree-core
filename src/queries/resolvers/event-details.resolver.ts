@@ -14,6 +14,7 @@ import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { QueriesService } from '../queries.service';
 import { UpdateEventInfoInput } from '../dto/update-event-info.input';
 import { EventQuery } from '../models/event-query.model';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @Resolver(_of => EventDetails)
 export class EventDetailsResolver {
@@ -37,6 +38,40 @@ export class EventDetailsResolver {
     input: UpdateEventInfoInput,
   ): Promise<EventQuery> {
     return this.queriesService.updateEventInfo(queryId, input);
+  }
+
+  @Mutation(_returns => EventQuery)
+  @UseGuards(GqlAuthGuard)
+  async addAttachments(
+    @Args({
+      name: 'queryId',
+      type: () => ID,
+    })
+    queryId: string,
+    @Args({
+      name: 'attachments',
+      type: () => [GraphQLUpload],
+    })
+    input: Promise<FileUpload>[],
+  ): Promise<EventQuery> {
+    return this.queriesService.addAttachments(queryId, input);
+  }
+
+  @Mutation(_returns => EventQuery)
+  @UseGuards(GqlAuthGuard)
+  async deleteAttachments(
+    @Args({
+      name: 'queryId',
+      type: () => ID,
+    })
+    queryId: string,
+    @Args({
+      name: 'attachmentIds',
+      type: () => [ID],
+    })
+    input: string[],
+  ): Promise<EventQuery> {
+    return this.queriesService.deleteAttachments(queryId, input);
   }
 
   @ResolveField('attachments', _returns => [UploadedFile])

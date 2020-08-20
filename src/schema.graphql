@@ -222,6 +222,8 @@ scalar Upload
 
 type Mutation {
   updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
+  addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
+  deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
 }
 
@@ -233,6 +235,5 @@ input UpdateEventInfoInput {
   info: String
   message: String
   eventType: String
-  attachments: [Upload!]
   password: String
 }

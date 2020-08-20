@@ -59,11 +59,32 @@ export class QueriesService {
     queryId: string,
     input: UpdateEventInfoInput,
   ): Promise<EventQuery> {
-    const attachments = await this.handleAttachments(input.attachments);
-
     const response = await this.queryDataService.updateEventInfo(
       queryId,
-      this.updateEventRequestMapper(input, attachments),
+      this.updateEventRequestMapper(input),
+    );
+    return mapEventQuery(response);
+  }
+
+  async addAttachments(
+    queryId: string,
+    input: Promise<FileUpload>[],
+  ): Promise<EventQuery> {
+    const processedAttachments = await this.handleAttachments(input);
+    const response = await this.queryDataService.addAttachments(
+      queryId,
+      processedAttachments,
+    );
+    return mapEventQuery(response);
+  }
+
+  async deleteAttachments(
+    queryId: string,
+    input: string[],
+  ): Promise<EventQuery> {
+    const response = await this.queryDataService.deleteAttachments(
+      queryId,
+      input,
     );
     return mapEventQuery(response);
   }
@@ -97,10 +118,8 @@ export class QueriesService {
 
   private updateEventRequestMapper = (
     input: UpdateEventInfoInput,
-    attachments: { filename: string; id: string; mimetype: string }[] = [],
   ): UpdateEventRequest => ({
     address: input.address,
-    attachments,
     end_date: input.endDate
       ? format(input.endDate, appConstants.dateFormat)
       : undefined,
