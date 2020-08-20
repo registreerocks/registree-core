@@ -17,7 +17,6 @@ import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
 import { ExpandEventQueryInput } from './dto/expand-event-query.input';
 import { ExpandQueryRequest } from 'src/query-data/dto/expand-query.request';
 import { DegreeSelection } from './models/degree-selection.model';
-import { assert } from 'console';
 import _ from 'lodash';
 import { Percentage } from 'src/common/percentage.model';
 import { Absolute } from 'src/common/absolute.model';
@@ -147,36 +146,39 @@ export class QueriesService {
 
   private checkInputQueryParameters(
     input: ExpandEventQueryInput,
-    prevQueryParameters: DegreeSelection[],
+    prevQueryParams: DegreeSelection[],
   ) {
-    const mappedNewSelection = _.chain(input.degrees)
+    const mappedNewQueryParams = _.chain(input.degrees)
       .map(
-        (d): Omit<MergedSelection, 'oldValue'> => ({
+        (d): Omit<MergedSelection, 'prevParams'> => ({
           id: d.degreeId,
-          newValue: d.absolute
+          newParams: d.absolute
             ? { absolute: d.absolute, amountType: 'Absolute' }
             : { percentage: d.percentage || 0, amountType: 'Percentage' },
         }),
       )
       .keyBy(d => d.id)
       .value();
-    const mergedSelection = _.chain(prevQueryParameters)
+    const mergedQueryParameters = _.chain(prevQueryParams)
       .map(d => ({
         id: d.degree.id,
-        oldValue: d.amount,
+        prevParams: d.amount,
       }))
       .keyBy(d => d.id)
-      .merge(mappedNewSelection)
+      .merge(mappedNewQueryParams)
       .value();
-    const allDegreesIncluded = _.every(mergedSelection, s => !!s.newValue);
-    assert(
-      allDegreesIncluded,
-      'Input does not contain all previously selected degrees.',
+    const prevDegreesIncludedInInput = _.every(
+      mergedQueryParameters,
+      s => !!s.newParams,
     );
-    const sameAmountTypes = _.every(mergedSelection, s =>
-      s.oldValue ? s.newValue.amountType === s.oldValue.amountType : true,
+    if (!prevDegreesIncludedInInput)
+      throw new Error(
+        'Input does not contain all previously selected degrees.',
+      );
+    const amountTypesMatch = _.every(mergedQueryParameters, s =>
+      s.prevParams ? s.newParams.amountType === s.prevParams.amountType : true,
     );
-    assert(sameAmountTypes, 'Amount type changed.');
+    if (!amountTypesMatch) throw new Error('Amount type changed.');
     const getValue = (amount: Percentage | Absolute) => {
       switch (amount.amountType) {
         case 'Percentage':
@@ -185,10 +187,11 @@ export class QueriesService {
           return amount.absolute;
       }
     };
-    const newValuesGte = _.every(mergedSelection, s =>
-      s.oldValue ? getValue(s.newValue) >= getValue(s.oldValue) : true,
+    const newAmountGtePrevAmount = _.every(mergedQueryParameters, s =>
+      s.prevParams ? getValue(s.newParams) >= getValue(s.prevParams) : true,
     );
-    assert(newValuesGte, 'Amount is smaller than previous selection');
+    if (!newAmountGtePrevAmount)
+      throw new Error('Amount is smaller than in previous selection');
   }
 
   private async retrieveQueryParameters(queryId: string) {
@@ -234,6 +237,6 @@ export class QueriesService {
 
 type MergedSelection = {
   id: string;
-  newValue: Percentage | Absolute;
-  oldValue: Percentage | Absolute;
+  newParams: Percentage | Absolute;
+  prevParams: Percentage | Absolute;
 };
