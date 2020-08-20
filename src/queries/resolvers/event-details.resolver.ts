@@ -67,7 +67,7 @@ export class EventDetailsResolver {
     queryId: string,
     @Args({
       name: 'attachmentIds',
-      type: () => [String],
+      type: () => [ID],
     })
     input: string[],
   ): Promise<EventQuery> {
