@@ -4,4 +4,5 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 export class Absolute {
   @Field(_type => Int)
   absolute!: number;
+  readonly amountType: 'Absolute' = 'Absolute';
 }

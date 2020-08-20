@@ -11,13 +11,16 @@ import { PricingService } from 'src/pricing/pricing.service';
 import { CreateQueryRequest } from 'src/query-data/dto/create-query.request';
 import { AttachmentDto } from 'src/query-data/dto/attachment.dto';
 import { mapEventQuery } from './mappers/map-event-query';
-import { orderBy, intersection, isEqual } from 'lodash';
+import { orderBy } from 'lodash';
 import { UpdateEventInfoInput } from './dto/update-event-info.input';
 import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
 import { ExpandEventQueryInput } from './dto/expand-event-query.input';
 import { ExpandQueryRequest } from 'src/query-data/dto/expand-query.request';
 import { DegreeSelection } from './models/degree-selection.model';
-import { ObjectLiteral } from 'src/common/interfaces/object-literal.interface';
+import { assert } from 'console';
+import _ from 'lodash';
+import { Percentage } from 'src/common/percentage.model';
+import { Absolute } from 'src/common/absolute.model';
 
 @Injectable()
 export class QueriesService {
@@ -146,60 +149,46 @@ export class QueriesService {
     input: ExpandEventQueryInput,
     prevQueryParameters: DegreeSelection[],
   ) {
-    const oldSelection = prevQueryParameters.reduce(
-      (obj, item) => ((obj[item.degree.id] = item.amount), obj),
-      {},
+    const mappedNewSelection = _.chain(input.degrees)
+      .map(
+        (d): Omit<MergedSelection, 'oldValue'> => ({
+          id: d.degreeId,
+          newValue: d.absolute
+            ? { absolute: d.absolute, amountType: 'Absolute' }
+            : { percentage: d.percentage || 0, amountType: 'Percentage' },
+        }),
+      )
+      .keyBy(d => d.id)
+      .value();
+    const mergedSelection = _.chain(prevQueryParameters)
+      .map(d => ({
+        id: d.degree.id,
+        oldValue: d.amount,
+      }))
+      .keyBy(d => d.id)
+      .merge(mappedNewSelection)
+      .value();
+    const allDegreesIncluded = _.every(mergedSelection, s => !!s.newValue);
+    assert(
+      allDegreesIncluded,
+      'Input does not contain all previously selected degrees.',
     );
-    const newSelection = {};
-    input.degrees.forEach(degree => {
-      if (degree.absolute)
-        newSelection[degree.degreeId] = { absolute: degree.absolute };
-      else newSelection[degree.degreeId] = { percentage: degree.percentage };
-    });
-    this.checkIntersection(oldSelection, newSelection);
-    this.checkAmountTypeAndValue(newSelection, oldSelection);
-  }
-
-  private checkAmountTypeAndValue(
-    newSelection: ObjectLiteral,
-    oldSelection: ObjectLiteral,
-  ) {
-    Object.keys(newSelection).forEach(degreeId => {
-      if (!Object.keys(oldSelection).includes(degreeId)) return;
-      else {
-        if (
-          isEqual(
-            Object.keys(oldSelection[degreeId]),
-            Object.keys(newSelection[degreeId]),
-          )
-        ) {
-          if (
-            Object.values(oldSelection[degreeId]) <=
-            Object.values(newSelection[degreeId])
-          )
-            return;
-          else {
-            throw new Error('Amount is smaller than in previous query.');
-          }
-        } else {
-          throw new Error('Amount type changed.');
-        }
+    const sameAmountTypes = _.every(mergedSelection, s =>
+      s.oldValue ? s.newValue.amountType === s.oldValue.amountType : true,
+    );
+    assert(sameAmountTypes, 'Amount type changed.');
+    const getValue = (amount: Percentage | Absolute) => {
+      switch (amount.amountType) {
+        case 'Percentage':
+          return amount.percentage;
+        case 'Absolute':
+          return amount.absolute;
       }
-    });
-  }
-
-  private checkIntersection(
-    newSelection: ObjectLiteral,
-    oldSelection: ObjectLiteral,
-  ) {
-    if (
-      Object.keys(oldSelection).length !==
-      intersection(Object.keys(oldSelection), Object.keys(newSelection)).length
-    ) {
-      throw new Error(
-        'Input does not contain all previously selected degrees.',
-      );
-    }
+    };
+    const newValuesGte = _.every(mergedSelection, s =>
+      s.oldValue ? getValue(s.newValue) >= getValue(s.oldValue) : true,
+    );
+    assert(newValuesGte, 'Amount is smaller than previous selection');
   }
 
   private async retrieveQueryParameters(queryId: string) {
@@ -242,3 +231,9 @@ export class QueriesService {
     );
   }
 }
+
+type MergedSelection = {
+  id: string;
+  newValue: Percentage | Absolute;
+  oldValue: Percentage | Absolute;
+};
