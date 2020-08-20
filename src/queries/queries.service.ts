@@ -68,9 +68,9 @@ export class QueriesService {
 
   async addAttachments(
     queryId: string,
-    attachments: Promise<FileUpload>[],
+    input: Promise<FileUpload>[],
   ): Promise<EventQuery> {
-    const processedAttachments = await this.handleAttachments(attachments);
+    const processedAttachments = await this.handleAttachments(input);
     const response = await this.queryDataService.addAttachments(
       queryId,
       processedAttachments,
@@ -80,11 +80,11 @@ export class QueriesService {
 
   async deleteAttachments(
     queryId: string,
-    attachments: string[],
+    input: string[],
   ): Promise<EventQuery> {
     const response = await this.queryDataService.deleteAttachments(
       queryId,
-      attachments,
+      input,
     );
     return mapEventQuery(response);
   }
