@@ -10,6 +10,7 @@ import {
 } from '@nestjs/graphql';
 import { EventQuery } from '../models/event-query.model';
 import { CreateEventQueryInput } from '../dto/create-event-query.input';
+import { ExpandEventQueryInput } from '../dto/expand-event-query.input';
 import { QueriesService } from '../queries.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { UseGuards, UnauthorizedException } from '@nestjs/common';
@@ -37,6 +38,17 @@ export class EventQueriesResolver {
     user: User,
   ): Promise<EventQuery> {
     return this.queriesService.createEventQuery(input, user.dbId);
+  }
+
+  @Mutation(_returns => EventQuery)
+  @UseGuards(GqlAuthGuard)
+  async expandQuery(
+    @Args({ name: 'queryId', type: () => ID })
+    queryId: string,
+    @Args({ name: 'expandEventQueryInput', type: () => ExpandEventQueryInput })
+    input: ExpandEventQueryInput,
+  ): Promise<EventQuery> {
+    return this.queriesService.expandEventQuery(queryId, input);
   }
 
   @Query(_returns => Quote)

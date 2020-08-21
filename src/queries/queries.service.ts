@@ -14,6 +14,13 @@ import { mapEventQuery } from './mappers/map-event-query';
 import { orderBy } from 'lodash';
 import { UpdateEventInfoInput } from './dto/update-event-info.input';
 import { UpdateEventRequest } from 'src/query-data/dto/update-event.request';
+import { ExpandEventQueryInput } from './dto/expand-event-query.input';
+import { ExpandQueryRequest } from 'src/query-data/dto/expand-query.request';
+import { DegreeSelection } from './models/degree-selection.model';
+import _ from 'lodash';
+import { Percentage } from 'src/common/percentage.model';
+import { Absolute } from 'src/common/absolute.model';
+import { getUnionValue } from 'src/common/amount.union';
 
 @Injectable()
 export class QueriesService {
@@ -89,6 +96,30 @@ export class QueriesService {
     return mapEventQuery(response);
   }
 
+  async expandEventQuery(
+    queryId: string,
+    input: ExpandEventQueryInput,
+  ): Promise<EventQuery> {
+    const prevQueryParameters = await this.retrieveQueryParameters(queryId);
+    this.checkInputQueryParameters(input, prevQueryParameters);
+    const response = await this.queryDataService.expandQuery(
+      queryId,
+      this.expandEventRequestMapper(input),
+    );
+    return mapEventQuery(response);
+  }
+
+  private expandEventRequestMapper = (
+    input: ExpandEventQueryInput,
+  ): ExpandQueryRequest => ({
+    details: input.degrees.map(d => ({
+      degree_id: d.degreeId,
+      absolute: d.absolute,
+      percentage: d.percentage,
+      degree_name: d.degreeName,
+    })),
+  });
+
   private createQueryRequestMapper = (
     input: CreateEventQueryInput,
     customerId: string,
@@ -133,6 +164,57 @@ export class QueriesService {
     type: input.eventType,
   });
 
+  private checkInputQueryParameters(
+    input: ExpandEventQueryInput,
+    prevQueryParams: DegreeSelection[],
+  ) {
+    const mappedNewQueryParams = _.chain(input.degrees)
+      .map(
+        (d): Omit<MergedSelection, 'prevParams'> => ({
+          id: d.degreeId,
+          newParams: d.absolute
+            ? { absolute: d.absolute, amountType: 'Absolute' }
+            : { percentage: d.percentage || 0, amountType: 'Percentage' },
+        }),
+      )
+      .keyBy(d => d.id)
+      .value();
+    const mergedQueryParameters = _.chain(prevQueryParams)
+      .map(d => ({
+        id: d.degree.id,
+        prevParams: d.amount,
+      }))
+      .keyBy(d => d.id)
+      .merge(mappedNewQueryParams)
+      .value();
+    const prevDegreesIncludedInInput = _.every(
+      mergedQueryParameters,
+      s => !!s.newParams,
+    );
+    if (!prevDegreesIncludedInInput)
+      throw new Error(
+        'Input does not contain all previously selected degrees.',
+      );
+    const amountTypesMatch = _.every(mergedQueryParameters, s =>
+      s.prevParams ? s.newParams.amountType === s.prevParams.amountType : true,
+    );
+    if (!amountTypesMatch) throw new Error('Amount type changed.');
+
+    const newAmountGtePrevAmount = _.every(mergedQueryParameters, s =>
+      s.prevParams
+        ? getUnionValue(s.newParams) >= getUnionValue(s.prevParams)
+        : true,
+    );
+    if (!newAmountGtePrevAmount)
+      throw new Error('Amount is smaller than in previous selection');
+  }
+
+  private async retrieveQueryParameters(queryId: string) {
+    const oldQueryResponse = await this.queryDataService.getQuery(queryId);
+    const oldDegrees = mapEventQuery(oldQueryResponse);
+    return oldDegrees.queryDetails.parameters;
+  }
+
   private async handleAttachments(
     files: Promise<FileUpload>[] = [],
   ): Promise<AttachmentDto[]> {
@@ -167,3 +249,9 @@ export class QueriesService {
     );
   }
 }
+
+type MergedSelection = {
+  id: string;
+  newParams: Percentage | Absolute;
+  prevParams: Percentage | Absolute;
+};

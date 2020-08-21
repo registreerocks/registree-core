@@ -89,7 +89,7 @@ type DegreeSelection {
 union Amount = Absolute | Percentage
 
 type Absolute {
-  amount: Int!
+  absolute: Int!
 }
 
 type Percentage {
@@ -225,6 +225,7 @@ type Mutation {
   addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+  expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
 }
 
 input UpdateEventInfoInput {
@@ -236,4 +237,8 @@ input UpdateEventInfoInput {
   message: String
   eventType: String
   password: String
+}
+
+input ExpandEventQueryInput {
+  degrees: [DegreeInput!]!
 }
