@@ -80,6 +80,9 @@ export class AppConfigService
   }
 
   createMongooseOptions(): MongooseModuleOptions {
-    return { uri: this.appConfig.mongoUri };
+    return {
+      uri: this.appConfig.mongoUri,
+      sslValidate: false,
+    };
   }
 }
