@@ -1,11 +1,11 @@
-import { Resolver, Query } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { Customer } from './models/customer.model';
 import { CustomersService } from './customers.service';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
-import { UseGuards } from '@nestjs/common';
-import { BearerToken } from 'src/auth/bearer-token.decorator';
+import { UseGuards, NotFoundException } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/common/interfaces/user.interface';
+import { CreateCustomerInput } from './dto/create-customer.input';
 
 @Resolver(_of => Customer)
 export class CustomersResolver {
@@ -13,15 +13,21 @@ export class CustomersResolver {
 
   @Query(_returns => Customer, { name: 'customer' })
   @UseGuards(GqlAuthGuard)
-  async getCurrentCustomer(
-    @CurrentUser() user: User,
-    @BearerToken() token: string,
-  ): Promise<Customer> {
-    return this.customersService.findOneById(user.dbId, token);
+  async getCurrentCustomer(@CurrentUser() user: User): Promise<Customer> {
+    const result = await this.customersService.findOneByUserId(user.dbId);
+    if (result) {
+      return result;
+    } else {
+      throw new NotFoundException();
+    }
   }
 
-  // @Mutation(_returns => Customer)
-  // async setCustomer(): Promise<Customer> {
-  //   return this.customersService.setCustomer(id);
-  // }
+  @Mutation(_returns => Customer)
+  async createCustomer(
+    @Args({ name: 'createCustomerInput', type: () => CreateCustomerInput })
+    input: CreateCustomerInput,
+  ): Promise<Customer> {
+    const result = await this.customersService.createCustomer(input);
+    return result;
+  }
 }

@@ -22,7 +22,7 @@ type Customer {
   description: String!
   name: String!
   billingDetails: BillingDetails!
-  contact: Contact!
+  contacts: [Contact!]!
 }
 
 type RsvpCost {
@@ -221,11 +221,24 @@ input DegreeInput {
 scalar Upload
 
 type Mutation {
+  createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
   addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
   expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+}
+
+input CreateCustomerInput {
+  description: String!
+  name: String!
+  contact: ContactInput!
+}
+
+input ContactInput {
+  email: String!
+  name: String!
+  userId: String!
 }
 
 input UpdateEventInfoInput {

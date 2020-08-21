@@ -13,6 +13,7 @@ import { AppConfigModule } from './app-config/app-config.module';
 import { AppConfigService } from './app-config/app-config.service';
 import { UniversitiesModule } from './universities/universities.module';
 import { appConstants } from './constants';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -34,6 +35,9 @@ import { appConstants } from './constants';
           },
         };
       },
+    }),
+    MongooseModule.forRootAsync({
+      useExisting: AppConfigService,
     }),
     GraphQLModule.forRoot({
       context: ({ req }: { req: IncomingMessage }) => ({

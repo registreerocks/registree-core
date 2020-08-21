@@ -7,4 +7,6 @@ export class Contact {
 
   @Field({ nullable: true })
   name?: string;
+
+  userId!: string;
 }
