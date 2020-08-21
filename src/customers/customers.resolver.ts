@@ -30,9 +30,4 @@ export class CustomersResolver {
     const result = await this.customersService.createCustomer(input);
     return result;
   }
-
-  // @Mutation(_returns => Customer)
-  // async setCustomer(): Promise<Customer> {
-  //   return this.customersService.setCustomer(id);
-  // }
 }
