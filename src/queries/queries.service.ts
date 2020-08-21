@@ -20,6 +20,7 @@ import { DegreeSelection } from './models/degree-selection.model';
 import _ from 'lodash';
 import { Percentage } from 'src/common/percentage.model';
 import { Absolute } from 'src/common/absolute.model';
+import { getUnionValue } from 'src/common/amount.union';
 
 @Injectable()
 export class QueriesService {
@@ -179,16 +180,11 @@ export class QueriesService {
       s.prevParams ? s.newParams.amountType === s.prevParams.amountType : true,
     );
     if (!amountTypesMatch) throw new Error('Amount type changed.');
-    const getValue = (amount: Percentage | Absolute) => {
-      switch (amount.amountType) {
-        case 'Percentage':
-          return amount.percentage;
-        case 'Absolute':
-          return amount.absolute;
-      }
-    };
+
     const newAmountGtePrevAmount = _.every(mergedQueryParameters, s =>
-      s.prevParams ? getValue(s.newParams) >= getValue(s.prevParams) : true,
+      s.prevParams
+        ? getUnionValue(s.newParams) >= getUnionValue(s.prevParams)
+        : true,
     );
     if (!newAmountGtePrevAmount)
       throw new Error('Amount is smaller than in previous selection');

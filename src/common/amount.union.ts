@@ -15,3 +15,12 @@ export const AmountUnion = createUnionType({
     return null;
   },
 });
+
+export const getUnionValue = (amount: Percentage | Absolute) => {
+  switch (amount.amountType) {
+    case 'Percentage':
+      return amount.percentage;
+    case 'Absolute':
+      return amount.absolute;
+  }
+};
