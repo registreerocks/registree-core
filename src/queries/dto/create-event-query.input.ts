@@ -25,8 +25,7 @@ export class CreateEventQueryInput {
   info!: string;
 
   @Field()
-  @IsNotEmpty()
-  message!: string;
+  message?: string;
 
   @Field(_type => [DegreeInput])
   @ValidateNested()
