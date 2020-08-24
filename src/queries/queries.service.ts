@@ -216,10 +216,10 @@ export class QueriesService {
   }
 
   private async handleAttachments(
-    files: Promise<FileUpload>[] = [],
+    files?: Promise<FileUpload>[],
   ): Promise<AttachmentDto[]> {
     return Promise.all(
-      files.map(async filePromise => {
+      (files || []).map(async filePromise => {
         const file = await filePromise;
         if (appConstants.acceptedMimetypes.includes(file.mimetype)) {
           try {
