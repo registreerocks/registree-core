@@ -10,12 +10,24 @@ export class CustomersService {
     @InjectModel(Customer.name) private customerModel: Model<Customer>,
   ) {}
 
+  async findOneByCustomerId(customerId: string): Promise<Customer | null> {
+    return await this.customerModel
+      .findOne({
+        _id: customerId,
+      })
+      .exec();
+  }
+
   async findOneByUserId(userId: string): Promise<Customer | null> {
     return await this.customerModel
       .findOne({
         'contacts.userId': userId,
       })
       .exec();
+  }
+
+  async findAll(): Promise<Customer[]> {
+    return await this.customerModel.find().exec();
   }
 
   async createCustomer(input: CreateCustomerInput): Promise<Customer> {

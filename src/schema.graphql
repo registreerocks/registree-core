@@ -25,6 +25,24 @@ type Customer {
   contacts: [Contact!]!
 }
 
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type CustomerEdge {
+  cursor: String!
+  node: Customer!
+}
+
+type CustomerConnection {
+  edges: [CustomerEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type RsvpCost {
   cost: Float!
   percent: Int!
@@ -94,13 +112,6 @@ type Absolute {
 
 type Percentage {
   percentage: Int!
-}
-
-type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
 }
 
 type Student {
@@ -191,6 +202,8 @@ type University {
 
 type Query {
   customer: Customer!
+  getCustomer(customerId: ID!): Customer!
+  getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
