@@ -3,13 +3,15 @@
 # ------------------------------------------------------
 
 type BillingDetails {
+  addressee: String
   city: String
   country: String
+  email: String
   line1: String
   line2: String
   province: String
-  zip: String
   vat: String
+  zip: String
 }
 
 type Contact {
