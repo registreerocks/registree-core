@@ -50,7 +50,9 @@ import { MongooseModule } from '@nestjs/mongoose';
       },
       introspection: true,
     }),
-    CustomersModule,
+    CustomersModule.forRootAsync({
+      useExisting: AppConfigService,
+    }),
     AuthModule.forRootAsync({
       useExisting: AppConfigService,
     }),
