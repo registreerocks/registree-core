@@ -17,12 +17,24 @@ export class CustomersService {
     private readonly auth0DataService: Auth0DataService,
   ) {}
 
+  async findOneByCustomerId(customerId: string): Promise<Customer | null> {
+    return await this.customerModel
+      .findOne({
+        _id: customerId,
+      })
+      .exec();
+  }
+
   async findOneByUserId(userId: string): Promise<Customer | null> {
     return await this.customerModel
       .findOne({
         'contacts.userId': userId,
       })
       .exec();
+  }
+  
+  async findAll(): Promise<Customer[]> {
+    return await this.customerModel.find().exec();
   }
 
   async createUser(input: CreateUserInput): Promise<Contact> {
