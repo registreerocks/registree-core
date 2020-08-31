@@ -6,6 +6,8 @@ import { UseGuards, NotFoundException } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/common/interfaces/user.interface';
 import { CreateCustomerInput } from './dto/create-customer.input';
+import { Contact } from './models/contact.model';
+import { CreateUserInput } from './dto/create-user.input';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import { connectionFromArray } from 'graphql-relay';
 import { CustomerConnection } from './models/pagination/customer-connection.model';
@@ -60,6 +62,15 @@ export class CustomersResolver {
     input: CreateCustomerInput,
   ): Promise<Customer> {
     const result = await this.customersService.createCustomer(input);
+    return result;
+  }
+
+  @Mutation(_returns => Contact)
+  async createUser(
+    @Args({ name: 'createUserInput', type: () => CreateUserInput })
+    input: CreateUserInput,
+  ): Promise<Contact> {
+    const result = await this.customersService.createUser(input);
     return result;
   }
 }

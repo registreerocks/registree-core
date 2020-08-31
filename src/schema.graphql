@@ -3,18 +3,21 @@
 # ------------------------------------------------------
 
 type BillingDetails {
+  addressee: String
   city: String
   country: String
+  email: String
   line1: String
   line2: String
   province: String
-  zip: String
   vat: String
+  zip: String
 }
 
 type Contact {
   email: String
   name: String
+  userId: ID!
 }
 
 type Customer {
@@ -235,6 +238,7 @@ scalar Upload
 
 type Mutation {
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
+  createUser(createUserInput: CreateUserInput!): Contact!
   updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
   addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
@@ -252,6 +256,11 @@ input ContactInput {
   email: String!
   name: String!
   userId: String!
+}
+
+input CreateUserInput {
+  email: String!
+  name: String!
 }
 
 input UpdateEventInfoInput {

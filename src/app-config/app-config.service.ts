@@ -20,6 +20,10 @@ import {
   MongooseOptionsFactory,
   MongooseModuleOptions,
 } from '@nestjs/mongoose';
+import {
+  Auth0DataOptionsFactory,
+  Auth0DataOptions,
+} from 'src/auth0-data/auth0-data.options';
 
 @Injectable()
 export class AppConfigService
@@ -28,7 +32,8 @@ export class AppConfigService
     QueryDataOptionsFactory,
     UploadOptionsFactory,
     PricingOptionsFactory,
-    MongooseOptionsFactory {
+    MongooseOptionsFactory,
+    Auth0DataOptionsFactory {
   constructor(
     @Inject(AuthConfig.KEY)
     private readonly authConfig: ConfigType<typeof AuthConfig>,
@@ -53,6 +58,13 @@ export class AppConfigService
   createQueryDataOptions(): QueryDataOptions {
     return {
       queryApi: this.apiConfig.queryApi,
+    };
+  }
+
+  createAuth0DataOptions(): Auth0DataOptions {
+    return {
+      managementApi: this.authConfig.managementApi,
+      connection: this.authConfig.connection,
     };
   }
 
