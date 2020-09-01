@@ -207,6 +207,7 @@ type Query {
   customer: Customer!
   getCustomer(customerId: ID!): Customer!
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
+  getUser(userId: ID!): Contact!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
@@ -239,6 +240,7 @@ scalar Upload
 type Mutation {
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   createUser(createUserInput: CreateUserInput!): Contact!
+  updateUser(updateUserInput: UpdateUserInput!, userId: ID!): Contact!
   updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
   addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
@@ -261,6 +263,12 @@ input ContactInput {
 input CreateUserInput {
   email: String!
   name: String!
+}
+
+input UpdateUserInput {
+  email: String
+  name: String
+  password: String
 }
 
 input UpdateEventInfoInput {
