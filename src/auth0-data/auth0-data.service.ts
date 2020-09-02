@@ -6,6 +6,9 @@ import { AUTH0_DATA_OPTIONS } from './auth0-data.constants';
 import { Auth0DataOptions } from './auth0-data.options';
 import { CreateUserRequest } from './dto/create-user.request';
 import { CreateUserResponse } from './dto/create-user.response';
+import { GetUserResponse } from './dto/get-user.response';
+import { UpdateUserRequest } from './dto/update-user.request';
+import { UpdateUserResponse } from './dto/update-user.response';
 
 @Injectable()
 export class Auth0DataService {
@@ -39,5 +42,49 @@ export class Auth0DataService {
     );
 
     return result.data;
+  }
+
+  async getUser(userId: string): Promise<GetUserResponse> {
+    const accessToken = await this.authService.getManagementToken();
+    try {
+      const result = await this.axiosInstance.get<GetUserResponse>(
+        `/users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return result.data;
+    } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      this.logger.error({ err }, 'Failed to get user with id: %s', userId);
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      throw err;
+    }
+  }
+
+  async updateUser(
+    userId: string,
+    request: UpdateUserRequest,
+  ): Promise<UpdateUserResponse> {
+    const accessToken = await this.authService.getManagementToken();
+    try {
+      const result = await this.axiosInstance.patch<UpdateUserResponse>(
+        `/users/${userId}`,
+        request,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return result.data;
+    } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      this.logger.error({ err }, 'Failed to get user with id: %s', userId);
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      throw err;
+    }
   }
 }
