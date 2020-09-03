@@ -47,6 +47,13 @@ type CustomerConnection {
   totalCount: Int!
 }
 
+type Student {
+  email: String!
+  name: String!
+  userId: ID!
+  studentNumber: ID!
+}
+
 type RsvpCost {
   cost: Float!
   percent: Int!
@@ -116,10 +123,6 @@ type Absolute {
 
 type Percentage {
   percentage: Int!
-}
-
-type Student {
-  name: String!
 }
 
 type StudentLink {
@@ -209,6 +212,7 @@ type Query {
   getCustomer(customerId: ID!): Customer!
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
   getUser: Contact!
+  getStudent: Student!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
