@@ -10,4 +10,7 @@ export class Contact {
 
   @Field(_type => ID)
   userId!: string;
+
+  @Field(_type => ID)
+  dbId?: string;
 }

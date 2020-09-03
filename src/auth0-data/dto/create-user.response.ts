@@ -17,6 +17,7 @@ export interface CreateUserResponse extends JsonObject {
 
 type Metadata = {
   roles: string[];
+  db_id: string;
 };
 
 type Identity = {

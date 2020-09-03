@@ -6,4 +6,10 @@ export interface UpdateUserResponse extends JsonObject {
   email_verified?: boolean;
   verify_email?: boolean;
   name?: string;
+  app_metadata: Metadata;
 }
+
+type Metadata = {
+  roles: string[];
+  db_id: string;
+};
