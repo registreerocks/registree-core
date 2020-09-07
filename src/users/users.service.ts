@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { Contact } from 'src/customers/models/contact.model';
+import { Contact } from './models/contact.model';
 import { Auth0DataService } from 'src/auth0-data/auth0-data.service';
 import { CreateUserRequest } from 'src/auth0-data/dto/create-user.request';
 import { CreateUserResponse } from 'src/auth0-data/dto/create-user.response';
@@ -53,6 +53,7 @@ export class UsersService {
       name: response.name,
       email: response.email,
       userId: response.user_id,
+      dbId: response.app_metadata.db_id,
     };
   }
 
@@ -61,6 +62,7 @@ export class UsersService {
       name: response.name,
       email: response.email,
       userId: response.user_id,
+      dbId: response.app_metadata.db_id,
     };
   }
 
@@ -82,6 +84,7 @@ export class UsersService {
       name: response.name,
       email: response.email,
       userId: response.user_id,
+      dbId: response.app_metadata.db_id,
     };
   }
 }

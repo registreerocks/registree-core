@@ -1,10 +1,12 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { Contact } from 'src/customers/models/contact.model';
+import { Contact } from './models/contact.model';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { User } from 'src/common/interfaces/user.interface';
 
 @Resolver(_of => Contact)
 export class UsersResolver {
@@ -21,22 +23,19 @@ export class UsersResolver {
 
   @Query(_returns => Contact)
   @UseGuards(GqlAuthGuard)
-  async getUser(
-    @Args({ name: 'userId', type: () => ID })
-    userId: string,
-  ): Promise<Contact> {
-    const result = await this.usersService.getUser(userId);
+  async getUser(@CurrentUser() user: User): Promise<Contact> {
+    const result = await this.usersService.getUser(user.userId);
     return result;
   }
 
   @Mutation(_returns => Contact)
+  @UseGuards(GqlAuthGuard)
   async updateUser(
-    @Args({ name: 'userId', type: () => ID })
-    userId: string,
+    @CurrentUser() user: User,
     @Args({ name: 'updateUserInput', type: () => UpdateUserInput })
     input: UpdateUserInput,
   ): Promise<Contact> {
-    const result = await this.usersService.updateUser(userId, input);
+    const result = await this.usersService.updateUser(user.userId, input);
     return result;
   }
 }

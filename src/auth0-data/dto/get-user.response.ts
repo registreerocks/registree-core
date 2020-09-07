@@ -24,6 +24,10 @@ export interface GetUserResponse extends JsonObject {
 
 type Metadata = {
   roles: string[];
+  db_id: string;
+  name?: string;
+  uniEmail?: string;
+  university?: string;
 };
 
 type Identity = {
