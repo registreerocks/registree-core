@@ -9,10 +9,10 @@ export class StudentsService {
 
   async getStudent(userId: string): Promise<Student> {
     const user = await this.auth0DataService.getUser(userId);
-    return this.getUserResponseMapper(user);
+    return this.getStudentResponseMapper(user);
   }
 
-  private getUserResponseMapper(response: GetUserResponse): Student {
+  private getStudentResponseMapper(response: GetUserResponse): Student {
     return {
       name: response.app_metadata.name,
       email: response.app_metadata.uniEmail,
