@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
+import { CreateContactInput } from './dto/create-contact.input';
+import { UpdateContactInput } from './dto/update-contact.input';
 import { Contact } from './models/contact.model';
 import { Auth0DataService } from 'src/auth0-data/auth0-data.service';
 import { CreateUserRequest } from 'src/auth0-data/dto/create-user.request';
@@ -11,30 +11,35 @@ import { UpdateUserResponse } from 'src/auth0-data/dto/update-user.response';
 import * as crypto from 'crypto';
 
 @Injectable()
-export class UsersService {
+export class ContactsService {
   constructor(private readonly auth0DataService: Auth0DataService) {}
 
-  async createUser(input: CreateUserInput): Promise<Contact> {
+  async createContact(input: CreateContactInput): Promise<Contact> {
     const user = await this.auth0DataService.createUser(
-      this.createUserRequestMapper(input),
+      this.createContactRequestMapper(input),
     );
-    return this.createUserResponseMapper(user);
+    return this.createContactResponseMapper(user);
   }
 
-  async getUser(userId: string): Promise<Contact> {
+  async getContact(userId: string): Promise<Contact> {
     const user = await this.auth0DataService.getUser(userId);
-    return this.getUserResponseMapper(user);
+    return this.getContactResponseMapper(user);
   }
 
-  async updateUser(userId: string, input: UpdateUserInput): Promise<Contact> {
+  async updateContact(
+    userId: string,
+    input: UpdateContactInput,
+  ): Promise<Contact> {
     const user = await this.auth0DataService.updateUser(
       userId,
-      this.updateUserRequestMapper(input),
+      this.updateContactRequestMapper(input),
     );
-    return this.updateUserResponseMapper(user);
+    return this.updateContactResponseMapper(user);
   }
 
-  private createUserRequestMapper(input: CreateUserInput): CreateUserRequest {
+  private createContactRequestMapper(
+    input: CreateContactInput,
+  ): CreateUserRequest {
     return {
       ...input,
       blocked: false,
@@ -48,7 +53,7 @@ export class UsersService {
     };
   }
 
-  private createUserResponseMapper(response: CreateUserResponse): Contact {
+  private createContactResponseMapper(response: CreateUserResponse): Contact {
     return {
       name: response.name,
       email: response.email,
@@ -57,7 +62,7 @@ export class UsersService {
     };
   }
 
-  private getUserResponseMapper(response: GetUserResponse): Contact {
+  private getContactResponseMapper(response: GetUserResponse): Contact {
     return {
       name: response.name,
       email: response.email,
@@ -66,7 +71,9 @@ export class UsersService {
     };
   }
 
-  private updateUserRequestMapper(input: UpdateUserInput): UpdateUserRequest {
+  private updateContactRequestMapper(
+    input: UpdateContactInput,
+  ): UpdateUserRequest {
     const request = {};
     Object.assign(
       request,
@@ -79,7 +86,7 @@ export class UsersService {
     return request;
   }
 
-  private updateUserResponseMapper(response: UpdateUserResponse): Contact {
+  private updateContactResponseMapper(response: UpdateUserResponse): Contact {
     return {
       name: response.name,
       email: response.email,

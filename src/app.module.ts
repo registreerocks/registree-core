@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { CustomersModule } from './customers/customers.module';
-import { UsersModule } from './users/users.module';
+import { ContactsModule } from './contacts/contacts.module';
 import { StudentsModule } from './students/students.module';
 import { AuthModule } from './auth/auth.module';
 import { QueriesModule } from './queries/queries.module';
@@ -55,7 +55,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     CustomersModule.forRootAsync({
       useExisting: AppConfigService,
     }),
-    UsersModule.forRootAsync({
+    ContactsModule.forRootAsync({
       useExisting: AppConfigService,
     }),
     StudentsModule.forRootAsync({
