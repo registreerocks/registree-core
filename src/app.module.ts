@@ -8,12 +8,17 @@ import { AuthModule } from './auth/auth.module';
 import { QueriesModule } from './queries/queries.module';
 import { LoggerModule } from 'nestjs-pino';
 import * as stdSerializers from 'pino-std-serializers';
-import { IncomingMessage } from 'http';
 import { AppConfigModule } from './app-config/app-config.module';
 import { AppConfigService } from './app-config/app-config.service';
 import { UniversitiesModule } from './universities/universities.module';
 import { appConstants } from './constants';
 import { MongooseModule } from '@nestjs/mongoose';
+import { applyMiddleware } from 'graphql-middleware';
+import { IncomingMessage } from 'http';
+import { wrapSchema } from '@graphql-tools/wrap';
+import { ReplaceFieldWithFragment } from '@graphql-tools/delegate';
+import { throwNestedErrorPlugin } from './get-nested-error';
+import { appPermissions } from './rules';
 
 @Module({
   imports: [
@@ -49,6 +54,22 @@ import { MongooseModule } from '@nestjs/mongoose';
         maxFiles: 5,
       },
       introspection: true,
+      plugins: [throwNestedErrorPlugin],
+      transformSchema: schema => {
+        const newSchema = applyMiddleware(schema, appPermissions);
+        if (newSchema.schema && newSchema.fragmentReplacements) {
+          const transforms = [
+            new ReplaceFieldWithFragment(
+              newSchema.schema,
+              newSchema.fragmentReplacements,
+            ),
+          ];
+          const finalSchema = wrapSchema(newSchema.schema, transforms);
+          return finalSchema;
+        } else {
+          return newSchema;
+        }
+      },
     }),
     CustomersModule.forRootAsync({
       useExisting: AppConfigService,

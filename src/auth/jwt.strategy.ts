@@ -27,13 +27,14 @@ export class JwtStrategy extends PassportStrategy(BaseStrategy) {
 
   validate(payload: JwtPayload): User {
     const dbId = payload['https://registree.com/db_id'];
-    if (!dbId) {
+    if (!dbId || !payload.scope) {
       throw new UnauthorizedException(
         'JWT does not have the required database id.',
       );
     }
     return {
       dbId,
+      scope: payload.scope,
     };
   }
 }
