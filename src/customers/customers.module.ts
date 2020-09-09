@@ -12,6 +12,7 @@ import { Auth0DataAsyncOptions } from 'src/auth0-data/auth0-data.options';
       { name: Customer.name, schema: CustomerSchema },
     ]),
   ],
+  exports: [CustomersService],
   providers: [CustomersResolver, CustomersService],
 })
 export class CustomersModule {
