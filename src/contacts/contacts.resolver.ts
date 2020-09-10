@@ -10,21 +10,21 @@ import { User } from 'src/common/interfaces/user.interface';
 
 @Resolver(_of => Contact)
 export class ContactsResolver {
-  constructor(private readonly usersService: ContactsService) {}
+  constructor(private readonly contactsService: ContactsService) {}
 
   @Mutation(_returns => Contact)
   async createContact(
     @Args({ name: 'createUserInput', type: () => CreateContactInput })
     input: CreateContactInput,
   ): Promise<Contact> {
-    const result = await this.usersService.createContact(input);
+    const result = await this.contactsService.createContact(input);
     return result;
   }
 
   @Query(_returns => Contact)
   @UseGuards(GqlAuthGuard)
   async getContact(@CurrentUser() user: User): Promise<Contact> {
-    const result = await this.usersService.getContact(user.userId);
+    const result = await this.contactsService.getContact(user.userId);
     return result;
   }
 
@@ -35,7 +35,7 @@ export class ContactsResolver {
     @Args({ name: 'updateUserInput', type: () => UpdateContactInput })
     input: UpdateContactInput,
   ): Promise<Contact> {
-    const result = await this.usersService.updateContact(user.userId, input);
+    const result = await this.contactsService.updateContact(user.userId, input);
     return result;
   }
 }
