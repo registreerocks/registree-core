@@ -27,15 +27,15 @@ export class JwtStrategy extends PassportStrategy(BaseStrategy) {
 
   validate(payload: JwtPayload): User {
     const dbId = payload['https://registree.com/db_id'];
-    const userId = payload['sub'];
-    if (!dbId || !userId) {
+    if (!dbId || !payload.scope || !payload.sub) {
       throw new UnauthorizedException(
         'JWT does not have the required attributes.',
       );
     }
     return {
       dbId,
-      userId,
+      scope: payload.scope,
+      userId: payload.sub,
     };
   }
 }

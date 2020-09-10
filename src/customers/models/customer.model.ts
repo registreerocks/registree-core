@@ -1,6 +1,6 @@
 import { Field, ObjectType, ID } from '@nestjs/graphql';
 import { BillingDetails } from './billing-details.model';
-import { Contact } from '../../users/models/contact.model';
+import { Contact } from '../../contacts/models/contact.model';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
