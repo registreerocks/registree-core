@@ -1,7 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { ContactInput } from './contact.input';
-import { IsNotEmpty, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsNotEmpty } from 'class-validator';
 
 @InputType()
 export class CreateCustomerInput {
@@ -11,9 +9,4 @@ export class CreateCustomerInput {
   @IsNotEmpty()
   @Field()
   name!: string;
-
-  @Field()
-  @ValidateNested()
-  @Type(_of => ContactInput)
-  contact!: ContactInput;
 }
