@@ -1,16 +1,16 @@
 import { Module, DynamicModule } from '@nestjs/common';
-import { StudentsResolver } from './students.resolver';
-import { StudentsService } from './students.service';
+import { UsersResolver } from './users.resolver';
+import { UsersService } from './users.service';
 import { Auth0DataModule } from 'src/auth0-data/auth0-data.module';
 import { Auth0DataAsyncOptions } from 'src/auth0-data/auth0-data.options';
 
 @Module({
-  providers: [StudentsResolver, StudentsService],
+  providers: [UsersResolver, UsersService],
 })
-export class StudentsModule {
+export class UsersModule {
   static forRootAsync(options: Auth0DataAsyncOptions): DynamicModule {
     return {
-      module: StudentsModule,
+      module: UsersModule,
       imports: [Auth0DataModule.forRootAsync(options)],
     };
   }
