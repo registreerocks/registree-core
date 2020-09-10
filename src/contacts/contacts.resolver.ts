@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { ContactsService } from './contacts.service';
 import { Contact } from './models/contact.model';
 import { CreateContactInput } from './dto/create-contact.input';
@@ -14,10 +14,12 @@ export class ContactsResolver {
 
   @Mutation(_returns => Contact)
   async createContact(
-    @Args({ name: 'createUserInput', type: () => CreateContactInput })
+    @Args({ name: 'createContactInput', type: () => CreateContactInput })
     input: CreateContactInput,
+    @Args({ name: 'customerId', type: () => ID })
+    customerId: string,
   ): Promise<Contact> {
-    const result = await this.contactsService.createContact(input);
+    const result = await this.contactsService.createContact(input, customerId);
     return result;
   }
 

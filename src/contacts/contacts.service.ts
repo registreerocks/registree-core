@@ -9,16 +9,26 @@ import { GetUserResponse } from 'src/auth0-data/dto/get-user.response';
 import { UpdateUserRequest } from 'src/auth0-data/dto/update-user.request';
 import { UpdateUserResponse } from 'src/auth0-data/dto/update-user.response';
 import * as crypto from 'crypto';
+import { ID } from 'aws-sdk/clients/iotsitewise';
+import { CustomersService } from 'src/customers/customers.service';
 
 @Injectable()
 export class ContactsService {
-  constructor(private readonly auth0DataService: Auth0DataService) {}
+  constructor(
+    private readonly auth0DataService: Auth0DataService,
+    private readonly customersService: CustomersService,
+  ) {}
 
-  async createContact(input: CreateContactInput): Promise<Contact> {
+  async createContact(
+    input: CreateContactInput,
+    customerId: ID,
+  ): Promise<Contact> {
     const user = await this.auth0DataService.createUser(
       this.createContactRequestMapper(input),
     );
-    return this.createContactResponseMapper(user);
+    const contact = this.createContactResponseMapper(user);
+    await this.customersService.addContact(customerId, contact);
+    return contact;
   }
 
   async getContact(userId: string): Promise<Contact> {

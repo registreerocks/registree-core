@@ -244,7 +244,7 @@ scalar Upload
 
 type Mutation {
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
-  createContact(createUserInput: CreateContactInput!): Contact!
+  createContact(customerId: ID!, createContactInput: CreateContactInput!): Contact!
   updateContact(updateUserInput: UpdateContactInput!): Contact!
   updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
   addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
@@ -256,13 +256,6 @@ type Mutation {
 input CreateCustomerInput {
   description: String!
   name: String!
-  contact: ContactInput!
-}
-
-input ContactInput {
-  email: String!
-  name: String!
-  userId: String!
 }
 
 input CreateContactInput {
