@@ -11,18 +11,14 @@ export const gqlAuthMiddleware: IMiddlewareFunction<
   unknown
 > = async (resolve, root, args, context, info: GraphQLResolveInfo) => {
   const passportFn = createPassportContext(context.req, context.res);
-  try {
-    const user = await passportFn(
-      'jwt',
-      { session: false },
-      (err, user, info, ctx, status) =>
-        handleRequest(err, user, info, ctx, status),
-    );
-    context.req.user = user;
-    return resolve(root, args, context, info) as unknown;
-  } catch (err) {
-    throw err;
-  }
+  const user = await passportFn(
+    'jwt',
+    { session: false },
+    (err, user, info, ctx, status) =>
+      handleRequest(err, user, info, ctx, status),
+  );
+  context.req.user = user;
+  return resolve(root, args, context, info) as unknown;
 };
 
 const handleRequest = (
