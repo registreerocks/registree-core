@@ -9,8 +9,6 @@ import {
 import { EventDetails } from '../models/event-details.model';
 import { UploadedFile } from 'src/common/uploaded-file.model';
 import { UploadService } from 'src/upload/upload.service';
-import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { QueriesService } from '../queries.service';
 import { UpdateEventInfoInput } from '../dto/update-event-info.input';
 import { EventQuery } from '../models/event-query.model';
@@ -24,7 +22,6 @@ export class EventDetailsResolver {
   ) {}
 
   @Mutation(_returns => EventQuery)
-  @UseGuards(GqlAuthGuard)
   async updateEventInfo(
     @Args({
       name: 'queryId',
@@ -41,7 +38,6 @@ export class EventDetailsResolver {
   }
 
   @Mutation(_returns => EventQuery)
-  @UseGuards(GqlAuthGuard)
   async addAttachments(
     @Args({
       name: 'queryId',
@@ -58,7 +54,6 @@ export class EventDetailsResolver {
   }
 
   @Mutation(_returns => EventQuery)
-  @UseGuards(GqlAuthGuard)
   async deleteAttachments(
     @Args({
       name: 'queryId',

@@ -13,8 +13,7 @@ import { CreateEventQueryInput } from '../dto/create-event-query.input';
 import { ExpandEventQueryInput } from '../dto/expand-event-query.input';
 import { QueriesService } from '../queries.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
-import { UseGuards, UnauthorizedException } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
+import { UnauthorizedException } from '@nestjs/common';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import { EventQueryConnection } from '../models/pagination/event-query-connection.model';
 import { User } from 'src/common/interfaces/user.interface';
@@ -30,7 +29,6 @@ export class EventQueriesResolver {
   ) {}
 
   @Mutation(_returns => EventQuery)
-  @UseGuards(GqlAuthGuard)
   async createQuery(
     @Args({ name: 'createEventQueryInput', type: () => CreateEventQueryInput })
     input: CreateEventQueryInput,
@@ -41,7 +39,6 @@ export class EventQueriesResolver {
   }
 
   @Mutation(_returns => EventQuery)
-  @UseGuards(GqlAuthGuard)
   async expandQuery(
     @Args({ name: 'queryId', type: () => ID })
     queryId: string,
@@ -52,7 +49,6 @@ export class EventQueriesResolver {
   }
 
   @Query(_returns => Quote)
-  @UseGuards(GqlAuthGuard)
   async getQuote(
     @Args({ name: 'createEventQueryInput', type: () => CreateEventQueryInput })
     input: CreateEventQueryInput,
@@ -61,7 +57,6 @@ export class EventQueriesResolver {
   }
 
   @Query(_returns => EventQueryConnection)
-  @UseGuards(GqlAuthGuard)
   async getQueries(
     @Args() args: PaginationArgs,
     @Args({ name: 'customerId', type: () => ID }) customerId: string,
@@ -82,7 +77,6 @@ export class EventQueriesResolver {
   }
 
   @Query(_returns => EventQuery)
-  @UseGuards(GqlAuthGuard)
   async getQuery(
     @Args({ name: 'id', type: () => ID }) id: string,
     @CurrentUser() user: User,
