@@ -21,6 +21,7 @@ import { wrapSchema } from '@graphql-tools/wrap';
 import { ReplaceFieldWithFragment } from '@graphql-tools/delegate';
 import { throwNestedErrorPlugin } from './get-nested-error';
 import { appPermissions } from './rules';
+import { gqlAuthMiddleware } from './auth/gql-auth.middleware';
 
 @Module({
   imports: [
@@ -58,7 +59,11 @@ import { appPermissions } from './rules';
       introspection: true,
       plugins: [throwNestedErrorPlugin],
       transformSchema: schema => {
-        const newSchema = applyMiddleware(schema, appPermissions);
+        const newSchema = applyMiddleware(
+          schema,
+          { Query: gqlAuthMiddleware, Mutation: gqlAuthMiddleware },
+          appPermissions,
+        );
         if (newSchema.schema && newSchema.fragmentReplacements) {
           const transforms = [
             new ReplaceFieldWithFragment(
