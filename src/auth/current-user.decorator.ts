@@ -15,7 +15,7 @@ export const CurrentUser = createParamDecorator(
       return user;
     } else {
       throw new Error(
-        'User parameter requested when no user were identified on the request. Ensure that the correct guards were specified for the method',
+        'User parameter requested when no user were identified on the request. Ensure that the authentication middleware ran for the request.',
       );
     }
   },

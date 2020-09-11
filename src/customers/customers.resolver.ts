@@ -1,8 +1,7 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { Customer } from './models/customer.model';
 import { CustomersService } from './customers.service';
-import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
-import { UseGuards, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/common/interfaces/user.interface';
 import { CreateCustomerInput } from './dto/create-customer.input';
@@ -15,7 +14,6 @@ export class CustomersResolver {
   constructor(private readonly customersService: CustomersService) {}
 
   @Query(_returns => Customer, { name: 'customer' })
-  @UseGuards(GqlAuthGuard)
   async getCurrentCustomer(@CurrentUser() user: User): Promise<Customer> {
     const result = await this.customersService.findOneByUserId(user.dbId);
     if (result) {
@@ -26,7 +24,6 @@ export class CustomersResolver {
   }
 
   @Query(_returns => Customer)
-  @UseGuards(GqlAuthGuard)
   async getCustomer(
     @Args({ name: 'customerId', type: () => ID })
     customerId: string,
@@ -40,7 +37,6 @@ export class CustomersResolver {
   }
 
   @Query(_returns => CustomerConnection)
-  @UseGuards(GqlAuthGuard)
   async getCustomers(
     @Args() args: PaginationArgs,
   ): Promise<CustomerConnection> {
