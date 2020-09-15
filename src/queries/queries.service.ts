@@ -21,6 +21,8 @@ import _ from 'lodash';
 import { Percentage } from 'src/common/percentage.model';
 import { Absolute } from 'src/common/absolute.model';
 import { getUnionValue } from 'src/common/amount.union';
+import { IdentifyingDataService } from 'src/identifying-data/identifying-data.service';
+import { LinkingDataService } from 'src/linking-data/linking-data.service';
 
 @Injectable()
 export class QueriesService {
@@ -28,10 +30,27 @@ export class QueriesService {
     private readonly uploadService: UploadService,
     private readonly queryDataService: QueryDataService,
     private readonly pricingService: PricingService,
+    private readonly identifyingDataService: IdentifyingDataService,
+    private readonly linkingDataService: LinkingDataService,
   ) {}
 
   async getCustomerQueries(customerId: string): Promise<EventQuery[]> {
     const response = await this.queryDataService.getCustomerQueries(customerId);
+    const mappedResponse = response.map(mapEventQuery);
+    return orderBy(mappedResponse, [r => r.eventDetails.startDate], ['desc']);
+  }
+
+  async getStudentQueries(studentNumber: string): Promise<EventQuery[]> {
+    const identifyingData = await this.identifyingDataService.getIdentifyingData(
+      studentNumber,
+    );
+    const transcriptId = await this.linkingDataService.getTranscriptId(
+      identifyingData[0]['_id'],
+      'http://localhost:8001',
+    );
+    const response = await this.queryDataService.getStudentQueries(
+      transcriptId,
+    );
     const mappedResponse = response.map(mapEventQuery);
     return orderBy(mappedResponse, [r => r.eventDetails.startDate], ['desc']);
   }

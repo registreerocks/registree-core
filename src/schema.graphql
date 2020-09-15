@@ -54,28 +54,22 @@ type Student {
   studentNumber: ID!
 }
 
+type RsvpCost {
+  cost: Float!
+  percent: Int!
+}
+
+type Quote {
+  numberOfStudents: Int!
+  rsvpCostBreakdown: [RsvpCost!]!
+}
+
 type UploadedFile {
   id: ID!
   filename: String!
   mimetype: String!
   url: String!
 }
-
-type StudentEventDetails {
-  address: String!
-  startDate: DateTime!
-  endDate: DateTime!
-  attachments: [UploadedFile!]!
-  information: String!
-  name: String!
-  eventType: String!
-  password: String
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Invitation {
   accepted: Boolean!
@@ -86,27 +80,10 @@ type Invitation {
   email: String
 }
 
-type Host {
-  id: ID!
-  name: String!
-}
-
-type StudentEventQuery {
-  id: ID!
-  host: Host!
-  eventDetails: StudentEventDetails!
-  response: Invitation!
-}
-
-type RsvpCost {
-  cost: Float!
-  percent: Int!
-}
-
-type Quote {
-  numberOfStudents: Int!
-  rsvpCostBreakdown: [RsvpCost!]!
-}
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type EventMetrics {
   acceptedCount: Int!
@@ -181,7 +158,7 @@ type QueryDetails {
 
 type EventQuery {
   id: ID!
-  customerId: ID!
+  customer: Customer
   eventDetails: EventDetails!
   queryDetails: QueryDetails!
   quoteDetails: Quote!
@@ -236,9 +213,9 @@ type Query {
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
   getContact: Contact!
   getStudent: Student!
-  getStudentQueries: [StudentEventQuery!]!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getStudentQueries(after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
   getUniversities: [University!]!
 }

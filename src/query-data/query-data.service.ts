@@ -8,7 +8,6 @@ import { QueryDataOptions } from './query-data.options';
 import { QUERY_DATA_OPTIONS } from './query-data.constants';
 import { UpdateEventRequest } from './dto/update-event.request';
 import { ExpandQueryRequest } from './dto/expand-query.request';
-import { StudentEventQueryResponse } from './dto/student-event-query.response';
 
 @Injectable()
 export class QueryDataService {
@@ -121,13 +120,11 @@ export class QueryDataService {
     }
   }
 
-  async getStudentQueries(
-    transcriptId: string,
-  ): Promise<StudentEventQueryResponse[]> {
+  async getStudentQueries(transcriptId: string): Promise<EventQueryResponse[]> {
     const accessToken = await this.authService.getAccessToken();
     try {
-      const result = await this.axiosInstance.get<StudentEventQueryResponse[]>(
-        `/query/get_by_student?student_address=${transcriptId}`,
+      const result = await this.axiosInstance.get<EventQueryResponse[]>(
+        `/query/get_by_transcript_id?transcript_id=${transcriptId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
