@@ -9,6 +9,10 @@ import { DegreeSchema, Degree } from './models/degree.model';
 import { Faculty, FacultySchema } from './models/faculty.model';
 import { University, UniversitySchema } from './models/university.model';
 import { DegreesResolver } from './resolvers/degrees.resolver';
+import { FacultiesLoader } from './loaders/faculties.loader';
+import { UniversitiesLoader } from './loaders/universities.loader';
+import { DegreesLoader } from './loaders/degrees.loader';
+import { FacultyDegreesLoader } from './loaders/faculty-degrees.loader';
 
 @Module({
   imports: [
@@ -24,8 +28,12 @@ import { DegreesResolver } from './resolvers/degrees.resolver';
     UniversitiesResolver,
     FacultiesResolver,
     DegreesResolver,
+    FacultiesLoader,
+    UniversitiesLoader,
+    DegreesLoader,
+    FacultyDegreesLoader,
   ],
-  exports: [UniversitiesService],
+  exports: [UniversitiesService, FacultyDegreesLoader],
 })
 export class UniversitiesModule {
   static forRootAsync(options: StudentDataAsyncOptions): DynamicModule {

@@ -22,6 +22,8 @@ import { ReplaceFieldWithFragment } from '@graphql-tools/delegate';
 import { throwNestedErrorPlugin } from './get-nested-error';
 import { appPermissions } from './rules';
 import { gqlAuthMiddleware } from './auth/gql-auth.middleware';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader';
 
 @Module({
   imports: [
@@ -98,6 +100,9 @@ import { gqlAuthMiddleware } from './auth/gql-auth.middleware';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: APP_INTERCEPTOR, useClass: DataLoaderInterceptor },
+  ],
 })
 export class AppModule {}

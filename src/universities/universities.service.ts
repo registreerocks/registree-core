@@ -20,16 +20,43 @@ export class UniversitiesService {
     return res;
   }
 
+  async getUniversitiesById(keys: readonly string[]): Promise<University[]> {
+    return this.universityModel
+      .find()
+      .where('_id')
+      .in(keys.map(x => new Types.ObjectId(x)))
+      .exec();
+  }
+
+  async getFacultiesById(keys: readonly string[]): Promise<Faculty[]> {
+    return this.facultyModel
+      .find()
+      .where('_id')
+      .in(keys.map(x => new Types.ObjectId(x)))
+      .exec();
+  }
+
+  async getDegreesById(keys: readonly string[]): Promise<Degree[]> {
+    return this.degreeModel
+      .find()
+      .where('_id')
+      .in(keys.map(x => new Types.ObjectId(x)))
+      .exec();
+  }
+
   async getUniversityFaculties(universityId: string): Promise<Faculty[]> {
     return this.facultyModel
       .find({ university: new Types.ObjectId(universityId) })
       .exec();
   }
 
-  async getFacultyDegrees(facultyId: string): Promise<Degree[]> {
+  async getFacultyDegrees(
+    facultyId: string,
+  ): Promise<{ id: string; degrees: Degree[] }> {
     return this.degreeModel
       .find({ faculty: new Types.ObjectId(facultyId) })
-      .exec();
+      .exec()
+      .then(x => ({ id: facultyId, degrees: x }));
   }
 
   async getUniversity(universityId: string): Promise<University | null> {
