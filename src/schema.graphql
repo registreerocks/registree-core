@@ -105,14 +105,40 @@ type EventDetails {
   password: String!
 }
 
-type QueryDegree {
+type University {
   id: ID!
-  degreeName: String!
+  country: String!
+  name: String!
+  physicalAddress: String!
+  shortName: String!
+  faculties: [Faculty!]!
+}
+
+type GroupedDegrees {
+  name: String!
+  degrees: [Degree!]!
+}
+
+type Faculty {
+  id: ID!
+  name: String!
+  description: String!
+  university: University!
+  groupedDegrees: [GroupedDegrees!]!
+  degrees: [Degree!]!
+}
+
+type Degree {
+  id: ID!
+  name: String!
+  description: String!
+  faculty: Faculty!
+  level: String!
 }
 
 type DegreeSelection {
   amount: Amount!
-  degree: QueryDegree!
+  degree: Degree!
 }
 
 union Amount = Absolute | Percentage
@@ -130,12 +156,17 @@ type StudentLink {
   student: Student
 }
 
+type QueryDegree {
+  id: ID!
+  degreeName: String!
+}
+
 type QueryTranscript {
   id: ID!
   degreeAverage: Float!
   degreeCompleted: Boolean!
   latestTerm: Float!
-  degree: QueryDegree!
+  degree: Degree!
   studentLink: StudentLink!
 }
 
@@ -152,6 +183,7 @@ type QueryTranscriptConnection {
 
 type QueryDetails {
   parameters: [DegreeSelection!]!
+  faculties: [Faculty!]!
   results(after: String, before: String, first: Int, last: Int): QueryTranscriptConnection!
   updatedAt: DateTime!
 }
@@ -174,37 +206,6 @@ type EventQueryConnection {
   edges: [EventQueryEdge!]
   pageInfo: PageInfo!
   totalCount: Int!
-}
-
-type Degree {
-  id: ID!
-  name: String!
-  description: String!
-  faculty: Faculty!
-  level: String!
-}
-
-type GroupedDegrees {
-  name: String!
-  degrees: [Degree!]!
-}
-
-type Faculty {
-  id: ID!
-  name: String!
-  description: String!
-  university: University!
-  groupedDegrees: [GroupedDegrees!]!
-  degrees: [Degree!]!
-}
-
-type University {
-  id: ID!
-  country: String!
-  name: String!
-  physicalAddress: String!
-  shortName: String!
-  faculties: [Faculty!]!
 }
 
 type Query {

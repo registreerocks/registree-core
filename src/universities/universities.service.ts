@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { StudentDataService } from 'src/student-data/student-data.service';
 import { University } from './models/university.model';
 import { Faculty } from './models/faculty.model';
 import { Degree } from './models/degree.model';
@@ -9,7 +8,6 @@ import { Model, Types } from 'mongoose';
 @Injectable()
 export class UniversitiesService {
   constructor(
-    private readonly studentDataService: StudentDataService,
     @InjectModel(Degree.name) private degreeModel: Model<Degree>,
     @InjectModel(Faculty.name) private facultyModel: Model<Faculty>,
     @InjectModel(University.name) private universityModel: Model<University>,

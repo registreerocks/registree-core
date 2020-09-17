@@ -95,9 +95,7 @@ import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader';
     QueriesModule.forRootAsync({
       useExisting: AppConfigService,
     }),
-    UniversitiesModule.forRootAsync({
-      useExisting: AppConfigService,
-    }),
+    UniversitiesModule,
   ],
   controllers: [AppController],
   providers: [

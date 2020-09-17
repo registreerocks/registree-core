@@ -1,7 +1,5 @@
-import { Module, DynamicModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { UniversitiesService } from './universities.service';
-import { StudentDataAsyncOptions } from 'src/student-data/student-data.options';
-import { StudentDataModule } from 'src/student-data/student-data.module';
 import { UniversitiesResolver } from './resolvers/universities.resolver';
 import { FacultiesResolver } from './resolvers/faculties.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -33,13 +31,6 @@ import { FacultyDegreesLoader } from './loaders/faculty-degrees.loader';
     DegreesLoader,
     FacultyDegreesLoader,
   ],
-  exports: [UniversitiesService, FacultyDegreesLoader],
+  exports: [UniversitiesService, DegreesLoader, FacultiesLoader],
 })
-export class UniversitiesModule {
-  static forRootAsync(options: StudentDataAsyncOptions): DynamicModule {
-    return {
-      module: UniversitiesModule,
-      imports: [StudentDataModule.forRootAsync(options)],
-    };
-  }
-}
+export class UniversitiesModule {}

@@ -6,7 +6,7 @@ export const mapQueryResult = (
   transcriptId: string,
 ): QueryTranscript => ({
   id: transcriptId,
-  degree: { degreeName: result.degree_name, id: result.degree_id },
+  degreeId: result.degree_id,
   degreeAverage: parseFloat(result.avg),
   degreeCompleted: result.complete,
   latestTerm: result.term,

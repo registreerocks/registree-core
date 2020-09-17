@@ -9,10 +9,7 @@ export const mapQueryDetails = ({
   timestamp,
 }: QueryResponse): QueryDetails => ({
   parameters: details.map(d => ({
-    degree: {
-      degreeName: d.degree_name,
-      id: d.degree_id,
-    },
+    degreeId: d.degree_id,
     amount:
       d.absolute > 0
         ? { absolute: d.absolute, amountType: 'Absolute' }
