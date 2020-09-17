@@ -1,21 +1,21 @@
 import { Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
-import { University, BaseUniversity } from '../models/university.model';
+import { University } from '../models/university.model';
 import { UniversitiesService } from '../universities.service';
-import { Faculty, BaseFaculty } from '../models/faculty.model';
+import { Faculty } from '../models/faculty.model';
 
 @Resolver(_of => University)
 export class UniversitiesResolver {
   constructor(private readonly universitiesService: UniversitiesService) {}
 
   @Query(_returns => [University])
-  async getUniversities(): Promise<BaseUniversity[]> {
+  async getUniversities(): Promise<University[]> {
     return this.universitiesService.getUniversities();
   }
 
   @ResolveField('faculties', _returns => [Faculty])
-  getUniversityFaculties(
+  async getUniversityFaculties(
     @Parent() university: University,
-  ): Promise<BaseFaculty[]> {
+  ): Promise<Faculty[]> {
     return this.universitiesService.getUniversityFaculties(university.id);
   }
 }

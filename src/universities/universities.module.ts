@@ -4,9 +4,28 @@ import { StudentDataAsyncOptions } from 'src/student-data/student-data.options';
 import { StudentDataModule } from 'src/student-data/student-data.module';
 import { UniversitiesResolver } from './resolvers/universities.resolver';
 import { FacultiesResolver } from './resolvers/faculties.resolver';
+import { MongooseModule } from '@nestjs/mongoose';
+import { DegreeSchema, Degree } from './models/degree.model';
+import { Faculty, FacultySchema } from './models/faculty.model';
+import { University, UniversitySchema } from './models/university.model';
+import { DegreesResolver } from './resolvers/degrees.resolver';
 
 @Module({
-  providers: [UniversitiesService, UniversitiesResolver, FacultiesResolver],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Degree.name, schema: DegreeSchema },
+      { name: Faculty.name, schema: FacultySchema },
+      { name: University.name, schema: UniversitySchema },
+    ]),
+  ],
+
+  providers: [
+    UniversitiesService,
+    UniversitiesResolver,
+    FacultiesResolver,
+    DegreesResolver,
+  ],
+  exports: [UniversitiesService],
 })
 export class UniversitiesModule {
   static forRootAsync(options: StudentDataAsyncOptions): DynamicModule {

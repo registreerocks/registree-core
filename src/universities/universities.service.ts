@@ -1,36 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { StudentDataService } from 'src/student-data/student-data.service';
-import { mapUniversity } from './mappers/map-university';
-import { BaseUniversity } from './models/university.model';
-import { mapDegree } from './mappers/map-degree';
-import { mapFaculty } from './mappers/map-faculty';
-import { BaseFaculty } from './models/faculty.model';
-import { BaseDegree } from './models/degree.model';
+import { University } from './models/university.model';
+import { Faculty } from './models/faculty.model';
+import { Degree } from './models/degree.model';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class UniversitiesService {
-  constructor(private readonly studentDataService: StudentDataService) {}
+  constructor(
+    private readonly studentDataService: StudentDataService,
+    @InjectModel(Degree.name) private degreeModel: Model<Degree>,
+    @InjectModel(Faculty.name) private facultyModel: Model<Faculty>,
+    @InjectModel(University.name) private universityModel: Model<University>,
+  ) {}
 
-  async getUniversities(): Promise<BaseUniversity[]> {
-    const res = await this.studentDataService.getUniversities();
-    return res.map(mapUniversity);
+  async getUniversities(): Promise<University[]> {
+    const res = await this.universityModel.find().exec();
+    return res;
   }
 
-  async getUniversityFaculties(universityId: string): Promise<BaseFaculty[]> {
-    const res = await this.studentDataService.getUniversityFaculties(
-      universityId,
-    );
-    return res.map(mapFaculty);
+  async getUniversityFaculties(universityId: string): Promise<Faculty[]> {
+    return this.facultyModel
+      .find({ university: new Types.ObjectId(universityId) })
+      .exec();
   }
 
-  async getFacultyDegrees(facultyId: string): Promise<BaseDegree[]> {
-    const res = await this.studentDataService.getFacultyDegrees(facultyId);
-    return res.map(mapDegree);
+  async getFacultyDegrees(facultyId: string): Promise<Degree[]> {
+    return this.degreeModel
+      .find({ faculty: new Types.ObjectId(facultyId) })
+      .exec();
   }
 
-  async getUniversity(universityId: string): Promise<BaseUniversity | null> {
-    const res = await this.studentDataService.getUniversities();
-    const university = res.find(u => u._id === universityId);
-    return university ? mapUniversity(university) : null;
+  async getUniversity(universityId: string): Promise<University | null> {
+    return this.universityModel.findById(universityId).exec();
   }
 }
