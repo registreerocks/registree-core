@@ -14,7 +14,7 @@ export class FacultyDegreesLoader extends OrderedNestDataLoader<
 
   protected getOptions = () => ({
     query: (keys: readonly string[]) =>
-      Promise.all(keys.map(x => this.universitiesService.getFacultyDegrees(x))),
+      this.universitiesService.getFaculiesDegrees(keys),
     typeName: 'Degrees',
   });
 }

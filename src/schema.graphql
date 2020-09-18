@@ -156,11 +156,6 @@ type StudentLink {
   student: Student
 }
 
-type QueryDegree {
-  id: ID!
-  degreeName: String!
-}
-
 type QueryTranscript {
   id: ID!
   degreeAverage: Float!

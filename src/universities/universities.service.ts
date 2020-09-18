@@ -4,6 +4,7 @@ import { Faculty } from './models/faculty.model';
 import { Degree } from './models/degree.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import _ from 'lodash';
 
 @Injectable()
 export class UniversitiesService {
@@ -46,6 +47,22 @@ export class UniversitiesService {
     return this.facultyModel
       .find({ university: new Types.ObjectId(universityId) })
       .exec();
+  }
+
+  async getFaculiesDegrees(
+    keys: readonly string[],
+  ): Promise<{ id: string; degrees: Degree[] }[]> {
+    const res = await this.degreeModel
+      .find()
+      .where('faculty')
+      .in(keys.map(x => new Types.ObjectId(x)))
+      .exec();
+
+    return _.chain(res)
+      .groupBy(x => x.faculty as Types.ObjectId)
+      .toPairs()
+      .map(([key, value]) => ({ id: key, degrees: value }))
+      .value();
   }
 
   async getFacultyDegrees(
