@@ -9,13 +9,19 @@ import { EventQueriesResolver } from './resolvers/event-queries.resolver';
 import { PricingModule } from 'src/pricing/pricing.module';
 import { PricingAsyncOptions } from 'src/pricing/pricing.options';
 import { QueryDetailsResolver } from './resolvers/query-details.resolver';
+import { QueryTranscriptResolver } from './resolvers/query-transcript.resolver';
+import { UniversitiesModule } from 'src/universities/universities.module';
+import { DegreeSelectionResolver } from './resolvers/degree-selection.resolver';
 
 @Module({
+  imports: [UniversitiesModule],
   providers: [
     EventQueriesResolver,
     EventDetailsResolver,
     QueriesService,
     QueryDetailsResolver,
+    QueryTranscriptResolver,
+    DegreeSelectionResolver,
   ],
 })
 export class QueriesModule {

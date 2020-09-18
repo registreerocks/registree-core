@@ -4,9 +4,44 @@ import { QueryDetails } from '../models/query-details.model';
 import { connectionFromArray } from 'graphql-relay';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import _ from 'lodash';
+import { Faculty } from 'src/universities/models/faculty.model';
+import { FacultiesLoader } from 'src/universities/loaders/faculties.loader';
+import DataLoader from 'dataloader';
+import { Loader } from 'nestjs-graphql-dataloader';
+import { DegreesLoader } from 'src/universities/loaders/degrees.loader';
+import { Degree } from 'src/universities/models/degree.model';
 
 @Resolver(_of => QueryDetails)
 export class QueryDetailsResolver {
+  @ResolveField('faculties', _returns => [Faculty])
+  async getFaculties(
+    @Parent() queryDetails: QueryDetails,
+    @Loader(FacultiesLoader) facultiesLoader: DataLoader<string, Faculty>,
+    @Loader(DegreesLoader) degreesLoader: DataLoader<string, Degree>,
+  ): Promise<Faculty[]> {
+    const degrees = await degreesLoader.loadMany(
+      queryDetails.parameters.map(p => p.degreeId),
+    );
+    const mappedDegrees = degrees.map(x => {
+      if (x instanceof Error) {
+        throw x;
+      } else {
+        if (x.faculty instanceof Faculty) {
+          return x.faculty.id;
+        } else {
+          return x.faculty.toHexString();
+        }
+      }
+    });
+    const faculties = await facultiesLoader.loadMany(_.uniq(mappedDegrees));
+    const err = faculties.find(f => f instanceof Error);
+    if (err) {
+      throw err;
+    } else {
+      return faculties as Faculty[];
+    }
+  }
+
   @ResolveField('results', _returns => QueryTranscriptConnection)
   getResults(
     @Args() args: PaginationArgs,
