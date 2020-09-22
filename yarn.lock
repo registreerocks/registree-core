@@ -83,32 +83,31 @@
     core-js "^3.4.0"
     lodash.xorby "^4.7.0"
 
-"@apollo/federation@^0.19.1":
-  version "0.19.1"
-  resolved "https://registry.yarnpkg.com/@apollo/federation/-/federation-0.19.1.tgz#4d4f227a2da1efb42f6569114fb0aae7b03af505"
-  integrity sha512-32l2XoyDZfqwCObm2iazwa2vlsEYHzBLwsoCJccd6pdW8PAoK+IoKWJqNrMTwVYYNvRvd6YI+VtZPGo460GqDA==
+"@apollo/federation@^0.20.2":
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/@apollo/federation/-/federation-0.20.2.tgz#155dd10822c4cab2b6a7705ea8ecd29e5c310206"
+  integrity sha512-SrwUK0dZdlHLDkv/8K/Q5OK1AE/RypNkLmxhBndlOKAb2e5li6dZy6FJGNbErgHBAJQSx2Xp1gCF5CZONbFxpw==
   dependencies:
-    apollo-graphql "^0.5.0"
+    apollo-graphql "^0.6.0"
     apollo-server-env "^2.4.5"
     core-js "^3.4.0"
     lodash.xorby "^4.7.0"
 
-"@apollo/gateway@0.19.1":
-  version "0.19.1"
-  resolved "https://registry.yarnpkg.com/@apollo/gateway/-/gateway-0.19.1.tgz#299a3e750d31e4bb123ae8bc922a67129bfebfbc"
-  integrity sha512-3UlzR/xagO6waIwDkStXE9f/qs+DB8UvFnrmw4MT5Rne/6sh7+05ZiYM8ViAcLgmGUctXuMN1zpHtysjHy+ELg==
+"@apollo/gateway@0.20.2":
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/@apollo/gateway/-/gateway-0.20.2.tgz#03601bcd16e953e16a8af45d796acefe8cf25fcc"
+  integrity sha512-TGPUQDky7RbBeo79ZfLNu5SN66xVgm5ijcifUShEtZdPuqVWg+LB/f75Ntx/KDzbrwGxSJvnIFcqSF+wC0hQpQ==
   dependencies:
-    "@apollo/federation" "^0.19.1"
+    "@apollo/federation" "^0.20.2"
+    "@apollo/query-planner-wasm" "0.0.4"
     "@types/node-fetch" "2.5.4"
     apollo-engine-reporting-protobuf "^0.5.2"
-    apollo-env "^0.6.1"
-    apollo-graphql "^0.5.0"
+    apollo-graphql "^0.6.0"
     apollo-server-caching "^0.5.2"
-    apollo-server-core "^2.16.1"
+    apollo-server-core "^2.17.0"
     apollo-server-env "^2.4.5"
     apollo-server-errors "^2.4.2"
     apollo-server-types "^0.5.1"
-    graphql-extensions "^0.12.4"
     loglevel "^1.6.1"
     make-fetch-happen "^8.0.0"
     pretty-format "^26.0.0"
@@ -151,6 +150,11 @@
     "@types/long" "^4.0.0"
     "@types/node" "^10.1.0"
     long "^4.0.0"
+
+"@apollo/query-planner-wasm@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@apollo/query-planner-wasm/-/query-planner-wasm-0.0.4.tgz#83e54b98ef483472de0a671b6b21b05b1634a6e4"
+  integrity sha512-umCWFC+PXptXsAkeFbA8TIVEFdFhru6Bj4wvhv0zrATYGlENrgrOavHC1+3GITMDDRZb4TQjfWPCaY3yE9gUpw==
 
 "@apollographql/apollo-tools@^0.4.3":
   version "0.4.8"
@@ -2667,6 +2671,14 @@ apollo-graphql@^0.5.0:
     apollo-env "^0.6.5"
     lodash.sortby "^4.7.0"
 
+apollo-graphql@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/apollo-graphql/-/apollo-graphql-0.6.0.tgz#37bee7dc853213269137f4c60bfdf2ee28658669"
+  integrity sha512-BxTf5LOQe649e9BNTPdyCGItVv4Ll8wZ2BKnmiYpRAocYEXAVrQPWuSr3dO4iipqAU8X0gvle/Xu9mSqg5b7Qg==
+  dependencies:
+    apollo-env "^0.6.5"
+    lodash.sortby "^4.7.0"
+
 apollo-link@1.2.14, apollo-link@^1.2.14:
   version "1.2.14"
   resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.14.tgz#3feda4b47f9ebba7f4160bef8b977ba725b684d9"
@@ -2712,7 +2724,7 @@ apollo-server-core@2.16.1:
     subscriptions-transport-ws "^0.9.11"
     ws "^6.0.0"
 
-apollo-server-core@^2.15.1, apollo-server-core@^2.16.1, apollo-server-core@^2.17.0:
+apollo-server-core@^2.15.1, apollo-server-core@^2.17.0:
   version "2.17.0"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.17.0.tgz#6af697ffe4968e74add01cd1efd2a8fb33299cf3"
   integrity sha512-rjAkBbKSrGLDfg/g5bohnPlQahmkAxgEBuMDVsoF3aa+RaEPXPUMYrLbOxntl0LWeLbPiMa/IyFF43dvlGqV7w==
@@ -8543,17 +8555,7 @@ pretty-format@^25.2.1, pretty-format@^25.5.0:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
-pretty-format@^26.0.0:
-  version "26.4.0"
-  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.4.0.tgz#c08073f531429e9e5024049446f42ecc9f933a3b"
-  integrity sha512-mEEwwpCseqrUtuMbrJG4b824877pM5xald3AkilJ47Po2YLr97/siejYQHqj2oDQBeJNbu+Q0qUuekJ8F0NAPg==
-  dependencies:
-    "@jest/types" "^26.3.0"
-    ansi-regex "^5.0.0"
-    ansi-styles "^4.0.0"
-    react-is "^16.12.0"
-
-pretty-format@^26.4.2:
+pretty-format@^26.0.0, pretty-format@^26.4.2:
   version "26.4.2"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.4.2.tgz#d081d032b398e801e2012af2df1214ef75a81237"
   integrity sha512-zK6Gd8zDsEiVydOCGLkoBoZuqv8VTiHyAbKznXe/gaph/DAeZOmit9yMfgIz5adIgAMMs5XfoYSwAX3jcCO1tA==
