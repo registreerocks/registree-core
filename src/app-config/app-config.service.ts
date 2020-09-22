@@ -95,6 +95,7 @@ export class AppConfigService
     return {
       uri: this.appConfig.mongoUri,
       sslValidate: false,
+      useFindAndModify: false,
     };
   }
 }

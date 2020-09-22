@@ -13,7 +13,7 @@ export class Customer extends Document {
   }
 
   @Prop()
-  @Field()
+  @Field({ nullable: true })
   description?: string;
 
   @Prop()

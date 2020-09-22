@@ -23,7 +23,7 @@ type Contact {
 
 type Customer {
   id: ID!
-  description: String!
+  description: String
   name: String!
   billingDetails: BillingDetails!
   contacts: [Contact!]!
@@ -239,6 +239,8 @@ input DegreeInput {
 scalar Upload
 
 type Mutation {
+  updateBillingDetails(updateBillingDetailsInput: UpdateBillingDetailsInput!, customerId: ID!): Customer!
+  updateCustomerDetails(updateCustomerDetailsInput: UpdateCustomerDetailsInput!, customerId: ID!): Customer!
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   createContact(customerId: ID!, createContactInput: CreateContactInput!): Contact!
   updateContact(updateUserInput: UpdateContactInput!): Contact!
@@ -247,6 +249,25 @@ type Mutation {
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
   expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+}
+
+input UpdateBillingDetailsInput {
+  addressee: String
+  city: String
+  country: String
+  email: String
+  line1: String
+  line2: String
+  province: String
+
+  """The vat number of the company, must match '/^4d{9}$/'"""
+  vat: String
+  zip: String
+}
+
+input UpdateCustomerDetailsInput {
+  description: String
+  name: String!
 }
 
 input CreateCustomerInput {
