@@ -28,6 +28,23 @@ const isAdmin = rule({
     : new ForbiddenError('invalid scope');
 });
 
+const userCustomerIdMatchesArgsCustomerId = rule({
+  cache: 'contextual',
+})(
+  (
+    _parent,
+    args: { customerId?: string } | null | undefined,
+    { req }: ContextWithUser,
+    _info,
+  ) => {
+    if (args?.customerId) {
+      return req.user.dbId === args.customerId;
+    } else {
+      return new ForbiddenError('customer id not provided');
+    }
+  },
+);
+
 export const appPermissions = shield(
   {
     EventQuery: or(and(isRecruiter, isEventQueryOwner), isAdmin),
@@ -36,9 +53,18 @@ export const appPermissions = shield(
     },
     Mutation: {
       createQuery: isRecruiter,
+      updateBillingDetails: or(
+        and(isRecruiter, userCustomerIdMatchesArgsCustomerId),
+        isAdmin,
+      ),
+      updateCustomerDetails: or(
+        and(isRecruiter, userCustomerIdMatchesArgsCustomerId),
+        isAdmin,
+      ),
     },
   },
   {
+    allowExternalErrors: true,
     debug: false,
     fallbackError: new ForbiddenError('authorization failed'),
   },
