@@ -10,6 +10,7 @@ import { UpdateUserRequest } from 'src/auth0-data/dto/update-user.request';
 import { UpdateUserResponse } from 'src/auth0-data/dto/update-user.response';
 import * as crypto from 'crypto';
 import { CustomersService } from 'src/customers/customers.service';
+import _ from 'lodash';
 
 @Injectable()
 export class ContactsService {
@@ -39,11 +40,18 @@ export class ContactsService {
     userId: string,
     input: UpdateContactInput,
   ): Promise<Contact> {
-    const user = await this.auth0DataService.updateUser(
-      userId,
-      this.updateContactRequestMapper(input),
-    );
-    return this.updateContactResponseMapper(user);
+    const userToUpdate = await this.getContact(userId);
+    const inputDiff = _.omitBy(input, (val, key) => userToUpdate[key] === val);
+
+    if (_.isEmpty(inputDiff)) {
+      return userToUpdate;
+    } else {
+      const user = await this.auth0DataService.updateUser(
+        userId,
+        this.updateContactRequestMapper(inputDiff),
+      );
+      return this.updateContactResponseMapper(user);
+    }
   }
 
   private createContactRequestMapper(
