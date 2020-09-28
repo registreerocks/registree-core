@@ -20,12 +20,15 @@ import { User } from 'src/common/interfaces/user.interface';
 import { connectionFromArray } from 'graphql-relay';
 import { Quote } from 'src/pricing/models/quote.model';
 import { PricingService } from 'src/pricing/pricing.service';
+import { Customer } from 'src/customers/models/customer.model';
+import { CustomersService } from 'src/customers/customers.service';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
   constructor(
     private readonly queriesService: QueriesService,
     private readonly pricingService: PricingService,
+    private readonly customersService: CustomersService,
   ) {}
 
   @Mutation(_returns => EventQuery)
@@ -76,6 +79,21 @@ export class EventQueriesResolver {
     }
   }
 
+  @Query(_returns => EventQueryConnection)
+  async getStudentQueries(
+    @Args() args: PaginationArgs,
+    @CurrentUser() user: User,
+  ): Promise<EventQueryConnection> {
+    const queries = await this.queriesService.getStudentQueries(user.dbId);
+    // TODO: Default sorting
+    const paginatedQueries = connectionFromArray(queries, args);
+
+    return {
+      ...paginatedQueries,
+      totalCount: queries.length,
+    };
+  }
+
   @Query(_returns => EventQuery)
   async getQuery(
     @Args({ name: 'id', type: () => ID }) id: string,
@@ -100,5 +118,12 @@ export class EventQueriesResolver {
     return this.pricingService.calculatePrice(
       eventQuery.eventDetails.metrics.acceptedCount,
     );
+  }
+
+  @ResolveField('customer', _returns => Customer)
+  async getCustomerInformation(
+    @Parent() eventQuery: EventQuery,
+  ): Promise<Customer | null> {
+    return await this.customersService.findOneByUserId(eventQuery.customerId);
   }
 }

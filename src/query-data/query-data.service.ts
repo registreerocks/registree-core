@@ -120,6 +120,30 @@ export class QueryDataService {
     }
   }
 
+  async getStudentQueries(transcriptId: string): Promise<EventQueryResponse[]> {
+    const accessToken = await this.authService.getAccessToken();
+    try {
+      const result = await this.axiosInstance.get<EventQueryResponse[]>(
+        `/query/get_by_transcript_id?transcript_id=${transcriptId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return result.data;
+    } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      this.logger.error(
+        { err },
+        'Failed to get queries by transcript id: %s',
+        transcriptId,
+      );
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      throw err;
+    }
+  }
+
   async updateEventInfo(
     queryId: string,
     request: UpdateEventRequest,

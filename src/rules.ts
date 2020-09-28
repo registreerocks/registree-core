@@ -28,6 +28,14 @@ const isAdmin = rule({
     : new ForbiddenError('invalid scope');
 });
 
+const isStudent = rule({
+  cache: 'contextual',
+})((_parent, _args, { req }: ContextWithUser, _info) => {
+  return req.user.scope === 'student'
+    ? true
+    : new ForbiddenError('invalid scope');
+});
+    
 const userCustomerIdMatchesArgsCustomerId = rule({
   cache: 'contextual',
 })(
@@ -47,9 +55,19 @@ const userCustomerIdMatchesArgsCustomerId = rule({
 
 export const appPermissions = shield(
   {
-    EventQuery: or(and(isRecruiter, isEventQueryOwner), isAdmin),
+    EventQuery: {
+      currentPrice: not(isStudent),
+    },
+    EventDetails: {
+      metrics: not(isStudent),
+    },
+    Customer: {
+      billingDetails: not(isStudent),
+      contacts: not(isStudent),
+    },
+    Quote: not(isStudent),
     QueryDetails: {
-      results: not(isAdmin),
+      results: not(or(isAdmin, isStudent)),
     },
     Mutation: {
       createQuery: isRecruiter,
@@ -61,6 +79,10 @@ export const appPermissions = shield(
         and(isRecruiter, userCustomerIdMatchesArgsCustomerId),
         isAdmin,
       ),
+    },
+    Query: {
+      getQueries: or(and(isRecruiter, isEventQueryOwner), isAdmin),
+      getStudentQueries: isStudent,
     },
   },
   {

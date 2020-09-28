@@ -1,5 +1,5 @@
 import { Module, DynamicModule } from '@nestjs/common';
-import { StudentsResolver } from './students.resolver';
+import { StudentsResolver } from './resolvers/students.resolver';
 import { StudentsService } from './students.service';
 import { Auth0DataModule } from 'src/auth0-data/auth0-data.module';
 import { Auth0DataAsyncOptions } from 'src/auth0-data/auth0-data.options';

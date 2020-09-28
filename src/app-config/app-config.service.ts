@@ -24,6 +24,14 @@ import {
   Auth0DataOptionsFactory,
   Auth0DataOptions,
 } from 'src/auth0-data/auth0-data.options';
+import {
+  LinkingDataOptionsFactory,
+  LinkingDataOptions,
+} from 'src/linking-data/linking-data.options';
+import {
+  IdentifyingDataOptions,
+  IdentifyingDataOptionsFactory,
+} from 'src/identifying-data/identifying-data.options';
 
 @Injectable()
 export class AppConfigService
@@ -33,7 +41,9 @@ export class AppConfigService
     UploadOptionsFactory,
     PricingOptionsFactory,
     MongooseOptionsFactory,
-    Auth0DataOptionsFactory {
+    Auth0DataOptionsFactory,
+    LinkingDataOptionsFactory,
+    IdentifyingDataOptionsFactory {
   constructor(
     @Inject(AuthConfig.KEY)
     private readonly authConfig: ConfigType<typeof AuthConfig>,
@@ -71,6 +81,18 @@ export class AppConfigService
   createStudentDataOptions(): StudentDataOptions {
     return {
       studentApis: this.apiConfig.studentApis,
+    };
+  }
+
+  createLinkingDataOptions(): LinkingDataOptions {
+    return {
+      linkingApi: this.apiConfig.linkingApi,
+    };
+  }
+
+  createIdentifyingDataOptions(): IdentifyingDataOptions {
+    return {
+      identifyingApi: this.apiConfig.identifyingApi,
     };
   }
 
