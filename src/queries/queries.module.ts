@@ -16,13 +16,19 @@ import { IdentifyingDataModule } from 'src/identifying-data/identifying-data.mod
 import { LinkingDataModule } from 'src/linking-data/linking-data.module';
 import { IdentifyingDataAsyncOptions } from 'src/identifying-data/identifying-data.options';
 import { LinkingDataAsyncOptions } from 'src/linking-data/linking-data.options';
+import { QueryTranscriptResolver } from './resolvers/query-transcript.resolver';
+import { UniversitiesModule } from 'src/universities/universities.module';
+import { DegreeSelectionResolver } from './resolvers/degree-selection.resolver';
 
 @Module({
+  imports: [UniversitiesModule],
   providers: [
     EventQueriesResolver,
     EventDetailsResolver,
     QueriesService,
     QueryDetailsResolver,
+    QueryTranscriptResolver,
+    DegreeSelectionResolver,
   ],
 })
 export class QueriesModule {

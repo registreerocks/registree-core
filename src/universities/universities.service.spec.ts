@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UniversitiesService } from './universities.service';
-import { StudentDataService } from 'src/student-data/student-data.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { Degree } from './models/degree.model';
+import { University } from './models/university.model';
+import { Faculty } from './models/faculty.model';
 
 describe('UniversitiesService', () => {
   let service: UniversitiesService;
@@ -10,7 +13,15 @@ describe('UniversitiesService', () => {
       providers: [
         UniversitiesService,
         {
-          provide: StudentDataService,
+          provide: getModelToken(Degree.name),
+          useValue: {},
+        },
+        {
+          provide: getModelToken(University.name),
+          useValue: {},
+        },
+        {
+          provide: getModelToken(Faculty.name),
           useValue: {},
         },
       ],

@@ -23,7 +23,7 @@ type Contact {
 
 type Customer {
   id: ID!
-  description: String!
+  description: String
   name: String!
   billingDetails: BillingDetails!
   contacts: [Contact!]!
@@ -105,14 +105,40 @@ type EventDetails {
   password: String!
 }
 
-type QueryDegree {
+type University {
   id: ID!
-  degreeName: String!
+  country: String!
+  name: String!
+  physicalAddress: String!
+  shortName: String!
+  faculties: [Faculty!]!
+}
+
+type GroupedDegrees {
+  name: String!
+  degrees: [Degree!]!
+}
+
+type Faculty {
+  id: ID!
+  name: String!
+  description: String!
+  university: University!
+  groupedDegrees: [GroupedDegrees!]!
+  degrees: [Degree!]!
+}
+
+type Degree {
+  id: ID!
+  name: String!
+  description: String!
+  faculty: Faculty!
+  level: String!
 }
 
 type DegreeSelection {
   amount: Amount!
-  degree: QueryDegree!
+  degree: Degree!
 }
 
 union Amount = Absolute | Percentage
@@ -135,7 +161,7 @@ type QueryTranscript {
   degreeAverage: Float!
   degreeCompleted: Boolean!
   latestTerm: Float!
-  degree: QueryDegree!
+  degree: Degree!
   studentLink: StudentLink!
 }
 
@@ -152,6 +178,7 @@ type QueryTranscriptConnection {
 
 type QueryDetails {
   parameters: [DegreeSelection!]!
+  faculties: [Faculty!]!
   results(after: String, before: String, first: Int, last: Int): QueryTranscriptConnection!
   updatedAt: DateTime!
 }
@@ -174,37 +201,6 @@ type EventQueryConnection {
   edges: [EventQueryEdge!]
   pageInfo: PageInfo!
   totalCount: Int!
-}
-
-type Degree {
-  id: ID!
-  name: String!
-  description: String!
-  faculty: Faculty!
-  level: String!
-}
-
-type GroupedDegrees {
-  name: String!
-  degrees: [Degree!]!
-}
-
-type Faculty {
-  id: ID!
-  name: String!
-  description: String!
-  university: University!
-  groupedDegrees: [GroupedDegrees!]!
-  degrees: [Degree!]!
-}
-
-type University {
-  id: ID!
-  country: String!
-  name: String!
-  physicalAddress: String!
-  shortName: String!
-  faculties: [Faculty!]!
 }
 
 type Query {
@@ -244,6 +240,8 @@ input DegreeInput {
 scalar Upload
 
 type Mutation {
+  updateBillingDetails(updateBillingDetailsInput: UpdateBillingDetailsInput!, customerId: ID!): Customer!
+  updateCustomerDetails(updateCustomerDetailsInput: UpdateCustomerDetailsInput!, customerId: ID!): Customer!
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   createContact(customerId: ID!, createContactInput: CreateContactInput!): Contact!
   updateContact(updateUserInput: UpdateContactInput!): Contact!
@@ -252,6 +250,25 @@ type Mutation {
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
   expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+}
+
+input UpdateBillingDetailsInput {
+  addressee: String
+  city: String
+  country: String
+  email: String
+  line1: String
+  line2: String
+  province: String
+
+  """The vat number of the company, must match '/^4d{9}$/'"""
+  vat: String
+  zip: String
+}
+
+input UpdateCustomerDetailsInput {
+  description: String
+  name: String!
 }
 
 input CreateCustomerInput {

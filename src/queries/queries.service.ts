@@ -200,7 +200,7 @@ export class QueriesService {
       .value();
     const mergedQueryParameters = _.chain(prevQueryParams)
       .map(d => ({
-        id: d.degree.id,
+        id: d.degreeId,
         prevParams: d.amount,
       }))
       .keyBy(d => d.id)
