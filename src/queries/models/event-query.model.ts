@@ -11,7 +11,7 @@ export class EventQuery {
 
   customerId!: string;
 
-  @Field(_type => Customer, { nullable: true })
+  @Field(_type => Customer)
   customer?: Customer;
 
   @Field(_type => EventDetails)

@@ -120,7 +120,7 @@ export class EventQueriesResolver {
     );
   }
 
-  @ResolveField('customer', _returns => Customer, { nullable: true })
+  @ResolveField('customer', _returns => Customer)
   async getCustomerInformation(
     @Parent() eventQuery: EventQuery,
   ): Promise<Customer | null> {
