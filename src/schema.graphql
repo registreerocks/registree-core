@@ -185,7 +185,7 @@ type QueryDetails {
 
 type EventQuery {
   id: ID!
-  customer: Customer
+  customer: Customer!
   eventDetails: EventDetails!
   queryDetails: QueryDetails!
   quoteDetails: Quote!

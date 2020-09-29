@@ -35,7 +35,7 @@ const isStudent = rule({
     ? true
     : new ForbiddenError('invalid scope');
 });
-    
+
 const userCustomerIdMatchesArgsCustomerId = rule({
   cache: 'contextual',
 })(
@@ -56,6 +56,7 @@ const userCustomerIdMatchesArgsCustomerId = rule({
 export const appPermissions = shield(
   {
     EventQuery: {
+      '*': or(and(isRecruiter, isEventQueryOwner), isAdmin, isStudent),
       currentPrice: not(isStudent),
     },
     EventDetails: {
@@ -81,7 +82,7 @@ export const appPermissions = shield(
       ),
     },
     Query: {
-      getQueries: or(and(isRecruiter, isEventQueryOwner), isAdmin),
+      getQueries: or(isRecruiter, isAdmin),
       getStudentQueries: isStudent,
     },
   },
