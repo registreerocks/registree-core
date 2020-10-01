@@ -32,6 +32,6 @@ export class EventDetails {
   @Field(_type => EventMetrics)
   metrics!: EventMetrics;
 
-  @Field()
-  password!: string;
+  @Field({ nullable: true })
+  password?: string;
 }
