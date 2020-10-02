@@ -5,6 +5,7 @@ import { QueryDataService } from 'src/query-data/query-data.service';
 import { PricingService } from 'src/pricing/pricing.service';
 import { IdentifyingDataService } from 'src/identifying-data/identifying-data.service';
 import { LinkingDataService } from 'src/linking-data/linking-data.service';
+import { UniversitiesService } from 'src/universities/universities.service';
 
 describe('QueriesService', () => {
   let service: QueriesService;
@@ -13,6 +14,10 @@ describe('QueriesService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         QueriesService,
+        {
+          provide: UniversitiesService,
+          useValue: {},
+        },
         {
           provide: UploadService,
           useValue: {},
