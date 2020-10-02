@@ -82,7 +82,10 @@ export const appPermissions = shield(
       ),
     },
     Query: {
-      getQueries: or(isRecruiter, isAdmin),
+      getQueries: or(
+        and(isRecruiter, userCustomerIdMatchesArgsCustomerId),
+        isAdmin,
+      ),
       getStudentQueries: isStudent,
     },
   },
