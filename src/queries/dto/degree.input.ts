@@ -6,10 +6,6 @@ export class DegreeInput {
   @Field()
   degreeId!: string;
 
-  // TODO: Remove this and get the degree name from a seperate list before doing a POST
-  @Field()
-  degreeName!: string;
-
   @Field(_type => Int, { nullable: true })
   @ValidateIf((o: DegreeInput) => !o.percentage)
   @IsDefined()
