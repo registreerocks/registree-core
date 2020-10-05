@@ -22,7 +22,7 @@ type Event = {
   //flyer: string;
   attachments: AttachmentDto[];
   info: string;
-  message: string;
+  message?: string;
   name: string;
   start_date: string;
   type: string;

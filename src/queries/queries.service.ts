@@ -149,7 +149,7 @@ export class QueriesService {
       address: input.address,
       end_date: format(input.endDate, appConstants.dateFormat),
       info: input.info,
-      message: input.message ? input.message : '',
+      message: input.message,
       attachments,
       name: input.name,
       start_date: format(input.startDate, appConstants.dateFormat),
