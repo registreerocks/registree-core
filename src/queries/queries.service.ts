@@ -148,7 +148,7 @@ export class QueriesService {
     event: {
       address: input.address,
       end_date: format(input.endDate, appConstants.dateFormat),
-      info: input.info,
+      info: input.information,
       message: input.message ? input.message : '',
       attachments,
       name: input.name,
@@ -173,7 +173,7 @@ export class QueriesService {
     end_date: input.endDate
       ? format(input.endDate, appConstants.dateFormat)
       : undefined,
-    info: input.info,
+    info: input.information,
     message: input.message,
     name: input.name,
     password: input.password,

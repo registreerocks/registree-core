@@ -22,7 +22,7 @@ export class CreateEventQueryInput {
 
   @Field()
   @IsNotEmpty()
-  info!: string;
+  information!: string;
 
   @Field()
   message?: string;

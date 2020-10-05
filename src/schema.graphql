@@ -221,7 +221,7 @@ input CreateEventQueryInput {
   address: String!
   startDate: DateTime!
   endDate: DateTime!
-  info: String!
+  information: String!
   message: String!
   degrees: [DegreeInput!]!
   eventType: String!
@@ -292,7 +292,7 @@ input UpdateEventInfoInput {
   address: String
   startDate: DateTime
   endDate: DateTime
-  info: String
+  information: String
   message: String
   eventType: String
   password: String
