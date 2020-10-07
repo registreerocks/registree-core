@@ -20,6 +20,9 @@ export class EventDetails {
   @Field()
   information!: string;
 
+  @Field({ nullable: true })
+  message?: string;
+
   @Field()
   name!: string;
 
