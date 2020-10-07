@@ -24,7 +24,7 @@ export class CreateEventQueryInput {
   @IsNotEmpty()
   information!: string;
 
-  @Field()
+  @Field({ nullable: true })
   message?: string;
 
   @Field(_type => [DegreeInput])

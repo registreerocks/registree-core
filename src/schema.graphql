@@ -98,6 +98,7 @@ type EventDetails {
   endDate: DateTime!
   attachments: [UploadedFile!]!
   information: String!
+  message: String
   name: String!
   eventType: String!
   invites: [Invitation!]!
@@ -222,7 +223,7 @@ input CreateEventQueryInput {
   startDate: DateTime!
   endDate: DateTime!
   information: String!
-  message: String!
+  message: String
   degrees: [DegreeInput!]!
   eventType: String!
   attachments: [Upload!]
