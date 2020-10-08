@@ -17,7 +17,7 @@ export class CustomersResolver {
 
   @Query(_returns => Customer, { name: 'customer' })
   async getCurrentCustomer(@CurrentUser() user: User): Promise<Customer> {
-    const result = await this.customersService.findOneByUserId(user.dbId);
+    const result = await this.customersService.findOneByUserId(user.userId);
     if (result) {
       return result;
     } else {

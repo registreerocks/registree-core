@@ -15,7 +15,7 @@ export class UpdateEventInfoInput {
   endDate?: Date;
 
   @Field({ nullable: true })
-  info?: string;
+  information?: string;
 
   @Field({ nullable: true })
   message?: string;
