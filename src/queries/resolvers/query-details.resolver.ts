@@ -10,6 +10,8 @@ import DataLoader from 'dataloader';
 import { Loader } from 'nestjs-graphql-dataloader';
 import { DegreesLoader } from 'src/universities/loaders/degrees.loader';
 import { Degree } from 'src/universities/models/degree.model';
+import { QueryTranscriptFilter } from '../dto/query-transcript-filter.input';
+import { QueryTranscript } from '../models/query-transcript.model';
 
 @Resolver(_of => QueryDetails)
 export class QueryDetailsResolver {
@@ -45,16 +47,43 @@ export class QueryDetailsResolver {
   @ResolveField('results', _returns => QueryTranscriptConnection)
   getResults(
     @Args() args: PaginationArgs,
+    @Args({ name: 'filter', type: () => QueryTranscriptFilter, nullable: true })
+    filter: QueryTranscriptFilter,
     @Parent() queryDetails: QueryDetails,
   ): QueryTranscriptConnection {
-    const paginatedResults = connectionFromArray(
-      _.orderBy(queryDetails.rawResults, x => x.degreeAverage, 'desc'),
-      args,
-    );
+    const results = _.orderBy(
+      queryDetails.rawResults,
+      x => x.degreeAverage,
+      'desc',
+    ).filter(this.createTranscriptPredicate(filter));
+
+    const paginatedResults = connectionFromArray(results, args);
 
     return {
       ...paginatedResults,
-      totalCount: queryDetails.rawResults.length,
+      totalCount: results.length,
     };
+  }
+
+  private createTranscriptPredicate(filter?: QueryTranscriptFilter) {
+    if (filter) {
+      const degreeFilter =
+        filter.degrees != null
+          ? (t: QueryTranscript) => filter.degrees!.includes(t.degreeId)
+          : _ => true;
+      const completedFilter =
+        filter.degreeCompleted != null
+          ? (t: QueryTranscript) => t.degreeCompleted === filter.degreeCompleted
+          : _ => true;
+      const attendedFilter =
+        filter.attendedEvent != null
+          ? (t: QueryTranscript) =>
+              !!t.studentLink.student === filter.attendedEvent
+          : _ => true;
+      return (t: QueryTranscript) =>
+        degreeFilter(t) && completedFilter(t) && attendedFilter(t);
+    } else {
+      return _ => true;
+    }
   }
 }

@@ -180,8 +180,14 @@ type QueryTranscriptConnection {
 type QueryDetails {
   parameters: [DegreeSelection!]!
   faculties: [Faculty!]!
-  results(after: String, before: String, first: Int, last: Int): QueryTranscriptConnection!
+  results(filter: QueryTranscriptFilter, after: String, before: String, first: Int, last: Int): QueryTranscriptConnection!
   updatedAt: DateTime!
+}
+
+input QueryTranscriptFilter {
+  degrees: [ID!]
+  degreeCompleted: Boolean
+  attendedEvent: Boolean
 }
 
 type EventQuery {
