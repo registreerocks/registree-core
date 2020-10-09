@@ -33,6 +33,8 @@ import { AllExceptionsFilter } from './all-exceptions.filter';
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => {
         const appConfig = configService.createAppParams();
+        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+        /* eslint-disable @typescript-eslint/no-unsafe-member-access*/
         return {
           pinoHttp: {
             serializers: {
@@ -45,6 +47,8 @@ import { AllExceptionsFilter } from './all-exceptions.filter';
             useLevel: appConfig.httpLogLevel,
           },
         };
+        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+        /* eslint-enable @typescript-eslint/no-unsafe-member-access*/
       },
     }),
     MongooseModule.forRootAsync({
