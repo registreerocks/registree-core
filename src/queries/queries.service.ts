@@ -23,6 +23,9 @@ import { Absolute } from 'src/common/absolute.model';
 import { getUnionValue } from 'src/common/amount.union';
 import { IdentifyingDataService } from 'src/identifying-data/identifying-data.service';
 import { LinkingDataService } from 'src/linking-data/linking-data.service';
+import { UniversitiesService } from 'src/universities/universities.service';
+import { Degree } from 'src/universities/models/degree.model';
+import { ApolloError } from 'apollo-server-express';
 
 @Injectable()
 export class QueriesService {
@@ -32,6 +35,7 @@ export class QueriesService {
     private readonly pricingService: PricingService,
     private readonly identifyingDataService: IdentifyingDataService,
     private readonly linkingDataService: LinkingDataService,
+    private readonly universitiesService: UniversitiesService,
   ) {}
 
   async getCustomerQueries(customerId: string): Promise<EventQuery[]> {
@@ -73,8 +77,11 @@ export class QueriesService {
   ): Promise<EventQuery> {
     const attachments = await this.handleAttachments(input.attachments);
 
+    const degrees = await this.getDegreesById(
+      input.degrees.map(d => d.degreeId),
+    );
     const queryId = await this.queryDataService.createQuery(
-      this.createQueryRequestMapper(input, customerId, attachments),
+      this.createQueryRequestMapper(input, customerId, attachments, degrees),
     );
 
     const response = await this.queryDataService.getQuery(queryId);
@@ -121,21 +128,36 @@ export class QueriesService {
   ): Promise<EventQuery> {
     const prevQueryParameters = await this.retrieveQueryParameters(queryId);
     this.checkInputQueryParameters(input, prevQueryParameters);
+    const degrees = await this.getDegreesById(
+      input.degrees.map(d => d.degreeId),
+    );
     const response = await this.queryDataService.expandQuery(
       queryId,
-      this.expandEventRequestMapper(input),
+      this.expandEventRequestMapper(input, degrees),
     );
     return mapEventQuery(response);
   }
 
+  private async getDegreesById(
+    degreeIds: readonly string[],
+  ): Promise<Degree[]> {
+    const degrees = await this.universitiesService.getDegreesById(degreeIds);
+    if (degreeIds.every(x => degrees.find(d => d.id === x))) {
+      return degrees;
+    } else {
+      throw new ApolloError('degrees provided not found', 'NOT_FOUND');
+    }
+  }
+
   private expandEventRequestMapper = (
     input: ExpandEventQueryInput,
+    degrees: Degree[],
   ): ExpandQueryRequest => ({
     details: input.degrees.map(d => ({
       degree_id: d.degreeId,
       absolute: d.absolute,
       percentage: d.percentage,
-      degree_name: d.degreeName,
+      degree_name: degrees.find(deg => deg.id === d.degreeId)?.name || '',
     })),
   });
 
@@ -143,6 +165,7 @@ export class QueriesService {
     input: CreateEventQueryInput,
     customerId: string,
     attachments: { filename: string; id: string; mimetype: string }[] = [],
+    degrees: Degree[] = [],
   ): CreateQueryRequest => ({
     customer_id: customerId,
     event: {
@@ -161,7 +184,7 @@ export class QueriesService {
         degree_id: d.degreeId,
         absolute: d.absolute,
         percentage: d.percentage,
-        degree_name: d.degreeName,
+        degree_name: degrees.find(deg => deg.id === d.degreeId)?.name || '',
       })),
     },
   });

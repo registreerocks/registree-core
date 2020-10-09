@@ -64,6 +64,37 @@ type Quote {
   rsvpCostBreakdown: [RsvpCost!]!
 }
 
+type Degree {
+  id: ID!
+  name: String!
+  description: String!
+  faculty: Faculty!
+  level: String!
+}
+
+type GroupedDegrees {
+  name: String!
+  degrees: [Degree!]!
+}
+
+type Faculty {
+  id: ID!
+  name: String!
+  description: String!
+  university: University!
+  groupedDegrees: [GroupedDegrees!]!
+  degrees: [Degree!]!
+}
+
+type University {
+  id: ID!
+  country: String!
+  name: String!
+  physicalAddress: String!
+  shortName: String!
+  faculties: [Faculty!]!
+}
+
 type UploadedFile {
   id: ID!
   filename: String!
@@ -104,37 +135,6 @@ type EventDetails {
   invites: [Invitation!]!
   metrics: EventMetrics!
   password: String
-}
-
-type University {
-  id: ID!
-  country: String!
-  name: String!
-  physicalAddress: String!
-  shortName: String!
-  faculties: [Faculty!]!
-}
-
-type GroupedDegrees {
-  name: String!
-  degrees: [Degree!]!
-}
-
-type Faculty {
-  id: ID!
-  name: String!
-  description: String!
-  university: University!
-  groupedDegrees: [GroupedDegrees!]!
-  degrees: [Degree!]!
-}
-
-type Degree {
-  id: ID!
-  name: String!
-  description: String!
-  faculty: Faculty!
-  level: String!
 }
 
 type DegreeSelection {
@@ -238,7 +238,6 @@ input CreateEventQueryInput {
 
 input DegreeInput {
   degreeId: String!
-  degreeName: String!
   absolute: Int
   percentage: Int
 }
