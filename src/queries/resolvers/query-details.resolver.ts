@@ -68,17 +68,17 @@ export class QueryDetailsResolver {
   private createTranscriptPredicate(filter?: QueryTranscriptFilter) {
     if (filter) {
       const degreeFilter =
-        filter.degrees != null
-          ? (t: QueryTranscript) => filter.degrees!.includes(t.degreeId)
+        filter.degreeIds != null
+          ? (t: QueryTranscript) => filter.degreeIds!.includes(t.degreeId)
           : _ => true;
       const completedFilter =
         filter.degreeCompleted != null
           ? (t: QueryTranscript) => t.degreeCompleted === filter.degreeCompleted
           : _ => true;
       const attendedFilter =
-        filter.attendedEvent != null
+        filter.eventAttended != null
           ? (t: QueryTranscript) =>
-              !!t.studentLink.student === filter.attendedEvent
+              !!t.studentLink.student === filter.eventAttended
           : _ => true;
       return (t: QueryTranscript) =>
         degreeFilter(t) && completedFilter(t) && attendedFilter(t);
