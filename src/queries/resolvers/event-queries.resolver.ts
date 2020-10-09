@@ -13,7 +13,6 @@ import { CreateEventQueryInput } from '../dto/create-event-query.input';
 import { ExpandEventQueryInput } from '../dto/expand-event-query.input';
 import { QueriesService } from '../queries.service';
 import { CurrentUser } from 'src/auth/current-user.decorator';
-import { UnauthorizedException } from '@nestjs/common';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import { EventQueryConnection } from '../models/pagination/event-query-connection.model';
 import { User } from 'src/common/interfaces/user.interface';
@@ -63,20 +62,15 @@ export class EventQueriesResolver {
   async getQueries(
     @Args() args: PaginationArgs,
     @Args({ name: 'customerId', type: () => ID }) customerId: string,
-    @CurrentUser() user: User,
   ): Promise<EventQueryConnection> {
-    if (user.dbId === customerId) {
-      const queries = await this.queriesService.getCustomerQueries(customerId);
-      // TODO: Default sorting
-      const paginatedQueries = connectionFromArray(queries, args);
+    const queries = await this.queriesService.getCustomerQueries(customerId);
+    // TODO: Default sorting
+    const paginatedQueries = connectionFromArray(queries, args);
 
-      return {
-        ...paginatedQueries,
-        totalCount: queries.length,
-      };
-    } else {
-      throw new UnauthorizedException();
-    }
+    return {
+      ...paginatedQueries,
+      totalCount: queries.length,
+    };
   }
 
   @Query(_returns => EventQueryConnection)
@@ -97,15 +91,8 @@ export class EventQueriesResolver {
   @Query(_returns => EventQuery)
   async getQuery(
     @Args({ name: 'id', type: () => ID }) id: string,
-    @CurrentUser() user: User,
   ): Promise<EventQuery> {
-    const query = await this.queriesService.getQuery(id);
-    // TODO: Move the Authorization into a different layer
-    if (query.customerId === user.dbId) {
-      return query;
-    } else {
-      throw new UnauthorizedException();
-    }
+    return this.queriesService.getQuery(id);
   }
 
   @ResolveField('quoteDetails', _returns => Quote)
