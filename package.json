@@ -47,7 +47,7 @@
     "jwks-rsa": "^1.10.1",
     "lodash": "^4.17.20",
     "mongoose": "^5.10.8",
-    "nestjs-graphql-dataloader": "^0.1.28",
+    "nestjs-graphql-dataloader": "patch:nestjs-graphql-dataloader@^0.1.28#./add-nestjs-dataloader-types.diff",
     "nestjs-pino": "^1.2.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

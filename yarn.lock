@@ -10127,7 +10127,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"nestjs-graphql-dataloader@npm:^0.1.28":
+nestjs-graphql-dataloader@^0.1.28:
   version: 0.1.28
   resolution: "nestjs-graphql-dataloader@npm:0.1.28"
   dependencies:
@@ -10137,6 +10137,19 @@ fsevents@^1.2.7:
     dataloader: ^2.0.0
     rxjs: ^6.5.4
   checksum: 413a142f37016cabc50160c9eb682c7f29993186e61f591d72af4e2c57e0fa1ef1fe312e85799611d328d47f343ab2f341cf4416ea7cdf5b3aa07af257da7191
+  languageName: node
+  linkType: hard
+
+"nestjs-graphql-dataloader@patch:nestjs-graphql-dataloader@^0.1.28#./add-nestjs-dataloader-types.diff::locator=registree-core%40workspace%3A.":
+  version: 0.1.28
+  resolution: "nestjs-graphql-dataloader@patch:nestjs-graphql-dataloader@npm%3A0.1.28#./add-nestjs-dataloader-types.diff::version=0.1.28&hash=3457db&locator=registree-core%40workspace%3A."
+  dependencies:
+    "@nestjs/common": ^7.0.7
+    "@nestjs/core": ^7.0.7
+    "@nestjs/graphql": ^7.1.5
+    dataloader: ^2.0.0
+    rxjs: ^6.5.4
+  checksum: d5a1092dec3512ef71d9b0c29fe9b8caa99b2868e52112bdd24456299965d11cd9463be74dc407349068b13d961b31311d2f473e563aa47b5f07a6d996e396d4
   languageName: node
   linkType: hard
 
@@ -11671,7 +11684,7 @@ fsevents@^1.2.7:
     lint-staged: ^10.4.0
     lodash: ^4.17.20
     mongoose: ^5.10.8
-    nestjs-graphql-dataloader: ^0.1.28
+    nestjs-graphql-dataloader: "patch:nestjs-graphql-dataloader@^0.1.28#./add-nestjs-dataloader-types.diff"
     nestjs-pino: ^1.2.0
     passport: ^0.4.1
     passport-jwt: ^4.0.0
