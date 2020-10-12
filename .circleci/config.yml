@@ -19,9 +19,11 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - node_modules
+            - ".yarn"
             - package.json
             - dist
+            - ".pnp.js"
+            - yarn.lock
             
 workflows:
     build-and-push:
