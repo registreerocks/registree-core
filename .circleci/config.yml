@@ -12,6 +12,7 @@ jobs:
     steps: 
       - checkout
       - node/install-packages:
+          override-ci-command: yarn install --immutable
           pkg-manager: yarn
       - run:
           command: yarn build
@@ -27,6 +28,7 @@ workflows:
       jobs:
         - node/test:
             pkg-manager: yarn
+            override-ci-command: yarn install --immutable
             version: 14.4.0
             run-command: "test -w 1"
         - build
