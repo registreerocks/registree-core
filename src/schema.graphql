@@ -185,9 +185,9 @@ type QueryDetails {
 }
 
 input QueryTranscriptFilter {
-  degrees: [ID!]
+  degreeIds: [ID!]
   degreeCompleted: Boolean
-  attendedEvent: Boolean
+  eventAttended: Boolean
 }
 
 type EventQuery {
@@ -256,6 +256,7 @@ type Mutation {
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
   expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+  setQueryInviteToViewed(queryId: ID!): EventQuery!
 }
 
 input UpdateBillingDetailsInput {

@@ -50,6 +50,15 @@ export class EventQueriesResolver {
     return this.queriesService.expandEventQuery(queryId, input);
   }
 
+  @Mutation(_returns => EventQuery)
+  async setQueryInviteToViewed(
+    @Args({ name: 'queryId', type: () => ID })
+    queryId: string,
+    @CurrentUser() user: User,
+  ): Promise<EventQuery> {
+    return this.queriesService.setQueryInviteToViewed(queryId, user.dbId);
+  }
+
   @Query(_returns => Quote)
   async getQuote(
     @Args({ name: 'createEventQueryInput', type: () => CreateEventQueryInput })

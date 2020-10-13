@@ -45,12 +45,8 @@ export class QueriesService {
   }
 
   async getStudentQueries(studentNumber: string): Promise<EventQuery[]> {
-    const identifyingData = await this.identifyingDataService.getIdentifyingData(
+    const transcriptId = await this.getTranscriptIdFromStudentNumber(
       studentNumber,
-    );
-    const transcriptId = await this.linkingDataService.getTranscriptId(
-      identifyingData[0]['_id'],
-      'http://localhost:8001',
     );
     const response = await this.queryDataService.getStudentQueries(
       transcriptId,
@@ -136,6 +132,34 @@ export class QueriesService {
       this.expandEventRequestMapper(input, degrees),
     );
     return mapEventQuery(response);
+  }
+
+  async setQueryInviteToViewed(
+    queryId: string,
+    studentNumber: string,
+  ): Promise<EventQuery> {
+    const transcriptId = await this.getTranscriptIdFromStudentNumber(
+      studentNumber,
+    );
+    const input = { student_address: transcriptId, viewed: true };
+    const response = await this.queryDataService.updateStudentInviteStatus(
+      queryId,
+      input,
+    );
+    return mapEventQuery(response);
+  }
+
+  private async getTranscriptIdFromStudentNumber(
+    studentNumber: string,
+  ): Promise<string> {
+    const identifyingData = await this.identifyingDataService.getIdentifyingData(
+      studentNumber,
+    );
+    const transcriptId = await this.linkingDataService.getTranscriptId(
+      identifyingData[0]['_id'],
+      'http://localhost:8001',
+    );
+    return transcriptId;
   }
 
   private async getDegreesById(
