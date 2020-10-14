@@ -26,6 +26,7 @@ import { LinkingDataService } from 'src/linking-data/linking-data.service';
 import { UniversitiesService } from 'src/universities/universities.service';
 import { Degree } from 'src/universities/models/degree.model';
 import { ApolloError } from 'apollo-server-express';
+import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-status.request';
 
 @Injectable()
 export class QueriesService {
@@ -134,15 +135,16 @@ export class QueriesService {
     return mapEventQuery(response);
   }
 
-  async setQueryInviteToViewed(
+  async updateQueryInvite(
     queryId: string,
     studentNumber: string,
+    input: UpdateQueryInviteStatus,
   ): Promise<EventQuery> {
     const transcriptId = await this.getTranscriptIdFromStudentNumber(
       studentNumber,
     );
-    const input = { student_address: transcriptId, viewed: true };
-    const response = await this.queryDataService.updateStudentInviteStatus(
+    input['student_address'] = transcriptId;
+    const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
       input,
     );

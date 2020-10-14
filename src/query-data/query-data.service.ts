@@ -8,7 +8,7 @@ import { QueryDataOptions } from './query-data.options';
 import { QUERY_DATA_OPTIONS } from './query-data.constants';
 import { UpdateEventRequest } from './dto/update-event.request';
 import { ExpandQueryRequest } from './dto/expand-query.request';
-import { UpdateStudentInviteStatus } from './dto/update-student-invite-status.request';
+import { UpdateQueryInviteStatus } from './dto/update-query-invite-status.request';
 
 @Injectable()
 export class QueryDataService {
@@ -145,9 +145,9 @@ export class QueryDataService {
     }
   }
 
-  async updateStudentInviteStatus(
+  async updateQueryInviteStatus(
     queryId: string,
-    request: UpdateStudentInviteStatus,
+    request: UpdateQueryInviteStatus,
   ): Promise<EventQueryResponse> {
     const accessToken = await this.authService.getAccessToken();
     try {
