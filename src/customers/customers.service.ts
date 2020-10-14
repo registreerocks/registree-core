@@ -102,7 +102,10 @@ export class CustomersService {
       if (updatedCustomer !== null) {
         return updatedCustomer;
       } else {
-        throw new Error('Could not update customer to add contact.');
+        throw new ApolloError(
+          'Failed to add contact to customer, customer with id not found',
+          'NOT_FOUND',
+        );
       }
     } else {
       throw new BadRequestException(

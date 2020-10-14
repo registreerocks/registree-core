@@ -185,9 +185,9 @@ type QueryDetails {
 }
 
 input QueryTranscriptFilter {
-  degrees: [ID!]
+  degreeIds: [ID!]
   degreeCompleted: Boolean
-  attendedEvent: Boolean
+  eventAttended: Boolean
 }
 
 type EventQuery {
