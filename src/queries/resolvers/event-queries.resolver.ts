@@ -50,36 +50,6 @@ export class EventQueriesResolver {
     return this.queriesService.expandEventQuery(queryId, input);
   }
 
-  @Mutation(_returns => EventQuery)
-  async setQueryInviteToViewed(
-    @Args({ name: 'queryId', type: () => ID })
-    queryId: string,
-    @CurrentUser() user: User,
-  ): Promise<EventQuery> {
-    const input = { viewed: true };
-    return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
-  }
-
-  @Mutation(_returns => EventQuery)
-  async setQueryInviteToAccepted(
-    @Args({ name: 'queryId', type: () => ID })
-    queryId: string,
-    @CurrentUser() user: User,
-  ): Promise<EventQuery> {
-    const input = { accepted: true };
-    return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
-  }
-
-  @Mutation(_returns => EventQuery)
-  async setQueryInviteToDeclined(
-    @Args({ name: 'queryId', type: () => ID })
-    queryId: string,
-    @CurrentUser() user: User,
-  ): Promise<EventQuery> {
-    const input = { accepted: false };
-    return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
-  }
-
   @Query(_returns => Quote)
   async getQuote(
     @Args({ name: 'createEventQueryInput', type: () => CreateEventQueryInput })

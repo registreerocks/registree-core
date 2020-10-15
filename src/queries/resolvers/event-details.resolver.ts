@@ -13,6 +13,8 @@ import { QueriesService } from '../queries.service';
 import { UpdateEventInfoInput } from '../dto/update-event-info.input';
 import { EventQuery } from '../models/event-query.model';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { User } from 'src/common/interfaces/user.interface';
 
 @Resolver(_of => EventDetails)
 export class EventDetailsResolver {
@@ -67,6 +69,36 @@ export class EventDetailsResolver {
     input: string[],
   ): Promise<EventQuery> {
     return this.queriesService.deleteAttachments(queryId, input);
+  }
+
+  @Mutation(_returns => EventQuery)
+  async setQueryInviteToViewed(
+    @Args({ name: 'queryId', type: () => ID })
+    queryId: string,
+    @CurrentUser() user: User,
+  ): Promise<EventQuery> {
+    const input = { viewed: true };
+    return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
+  }
+
+  @Mutation(_returns => EventQuery)
+  async setQueryInviteToAccepted(
+    @Args({ name: 'queryId', type: () => ID })
+    queryId: string,
+    @CurrentUser() user: User,
+  ): Promise<EventQuery> {
+    const input = { accepted: true };
+    return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
+  }
+
+  @Mutation(_returns => EventQuery)
+  async setQueryInviteToDeclined(
+    @Args({ name: 'queryId', type: () => ID })
+    queryId: string,
+    @CurrentUser() user: User,
+  ): Promise<EventQuery> {
+    const input = { accepted: false };
+    return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
   }
 
   @ResolveField('attachments', _returns => [UploadedFile])
