@@ -27,7 +27,7 @@ export class ContactsService {
       this.createContactRequestMapper(input),
     );
     const contact = this.createContactResponseMapper(user);
-    await this.customersService.addContact(customerId, contact);
+    await this.customersService.addContact(customerId, user.user_id);
     return contact;
   }
 
