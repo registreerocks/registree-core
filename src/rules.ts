@@ -60,6 +60,7 @@ export const appPermissions = shield(
       currentPrice: not(isStudent),
     },
     EventDetails: {
+      invites: not(isRecruiter),
       metrics: not(isStudent),
     },
     Customer: {
