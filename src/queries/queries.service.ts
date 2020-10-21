@@ -143,10 +143,12 @@ export class QueriesService {
     const transcriptId = await this.getTranscriptIdFromStudentNumber(
       studentNumber,
     );
-    input['student_address'] = transcriptId;
     const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
-      input,
+      {
+        ...input,
+        student_address: transcriptId,
+      },
     );
     return mapEventQuery(response);
   }
