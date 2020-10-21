@@ -25,7 +25,8 @@ import { IdentifyingDataService } from 'src/identifying-data/identifying-data.se
 import { LinkingDataService } from 'src/linking-data/linking-data.service';
 import { UniversitiesService } from 'src/universities/universities.service';
 import { Degree } from 'src/universities/models/degree.model';
-import { ApolloError } from 'apollo-server-express';
+import { ApolloError, ValidationError } from 'apollo-server-express';
+import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-status.request';
 
 @Injectable()
 export class QueriesService {
@@ -45,12 +46,8 @@ export class QueriesService {
   }
 
   async getStudentQueries(studentNumber: string): Promise<EventQuery[]> {
-    const identifyingData = await this.identifyingDataService.getIdentifyingData(
+    const transcriptId = await this.getTranscriptIdFromStudentNumber(
       studentNumber,
-    );
-    const transcriptId = await this.linkingDataService.getTranscriptId(
-      identifyingData[0]['_id'],
-      'http://localhost:8001',
     );
     const response = await this.queryDataService.getStudentQueries(
       transcriptId,
@@ -136,6 +133,37 @@ export class QueriesService {
       this.expandEventRequestMapper(input, degrees),
     );
     return mapEventQuery(response);
+  }
+
+  async updateQueryInvite(
+    queryId: string,
+    studentNumber: string,
+    input: UpdateQueryInviteStatus,
+  ): Promise<EventQuery> {
+    const transcriptId = await this.getTranscriptIdFromStudentNumber(
+      studentNumber,
+    );
+    const response = await this.queryDataService.updateQueryInviteStatus(
+      queryId,
+      {
+        ...input,
+        student_address: transcriptId,
+      },
+    );
+    return mapEventQuery(response);
+  }
+
+  private async getTranscriptIdFromStudentNumber(
+    studentNumber: string,
+  ): Promise<string> {
+    const identifyingData = await this.identifyingDataService.getIdentifyingData(
+      studentNumber,
+    );
+    const transcriptId = await this.linkingDataService.getTranscriptId(
+      identifyingData[0]['_id'],
+      'http://localhost:8001',
+    );
+    return transcriptId;
   }
 
   private async getDegreesById(
@@ -234,13 +262,13 @@ export class QueriesService {
       s => !!s.newParams,
     );
     if (!prevDegreesIncludedInInput)
-      throw new Error(
+      throw new ValidationError(
         'Input does not contain all previously selected degrees.',
       );
     const amountTypesMatch = _.every(mergedQueryParameters, s =>
       s.prevParams ? s.newParams.amountType === s.prevParams.amountType : true,
     );
-    if (!amountTypesMatch) throw new Error('Amount type changed.');
+    if (!amountTypesMatch) throw new ValidationError('Amount type changed.');
 
     const newAmountGtePrevAmount = _.every(mergedQueryParameters, s =>
       s.prevParams
@@ -248,7 +276,7 @@ export class QueriesService {
         : true,
     );
     if (!newAmountGtePrevAmount)
-      throw new Error('Amount is smaller than in previous selection');
+      throw new ValidationError('Amount is smaller than in previous selection');
   }
 
   private async retrieveQueryParameters(queryId: string) {
@@ -274,7 +302,7 @@ export class QueriesService {
           } catch (error) {
             /* eslint-disable @typescript-eslint/no-unsafe-member-access */
             if (error.name === 'PayloadTooLargeError') {
-              throw new Error(
+              throw new ValidationError(
                 `The file size exceeds ${appConstants.fileSize} mb`,
               );
             } else {
@@ -283,7 +311,7 @@ export class QueriesService {
             /* eslint-enable @typescript-eslint/no-unsafe-member-access */
           }
         } else {
-          throw new Error(
+          throw new ValidationError(
             `The following mimetype is not accepted: ${file.mimetype}`,
           );
         }
