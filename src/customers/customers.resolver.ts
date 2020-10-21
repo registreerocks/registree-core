@@ -20,7 +20,7 @@ import { UpdateCustomerDetailsInput } from './dto/update-customer-details.input'
 import { UpdateBillingDetailsInput } from './dto/update-billing-details.input';
 import { Contact } from 'src/contacts/models/contact.model';
 import { Auth0DataService } from 'src/auth0-data/auth0-data.service';
-import { GetUserResponse } from 'src/auth0-data/dto/get-user.response';
+import { mapContact } from 'src/contacts/mappers/map-contact';
 
 @Resolver(_of => Customer)
 export class CustomersResolver {
@@ -96,20 +96,13 @@ export class CustomersResolver {
 
   @ResolveField('contacts', _returns => [Contact])
   async getContacts(@Parent() customer: Customer): Promise<Contact[]> {
-    return Promise.all(
-      customer.contactIds.map(async contactId => {
-        const user = await this.auth0DataService.getUser(contactId);
-        return this.getContactResponseMapper(user);
-      }),
+    const users = await this.auth0DataService.getUsers(
+      this.buildUserQuery(customer.contactIds),
     );
+    return users.map(mapContact);
   }
 
-  private getContactResponseMapper(response: GetUserResponse): Contact {
-    return {
-      name: response.name,
-      email: response.email,
-      userId: response.user_id,
-      dbId: response.app_metadata.db_id,
-    };
+  private buildUserQuery(contactIds: string[]): string {
+    return `user_id:("${contactIds.join('" OR "')}")`;
   }
 }

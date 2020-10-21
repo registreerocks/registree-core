@@ -64,6 +64,30 @@ export class Auth0DataService {
     }
   }
 
+  async getUsers(searchQuery: string): Promise<GetUserResponse[]> {
+    const accessToken = await this.authService.getManagementToken();
+    try {
+      const result = await this.axiosInstance.get<GetUserResponse[]>(
+        `/users?q=${searchQuery}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return result.data;
+    } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      this.logger.error(
+        { err },
+        'Failed to get user with in query: %s',
+        searchQuery,
+      );
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      throw err;
+    }
+  }
+
   async updateUser(
     userId: string,
     request: UpdateUserRequest,
