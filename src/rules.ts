@@ -36,6 +36,12 @@ const isStudent = rule({
     : new ForbiddenError('invalid scope');
 });
 
+const hasEmail = rule({
+  cache: 'contextual',
+})((_parent, _args, { req }: ContextWithUser, _info) => {
+  return req.user.email ? true : new ForbiddenError('invalid token');
+});
+
 const userCustomerIdMatchesArgsCustomerId = rule({
   cache: 'contextual',
 })(
@@ -87,7 +93,7 @@ export const appPermissions = shield(
         and(isRecruiter, userCustomerIdMatchesArgsCustomerId),
         isAdmin,
       ),
-      getStudentQueries: isStudent,
+      getStudentQueries: and(isStudent, hasEmail),
     },
   },
   {

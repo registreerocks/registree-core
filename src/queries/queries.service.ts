@@ -45,14 +45,23 @@ export class QueriesService {
     return orderBy(mappedResponse, [r => r.eventDetails.startDate], ['desc']);
   }
 
-  async getStudentQueries(studentNumber: string): Promise<EventQuery[]> {
+  async getStudentQueries(
+    studentNumber: string,
+    studentEmail: string,
+  ): Promise<EventQuery[]> {
     const transcriptId = await this.getTranscriptIdFromStudentNumber(
       studentNumber,
     );
     const response = await this.queryDataService.getStudentQueries(
       transcriptId,
     );
-    const mappedResponse = response.map(mapEventQuery);
+    const mappedResponse = response.map(mapEventQuery).map(q => ({
+      ...q,
+      eventDetails: {
+        ...q.eventDetails,
+        invites: q.eventDetails.invites.filter(x => x.email !== studentEmail),
+      },
+    }));
     return orderBy(mappedResponse, [r => r.eventDetails.startDate], ['desc']);
   }
 
