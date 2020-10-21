@@ -89,7 +89,8 @@
     "ts-loader": "^8.0.4",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "typescript-language-server": "^0.4.0"
   },
   "resolutions": {
     "fs-capacitor": "^6.2.0",
