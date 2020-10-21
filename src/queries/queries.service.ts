@@ -25,7 +25,7 @@ import { IdentifyingDataService } from 'src/identifying-data/identifying-data.se
 import { LinkingDataService } from 'src/linking-data/linking-data.service';
 import { UniversitiesService } from 'src/universities/universities.service';
 import { Degree } from 'src/universities/models/degree.model';
-import { ApolloError } from 'apollo-server-express';
+import { ApolloError, ValidationError } from 'apollo-server-express';
 import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-status.request';
 
 @Injectable()
@@ -262,13 +262,13 @@ export class QueriesService {
       s => !!s.newParams,
     );
     if (!prevDegreesIncludedInInput)
-      throw new Error(
+      throw new ValidationError(
         'Input does not contain all previously selected degrees.',
       );
     const amountTypesMatch = _.every(mergedQueryParameters, s =>
       s.prevParams ? s.newParams.amountType === s.prevParams.amountType : true,
     );
-    if (!amountTypesMatch) throw new Error('Amount type changed.');
+    if (!amountTypesMatch) throw new ValidationError('Amount type changed.');
 
     const newAmountGtePrevAmount = _.every(mergedQueryParameters, s =>
       s.prevParams
@@ -276,7 +276,7 @@ export class QueriesService {
         : true,
     );
     if (!newAmountGtePrevAmount)
-      throw new Error('Amount is smaller than in previous selection');
+      throw new ValidationError('Amount is smaller than in previous selection');
   }
 
   private async retrieveQueryParameters(queryId: string) {
@@ -302,7 +302,7 @@ export class QueriesService {
           } catch (error) {
             /* eslint-disable @typescript-eslint/no-unsafe-member-access */
             if (error.name === 'PayloadTooLargeError') {
-              throw new Error(
+              throw new ValidationError(
                 `The file size exceeds ${appConstants.fileSize} mb`,
               );
             } else {
@@ -311,7 +311,7 @@ export class QueriesService {
             /* eslint-enable @typescript-eslint/no-unsafe-member-access */
           }
         } else {
-          throw new Error(
+          throw new ValidationError(
             `The following mimetype is not accepted: ${file.mimetype}`,
           );
         }
