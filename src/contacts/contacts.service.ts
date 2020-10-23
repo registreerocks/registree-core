@@ -5,12 +5,12 @@ import { Contact } from './models/contact.model';
 import { Auth0DataService } from 'src/auth0-data/auth0-data.service';
 import { CreateUserRequest } from 'src/auth0-data/dto/create-user.request';
 import { CreateUserResponse } from 'src/auth0-data/dto/create-user.response';
-import { GetUserResponse } from 'src/auth0-data/dto/get-user.response';
 import { UpdateUserRequest } from 'src/auth0-data/dto/update-user.request';
 import { UpdateUserResponse } from 'src/auth0-data/dto/update-user.response';
 import * as crypto from 'crypto';
 import { CustomersService } from 'src/customers/customers.service';
 import _ from 'lodash';
+import { mapContact } from './mappers/map-contact';
 
 @Injectable()
 export class ContactsService {
@@ -27,13 +27,13 @@ export class ContactsService {
       this.createContactRequestMapper(input),
     );
     const contact = this.createContactResponseMapper(user);
-    await this.customersService.addContact(customerId, contact);
+    await this.customersService.addContact(customerId, user.user_id);
     return contact;
   }
 
   async getContact(userId: string): Promise<Contact> {
     const user = await this.auth0DataService.getUser(userId);
-    return this.getContactResponseMapper(user);
+    return mapContact(user);
   }
 
   async updateContact(
@@ -71,15 +71,6 @@ export class ContactsService {
   }
 
   private createContactResponseMapper(response: CreateUserResponse): Contact {
-    return {
-      name: response.name,
-      email: response.email,
-      userId: response.user_id,
-      dbId: response.app_metadata.db_id,
-    };
-  }
-
-  private getContactResponseMapper(response: GetUserResponse): Contact {
     return {
       name: response.name,
       email: response.email,

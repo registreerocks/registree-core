@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ID,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { Customer } from './models/customer.model';
 import { CustomersService } from './customers.service';
 import { NotFoundException } from '@nestjs/common';
@@ -10,10 +18,16 @@ import { connectionFromArray } from 'graphql-relay';
 import { CustomerConnection } from './models/pagination/customer-connection.model';
 import { UpdateCustomerDetailsInput } from './dto/update-customer-details.input';
 import { UpdateBillingDetailsInput } from './dto/update-billing-details.input';
+import { Contact } from 'src/contacts/models/contact.model';
+import { Auth0DataService } from 'src/auth0-data/auth0-data.service';
+import { mapContact } from 'src/contacts/mappers/map-contact';
 
 @Resolver(_of => Customer)
 export class CustomersResolver {
-  constructor(private readonly customersService: CustomersService) {}
+  constructor(
+    private readonly customersService: CustomersService,
+    private readonly auth0DataService: Auth0DataService,
+  ) {}
 
   @Query(_returns => Customer, { name: 'customer' })
   async getCurrentCustomer(@CurrentUser() user: User): Promise<Customer> {
@@ -78,5 +92,11 @@ export class CustomersResolver {
   ): Promise<Customer> {
     const result = await this.customersService.createCustomer(input);
     return result;
+  }
+
+  @ResolveField('contacts', _returns => [Contact])
+  async getContacts(@Parent() customer: Customer): Promise<Contact[]> {
+    const users = await this.auth0DataService.getUsers(customer.contactIds);
+    return users.map(mapContact);
   }
 }
