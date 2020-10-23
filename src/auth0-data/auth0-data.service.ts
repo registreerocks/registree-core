@@ -64,8 +64,9 @@ export class Auth0DataService {
     }
   }
 
-  async getUsers(searchQuery: string): Promise<GetUserResponse[]> {
+  async getUsers(customerIds: string[]): Promise<GetUserResponse[]> {
     const accessToken = await this.authService.getManagementToken();
+    const searchQuery = this.buildUserQuery(customerIds);
     try {
       const result = await this.axiosInstance.get<GetUserResponse[]>(
         `/users?q=${searchQuery}`,
@@ -110,5 +111,9 @@ export class Auth0DataService {
       /* eslint-enable @typescript-eslint/no-unsafe-assignment */
       throw err;
     }
+  }
+
+  private buildUserQuery(contactIds: string[]): string {
+    return `user_id:("${contactIds.join('" OR "')}")`;
   }
 }

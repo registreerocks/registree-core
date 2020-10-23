@@ -96,13 +96,7 @@ export class CustomersResolver {
 
   @ResolveField('contacts', _returns => [Contact])
   async getContacts(@Parent() customer: Customer): Promise<Contact[]> {
-    const users = await this.auth0DataService.getUsers(
-      this.buildUserQuery(customer.contactIds),
-    );
+    const users = await this.auth0DataService.getUsers(customer.contactIds);
     return users.map(mapContact);
-  }
-
-  private buildUserQuery(contactIds: string[]): string {
-    return `user_id:("${contactIds.join('" OR "')}")`;
   }
 }
