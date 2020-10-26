@@ -19,4 +19,6 @@ export class Invitation {
 
   @Field({ nullable: true })
   email?: string;
+
+  transcriptId!: string;
 }
