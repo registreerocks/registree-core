@@ -3,8 +3,6 @@ import { JsonObject } from '../../common/interfaces/json-object.interface';
 export interface JwtPayload extends JsonObject {
   /** Id of the user in our database */
   'https://registree.com/db_id'?: string;
-  /** Email of the user in auth0 */
-  'https://registree.com/email'?: string;
   /** Issuer (who created and signed this token) */
   iss?: string;
   /** Subject (whom the token refers to) */

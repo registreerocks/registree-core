@@ -78,15 +78,7 @@ export class EventQueriesResolver {
     @Args() args: PaginationArgs,
     @CurrentUser() user: User,
   ): Promise<EventQueryConnection> {
-    if (!user.email) {
-      throw new Error(
-        'User expected to have an email defined. This should have been picked up by a shield rule',
-      );
-    }
-    const queries = await this.queriesService.getStudentQueries(
-      user.dbId,
-      user.email,
-    );
+    const queries = await this.queriesService.getStudentQueries(user.dbId);
     // TODO: Default sorting
     const paginatedQueries = connectionFromArray(queries, args);
 
