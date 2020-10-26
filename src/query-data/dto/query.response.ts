@@ -26,9 +26,8 @@ export type ResponseDto = {
   sent: string;
   viewed: string;
   student_info: {
-    first_name: string;
-    last_name: string;
-    student_id: string;
+    user_id: string;
+    student_number: string;
   };
 };
 
