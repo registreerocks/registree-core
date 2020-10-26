@@ -24,9 +24,11 @@ export class Customer extends Document {
   @Field(_type => BillingDetails)
   billingDetails!: BillingDetails;
 
-  @Prop([Contact])
+  @Prop()
+  contactIds!: string[];
+
   @Field(_type => [Contact])
-  contacts!: Contact[];
+  contacts?: Contact[];
 }
 
 export const CustomerSchema = SchemaFactory.createForClass(Customer);
