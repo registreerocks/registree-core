@@ -13,4 +13,12 @@ export class StudentsResolver {
     const result = await this.studentsService.getStudent(user.userId);
     return result;
   }
+
+  @Query(_returns => Date)
+  async studentPrivacyPolicy(@CurrentUser() user: User): Promise<Date> {
+    const result = await this.studentsService.getStudentPrivacyPolicyReadDate(
+      user.userId,
+    );
+    return result;
+  }
 }
