@@ -12,6 +12,13 @@ export class StudentsService {
     return this.getStudentResponseMapper(user);
   }
 
+  async getStudentPrivacyPolicyReadDate(userId: string): Promise<Date> {
+    const user = await this.auth0DataService.getUser(userId);
+    return user.app_metadata.privacyPolicy
+      ? new Date(user.app_metadata.privacyPolicy)
+      : new Date(0);
+  }
+
   private getStudentResponseMapper(response: GetUserResponse): Student {
     return {
       name: response.app_metadata.name,
