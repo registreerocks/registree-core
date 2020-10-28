@@ -1,4 +1,4 @@
-import { Resolver, Query } from '@nestjs/graphql';
+import { Resolver, Query, Mutation } from '@nestjs/graphql';
 import { StudentsService } from '../students.service';
 import { Student } from '../models/student.model';
 import { CurrentUser } from 'src/auth/current-user.decorator';
@@ -17,6 +17,14 @@ export class StudentsResolver {
   @Query(_returns => Date)
   async studentPrivacyPolicy(@CurrentUser() user: User): Promise<Date> {
     const result = await this.studentsService.getStudentPrivacyPolicyReadDate(
+      user.userId,
+    );
+    return result;
+  }
+
+  @Mutation(_returns => Date)
+  async setStudentPrivacyPolicy(@CurrentUser() user: User): Promise<Date> {
+    const result = await this.studentsService.setStudentPrivacyPolicyReadDate(
       user.userId,
     );
     return result;
