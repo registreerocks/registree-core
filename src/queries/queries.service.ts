@@ -52,7 +52,15 @@ export class QueriesService {
     const response = await this.queryDataService.getStudentQueries(
       transcriptId,
     );
-    const mappedResponse = response.map(mapEventQuery);
+    const mappedResponse = response.map(mapEventQuery).map(q => ({
+      ...q,
+      eventDetails: {
+        ...q.eventDetails,
+        invites: q.eventDetails.invites.filter(
+          x => x.transcriptId === transcriptId,
+        ),
+      },
+    }));
     return orderBy(mappedResponse, [r => r.eventDetails.startDate], ['desc']);
   }
 

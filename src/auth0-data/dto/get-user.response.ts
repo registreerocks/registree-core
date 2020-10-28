@@ -28,6 +28,7 @@ type Metadata = {
   name?: string;
   uniEmail?: string;
   university?: string;
+  privacyPolicy?: string;
 };
 
 type Identity = {

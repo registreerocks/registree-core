@@ -216,6 +216,7 @@ type Query {
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
   getContact: Contact!
   getStudent: Student!
+  studentPrivacyPolicy: DateTime!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getStudentQueries(filter: StudentQueryFilter, after: String, before: String, first: Int, last: Int): EventQueryConnection!
