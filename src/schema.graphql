@@ -218,7 +218,7 @@ type Query {
   getStudent: Student!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
-  getStudentQueries(after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getStudentQueries(filter: StudentQueryFilter, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
   getUniversities: [University!]!
 }
@@ -244,6 +244,13 @@ input DegreeInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+input StudentQueryFilter {
+  accepted: Boolean
+  attended: Boolean
+  responded: Boolean
+  viewed: Boolean
+}
 
 type Mutation {
   updateBillingDetails(updateBillingDetailsInput: UpdateBillingDetailsInput!, customerId: ID!): Customer!
