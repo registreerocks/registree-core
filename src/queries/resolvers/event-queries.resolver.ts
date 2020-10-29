@@ -21,6 +21,7 @@ import { Quote } from 'src/pricing/models/quote.model';
 import { PricingService } from 'src/pricing/pricing.service';
 import { Customer } from 'src/customers/models/customer.model';
 import { CustomersService } from 'src/customers/customers.service';
+import { StudentQueryFilter } from '../dto/student-query-filter.input';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
@@ -77,15 +78,53 @@ export class EventQueriesResolver {
   async getStudentQueries(
     @Args() args: PaginationArgs,
     @CurrentUser() user: User,
+    @Args({ name: 'filter', type: () => StudentQueryFilter, nullable: true })
+    filter?: StudentQueryFilter,
   ): Promise<EventQueryConnection> {
     const queries = await this.queriesService.getStudentQueries(user.dbId);
+    const filteredQueries = queries.filter(
+      this.createStudentQueriesPredicate(filter),
+    );
+
     // TODO: Default sorting
-    const paginatedQueries = connectionFromArray(queries, args);
+    const paginatedQueries = connectionFromArray(filteredQueries, args);
 
     return {
       ...paginatedQueries,
       totalCount: queries.length,
     };
+  }
+
+  private createStudentQueriesPredicate(
+    filter?: StudentQueryFilter,
+  ): (eventQuery: EventQuery) => boolean {
+    const getInvite = (eventQuery: EventQuery) =>
+      eventQuery.eventDetails.invites[0];
+    if (filter) {
+      const acceptedFilter =
+        filter.accepted != null
+          ? (eq: EventQuery) => getInvite(eq).accepted === filter.accepted
+          : _ => true;
+      const attendedFilter =
+        filter.attended != null
+          ? (eq: EventQuery) => getInvite(eq).attended === filter.attended
+          : _ => true;
+      const respondedFilter =
+        filter.responded != null
+          ? (eq: EventQuery) => !!getInvite(eq).respondedAt === filter.responded
+          : _ => true;
+      const viewedFilter =
+        filter.viewed != null
+          ? (eq: EventQuery) => !!getInvite(eq).viewedAt === filter.viewed
+          : _ => true;
+      return (eq: EventQuery) =>
+        acceptedFilter(eq) &&
+        attendedFilter(eq) &&
+        respondedFilter(eq) &&
+        viewedFilter(eq);
+    } else {
+      return _ => true;
+    }
   }
 
   @Query(_returns => EventQuery)
