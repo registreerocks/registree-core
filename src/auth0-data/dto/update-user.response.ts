@@ -12,4 +12,5 @@ export interface UpdateUserResponse extends JsonObject {
 type Metadata = {
   roles: string[];
   db_id: string;
+  privacyPolicy?: string;
 };

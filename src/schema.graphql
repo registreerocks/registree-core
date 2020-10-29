@@ -259,6 +259,7 @@ type Mutation {
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   createContact(customerId: ID!, createContactInput: CreateContactInput!): Contact!
   updateContact(updateUserInput: UpdateContactInput!): Contact!
+  setStudentPrivacyPolicy: DateTime!
   updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
   addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
