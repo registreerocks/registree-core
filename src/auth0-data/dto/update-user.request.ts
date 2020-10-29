@@ -6,4 +6,9 @@ export interface UpdateUserRequest extends JsonObject {
   verify_email?: boolean;
   password?: string;
   name?: string;
+  app_metadata?: Metadata;
 }
+
+type Metadata = {
+  privacyPolicy?: string;
+};
