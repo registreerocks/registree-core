@@ -258,6 +258,7 @@ type Mutation {
   setQueryInviteToViewed(queryId: ID!): EventQuery!
   setQueryInviteToAccepted(queryId: ID!): EventQuery!
   setQueryInviteToDeclined(queryId: ID!): EventQuery!
+  setQueryInviteToAttendedAndLink(queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
   expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
 }

@@ -101,6 +101,22 @@ export class EventDetailsResolver {
     return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
   }
 
+  @Mutation(_returns => EventQuery)
+  async setQueryInviteToAttendedAndLink(
+    @Args({ name: 'queryId', type: () => ID })
+    queryId: string,
+    @CurrentUser() user: User,
+  ): Promise<EventQuery> {
+    const linkInput = { student_number: user.dbId, user_id: user.userId };
+    await this.queriesService.linkStudent(queryId, user.dbId, linkInput);
+    const statusInput = { attended: true };
+    return this.queriesService.updateQueryInvite(
+      queryId,
+      user.dbId,
+      statusInput,
+    );
+  }
+
   @ResolveField('attachments', _returns => [UploadedFile])
   async getAttachments(
     @Parent() eventDetails: EventDetails,

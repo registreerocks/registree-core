@@ -1,11 +1,11 @@
 import { QueryResponse } from 'src/query-data/dto/query.response';
 import { QueryDetails } from '../models/query-details.model';
-import { mapQueryResult } from './map-query-results';
-import _ from 'lodash';
+import { mapRawResults } from './map-raw-results';
 
 export const mapQueryDetails = ({
   details,
   results,
+  responses,
   timestamp,
 }: QueryResponse): QueryDetails => ({
   parameters: details.map(d => ({
@@ -15,6 +15,6 @@ export const mapQueryDetails = ({
         ? { absolute: d.absolute, amountType: 'Absolute' }
         : { percentage: d.percentage, amountType: 'Percentage' },
   })),
-  rawResults: _.chain(results).mapValues(mapQueryResult).values().value(),
+  rawResults: mapRawResults(results, responses),
   updatedAt: new Date(timestamp),
 });
