@@ -28,6 +28,7 @@ import { Degree } from 'src/universities/models/degree.model';
 import { ApolloError, ValidationError } from 'apollo-server-express';
 import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-status.request';
 import { CustomersService } from 'src/customers/customers.service';
+import { UpdateStudentLink } from 'src/query-data/dto/update-student-link.request';
 
 @Injectable()
 export class QueriesService {
@@ -166,6 +167,20 @@ export class QueriesService {
       },
     );
     return mapEventQuery(response);
+  }
+
+  async linkStudent(
+    queryId: string,
+    studentNumber: string,
+    input: UpdateStudentLink,
+  ) {
+    const transcriptId = await this.getTranscriptIdFromStudentNumber(
+      studentNumber,
+    );
+    await this.queryDataService.linkStudent(queryId, {
+      ...input,
+      student_address: transcriptId,
+    });
   }
 
   private async getTranscriptIdFromStudentNumber(

@@ -9,6 +9,7 @@ import { QUERY_DATA_OPTIONS } from './query-data.constants';
 import { UpdateEventRequest } from './dto/update-event.request';
 import { ExpandQueryRequest } from './dto/expand-query.request';
 import { UpdateQueryInviteStatus } from './dto/update-query-invite-status.request';
+import { UpdateStudentLink } from './dto/update-student-link.request';
 
 @Injectable()
 export class QueryDataService {
@@ -186,6 +187,30 @@ export class QueryDataService {
     } catch (err) {
       /* eslint-disable @typescript-eslint/no-unsafe-assignment */
       this.logger.error({ err }, 'Failed to retrieve event query: %s', queryId);
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      throw err;
+    }
+  }
+
+  async linkStudent(queryId: string, request: UpdateStudentLink) {
+    const accessToken = await this.authService.getAccessToken();
+    try {
+      await this.axiosInstance.post<string>(
+        `/query/add_student_attendance/${queryId}`,
+        request,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+    } catch (err) {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      this.logger.error(
+        { err },
+        'Failed to link student for transcriptId: %s',
+        request.student_address,
+      );
       /* eslint-enable @typescript-eslint/no-unsafe-assignment */
       throw err;
     }
