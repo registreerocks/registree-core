@@ -3,9 +3,12 @@ import { GqlArgumentsHost, GqlContextType } from '@nestjs/graphql';
 import { ApolloError } from 'apollo-server-express';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { ServerError } from './common/errors/server.error';
 
 @Catch()
 export class AllExceptionsFilter extends BaseExceptionFilter {
+  private readonly loggerContext = AllExceptionsFilter.name;
+
   constructor(
     @InjectPinoLogger(AllExceptionsFilter.name)
     private readonly logger: PinoLogger,
@@ -29,21 +32,46 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     if (err instanceof ApolloError) {
       // expected errors
       return err;
-    } else if (err instanceof Error) {
-      // unexpected errors
-      this.logger.error({ err }, 'Unexpected error thrown');
-      return new ApolloError(
-        'Internal Server Error',
-        'INTERNAL_SERVER_ERROR',
-        err,
+    } else if (err instanceof ServerError) {
+      return this.handleUnexpectedError(
+        err.baseError,
+        err.handlerClass,
+        err.handler,
       );
     } else {
-      // something that is not an error were thrown
-      this.logger.error(
-        { throwObject: err },
-        'Object thrown that is not an error',
-      );
-      return new ApolloError('Internal Server Error', 'INTERNAL_SERVER_ERROR');
+      return this.handleUnexpectedError(err);
+    }
+  }
+
+  private handleUnexpectedError(
+    err: unknown,
+    context?: string,
+    handler?: string,
+  ): ApolloError {
+    try {
+      if (context) {
+        this.logger.setContext(context);
+      }
+      if (err instanceof Error) {
+        this.logger.error({ err, handler }, 'Unexpected error thrown');
+        return new ApolloError(
+          'Internal Server Error',
+          'INTERNAL_SERVER_ERROR',
+          err,
+        );
+      } else {
+        // something that is not an error were thrown
+        this.logger.error(
+          { throwObject: err, handler },
+          'Object thrown that is not an error',
+        );
+        return new ApolloError(
+          'Internal Server Error',
+          'INTERNAL_SERVER_ERROR',
+        );
+      }
+    } finally {
+      this.logger.setContext(this.loggerContext);
     }
   }
 }

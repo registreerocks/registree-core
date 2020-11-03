@@ -25,6 +25,7 @@ import { gqlAuthMiddleware } from './auth/gql-auth.middleware';
 import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader';
 import { AllExceptionsFilter } from './all-exceptions.filter';
+import { ErrorContextInterceptor } from './common/error-context.interceptor';
 
 @Module({
   imports: [
@@ -106,6 +107,7 @@ import { AllExceptionsFilter } from './all-exceptions.filter';
   providers: [
     AppService,
     { provide: APP_INTERCEPTOR, useClass: DataLoaderInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: ErrorContextInterceptor },
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
   ],
 })
