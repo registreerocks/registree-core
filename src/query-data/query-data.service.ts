@@ -9,6 +9,7 @@ import { UpdateEventRequest } from './dto/update-event.request';
 import { ExpandQueryRequest } from './dto/expand-query.request';
 import { UpdateQueryInviteStatus } from './dto/update-query-invite-status.request';
 import { ServerError } from 'src/common/errors/server.error';
+import { UpdateStudentLink } from './dto/update-student-link.request';
 
 @Injectable()
 export class QueryDataService {
@@ -166,6 +167,23 @@ export class QueryDataService {
       );
     }
     return this.getQuery(queryId);
+  }
+
+  async linkStudent(queryId: string, request: UpdateStudentLink) {
+    const accessToken = await this.authService.getAccessToken();
+    try {
+      await this.axiosInstance.post<string>(
+        `/query/add_student_attendance/${queryId}`,
+        request,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+    } catch (err) {
+      throw new ServerError('Failed to link student to query', err);
+    }
   }
 
   async updateEventInfo(

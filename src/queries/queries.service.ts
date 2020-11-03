@@ -27,6 +27,8 @@ import { UniversitiesService } from 'src/universities/universities.service';
 import { Degree } from 'src/universities/models/degree.model';
 import { ApolloError, ValidationError } from 'apollo-server-express';
 import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-status.request';
+import { CustomersService } from 'src/customers/customers.service';
+import { UpdateStudentLink } from 'src/query-data/dto/update-student-link.request';
 
 @Injectable()
 export class QueriesService {
@@ -37,6 +39,7 @@ export class QueriesService {
     private readonly identifyingDataService: IdentifyingDataService,
     private readonly linkingDataService: LinkingDataService,
     private readonly universitiesService: UniversitiesService,
+    private readonly customersService: CustomersService,
   ) {}
 
   async getCustomerQueries(customerId: string): Promise<EventQuery[]> {
@@ -78,8 +81,13 @@ export class QueriesService {
 
   async createEventQuery(
     input: CreateEventQueryInput,
-    customerId: string,
+    userId: string,
   ): Promise<EventQuery> {
+    const customerId = (await this.customersService.findOneByUserId(userId))
+      ?.id;
+    if (!customerId) {
+      throw new Error(`Customer for user with id: ${userId} not found.`);
+    }
     const attachments = await this.handleAttachments(input.attachments);
 
     const degrees = await this.getDegreesById(
@@ -159,6 +167,20 @@ export class QueriesService {
       },
     );
     return mapEventQuery(response);
+  }
+
+  async linkStudent(
+    queryId: string,
+    studentNumber: string,
+    input: UpdateStudentLink,
+  ) {
+    const transcriptId = await this.getTranscriptIdFromStudentNumber(
+      studentNumber,
+    );
+    await this.queryDataService.linkStudent(queryId, {
+      ...input,
+      student_address: transcriptId,
+    });
   }
 
   private async getTranscriptIdFromStudentNumber(

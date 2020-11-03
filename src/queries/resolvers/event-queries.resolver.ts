@@ -38,7 +38,7 @@ export class EventQueriesResolver {
     @CurrentUser()
     user: User,
   ): Promise<EventQuery> {
-    return this.queriesService.createEventQuery(input, user.dbId);
+    return this.queriesService.createEventQuery(input, user.userId);
   }
 
   @Mutation(_returns => EventQuery)
@@ -149,7 +149,16 @@ export class EventQueriesResolver {
   @ResolveField('customer', _returns => Customer)
   async getCustomerInformation(
     @Parent() eventQuery: EventQuery,
-  ): Promise<Customer | null> {
-    return await this.customersService.findOneByUserId(eventQuery.customerId);
+  ): Promise<Customer> {
+    const res = await this.customersService.findOneByCustomerId(
+      eventQuery.customerId,
+    );
+    if (res) {
+      return res;
+    } else {
+      throw new Error(
+        `Event Query with id: ${eventQuery.id} has an invalid customerId`,
+      );
+    }
   }
 }
