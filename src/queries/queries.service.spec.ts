@@ -6,6 +6,7 @@ import { PricingService } from 'src/pricing/pricing.service';
 import { IdentifyingDataService } from 'src/identifying-data/identifying-data.service';
 import { LinkingDataService } from 'src/linking-data/linking-data.service';
 import { UniversitiesService } from 'src/universities/universities.service';
+import { CustomersService } from 'src/customers/customers.service';
 
 describe('QueriesService', () => {
   let service: QueriesService;
@@ -36,6 +37,10 @@ describe('QueriesService', () => {
         },
         {
           provide: LinkingDataService,
+          useValue: {},
+        },
+        {
+          provide: CustomersService,
           useValue: {},
         },
       ],
