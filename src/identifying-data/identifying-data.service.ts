@@ -1,10 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { AuthService } from 'src/auth/auth.service';
-import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { IdentifyingDataOptions } from './identifying-data.options';
 import { IDENTIFYING_DATA_OPTIONS } from './identifying-data.constants';
 import { GetIdentifyingDataResponse } from './dto/get-identifying-data.response';
+import { ServerError } from 'src/common/errors/server.error';
 
 @Injectable()
 export class IdentifyingDataService {
@@ -14,8 +14,6 @@ export class IdentifyingDataService {
     @Inject(IDENTIFYING_DATA_OPTIONS)
     private readonly options: IdentifyingDataOptions,
     private readonly authService: AuthService,
-    @InjectPinoLogger(IdentifyingDataService.name)
-    private readonly logger: PinoLogger,
   ) {
     this.axiosInstance = axios.create({
       baseURL: options.identifyingApi,
@@ -37,14 +35,7 @@ export class IdentifyingDataService {
       );
       return result.data;
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error(
-        { err },
-        'Failed to get identifying id for student %s',
-        studentNumber,
-      );
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
+      throw new ServerError('Failed to get identifying id for student', err);
     }
   }
 }

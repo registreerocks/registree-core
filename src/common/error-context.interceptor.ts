@@ -7,7 +7,7 @@ import {
 import { Observable, MonoTypeOperatorFunction, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ApolloError } from 'apollo-server-core';
-import { ServerError } from './errors/server.error';
+import { WrappedError } from './errors/wrapped.error';
 
 @Injectable()
 export class ErrorContextInterceptor implements NestInterceptor {
@@ -30,7 +30,7 @@ export class ErrorContextInterceptor implements NestInterceptor {
       if (err instanceof ApolloError) {
         return throwError(err);
       } else {
-        return throwError(new ServerError(err, handlerClass, handler));
+        return throwError(new WrappedError(err, handlerClass, handler));
       }
     });
   }
