@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Customer } from './models/customer.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -24,7 +24,7 @@ export class CustomersService {
   async findOneByUserId(userId: string): Promise<Customer | null> {
     return await this.customerModel
       .findOne({
-        'contacts.userId': userId,
+        contactIds: userId,
       })
       .exec();
   }
@@ -37,7 +37,7 @@ export class CustomersService {
     const createdCustomer = new this.customerModel({
       name: input.name,
       description: input.description,
-      contacts: [],
+      contactIds: [],
       billingDetails: {
         city: null,
       },
@@ -84,12 +84,7 @@ export class CustomersService {
   }
 
   async addContact(customerId: string, userId: string): Promise<Customer> {
-    const userCustomer = await this.customerModel
-      .findOne({
-        contactIds: userId,
-      })
-      .exec();
-
+    const userCustomer = await this.findOneByUserId(userId);
     if (userCustomer === null) {
       const updatedCustomer = await this.customerModel.findOneAndUpdate(
         {
@@ -107,8 +102,9 @@ export class CustomersService {
         );
       }
     } else {
-      throw new BadRequestException(
+      throw new ApolloError(
         'Contact is already a contact on another client',
+        'INPUT_ERROR',
       );
     }
   }
