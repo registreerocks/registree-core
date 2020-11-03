@@ -6,6 +6,7 @@ import { Auth0DataAsyncOptions } from 'src/auth0-data/auth0-data.options';
 
 @Module({
   providers: [StudentsResolver, StudentsService],
+  exports: [StudentsService],
 })
 export class StudentsModule {
   static forRootAsync(options: Auth0DataAsyncOptions): DynamicModule {
