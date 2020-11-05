@@ -166,7 +166,17 @@ export class QueriesService {
         student_address: transcriptId,
       },
     );
-    return mapEventQuery(response);
+    const mappedResponse = mapEventQuery(response);
+    const filteredResponse = {
+      ...mappedResponse,
+      eventDetails: {
+        ...mappedResponse.eventDetails,
+        invites: mappedResponse.eventDetails.invites.filter(
+          x => x.transcriptId === transcriptId,
+        ),
+      },
+    };
+    return filteredResponse;
   }
 
   async linkStudent(
