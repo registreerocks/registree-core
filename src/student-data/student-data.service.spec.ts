@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StudentDataService } from './student-data.service';
-import { getLoggerToken } from 'nestjs-pino';
 import { AuthService } from 'src/auth/auth.service';
 import { STUDENT_DATA_OPTIONS } from './student-data.constants';
 
@@ -13,10 +12,6 @@ describe('StudentDataService', () => {
         StudentDataService,
         {
           provide: AuthService,
-          useValue: {},
-        },
-        {
-          provide: getLoggerToken(StudentDataService.name),
           useValue: {},
         },
         {

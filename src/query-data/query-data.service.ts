@@ -3,12 +3,12 @@ import axios, { AxiosInstance } from 'axios';
 import { EventQueryResponse } from './dto/event-query.response';
 import { AuthService } from 'src/auth/auth.service';
 import { CreateQueryRequest } from './dto/create-query.request';
-import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { QueryDataOptions } from './query-data.options';
 import { QUERY_DATA_OPTIONS } from './query-data.constants';
 import { UpdateEventRequest } from './dto/update-event.request';
 import { ExpandQueryRequest } from './dto/expand-query.request';
 import { UpdateQueryInviteStatus } from './dto/update-query-invite-status.request';
+import { ServerError } from 'src/common/errors/server.error';
 import { UpdateStudentLink } from './dto/update-student-link.request';
 
 @Injectable()
@@ -18,8 +18,6 @@ export class QueryDataService {
   constructor(
     @Inject(QUERY_DATA_OPTIONS) private readonly options: QueryDataOptions,
     private readonly authService: AuthService,
-    @InjectPinoLogger(QueryDataService.name)
-    private readonly logger: PinoLogger,
   ) {
     this.axiosInstance = axios.create({
       baseURL: options.queryApi,
@@ -29,33 +27,41 @@ export class QueryDataService {
   async getStudentCountForQuery(request: CreateQueryRequest): Promise<number> {
     const accessToken = await this.authService.getAccessToken();
 
-    const result = await this.axiosInstance.post<number>(
-      '/dry_run/degree',
-      request,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+    try {
+      const result = await this.axiosInstance.post<number>(
+        '/dry_run/degree',
+        request,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-      },
-    );
+      );
 
-    return result.data;
+      return result.data;
+    } catch (err) {
+      throw new ServerError('Failed to get student count for a query', err);
+    }
   }
 
   async createQuery(request: CreateQueryRequest): Promise<string> {
     const accessToken = await this.authService.getAccessToken();
 
-    const result = await this.axiosInstance.post<string>(
-      `/query/degree`,
-      request,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+    try {
+      const result = await this.axiosInstance.post<string>(
+        `/query/degree`,
+        request,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-      },
-    );
+      );
 
-    return result.data;
+      return result.data;
+    } catch (err) {
+      throw new ServerError('Query creation failed', err);
+    }
   }
 
   async expandQuery(
@@ -63,36 +69,43 @@ export class QueryDataService {
     request: ExpandQueryRequest,
   ): Promise<EventQueryResponse> {
     const accessToken = await this.authService.getAccessToken();
-
-    const result = await this.axiosInstance.post<EventQueryResponse>(
-      `/expand/degree/${queryId}`,
-      request.details,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+    try {
+      const result = await this.axiosInstance.post<EventQueryResponse>(
+        `/expand/degree/${queryId}`,
+        request.details,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-      },
-    );
+      );
 
-    return result.data;
+      return result.data;
+    } catch (err) {
+      throw new ServerError('Failed to expand query', err);
+    }
   }
 
   async getQuery(queryId: string): Promise<EventQueryResponse> {
     const accessToken = await this.authService.getAccessToken();
 
-    const result = await this.axiosInstance.get<EventQueryResponse>(
-      `/query/get`,
-      {
-        params: {
-          id: queryId,
+    try {
+      const result = await this.axiosInstance.get<EventQueryResponse>(
+        `/query/get`,
+        {
+          params: {
+            id: queryId,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
+      );
 
-    return result.data;
+      return result.data;
+    } catch (err) {
+      throw new ServerError('Failed to get query by id', err);
+    }
   }
 
   async getCustomerQueries(customerId: string): Promise<EventQueryResponse[]> {
@@ -111,14 +124,7 @@ export class QueryDataService {
       );
       return result.data;
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error(
-        { err },
-        'Failed to get queries by customer id: %s',
-        customerId,
-      );
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
+      throw new ServerError('Failed to get queries by customer id', err);
     }
   }
 
@@ -135,14 +141,7 @@ export class QueryDataService {
       );
       return result.data;
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error(
-        { err },
-        'Failed to get queries by transcript id: %s',
-        transcriptId,
-      );
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
+      throw new ServerError('Failed to get queries by transcript id', err);
     }
   }
 
@@ -162,34 +161,12 @@ export class QueryDataService {
         },
       );
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error(
-        { err },
-        'Failed to update student invite status for transcriptId: %s',
-        request.student_address,
+      throw new ServerError(
+        'Failed to update student invite status for transcriptId',
+        err,
       );
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
     }
-    try {
-      const result = await this.axiosInstance.get<EventQueryResponse>(
-        `/query/get`,
-        {
-          params: {
-            id: queryId,
-          },
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      return result.data;
-    } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error({ err }, 'Failed to retrieve event query: %s', queryId);
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
-    }
+    return this.getQuery(queryId);
   }
 
   async linkStudent(queryId: string, request: UpdateStudentLink) {
@@ -205,14 +182,7 @@ export class QueryDataService {
         },
       );
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error(
-        { err },
-        'Failed to link student for transcriptId: %s',
-        request.student_address,
-      );
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
+      throw new ServerError('Failed to link student to query', err);
     }
   }
 
@@ -233,14 +203,7 @@ export class QueryDataService {
       );
       return result.data;
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error(
-        { err },
-        'Failed to update event details for id: %s',
-        queryId,
-      );
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
+      throw new ServerError('Failed to update event details', err);
     }
   }
 
@@ -261,14 +224,7 @@ export class QueryDataService {
       );
       return result.data;
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error(
-        { err },
-        'Failed to add attachments for id: %s',
-        queryId,
-      );
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
+      throw new ServerError('Failed to add attachments', err);
     }
   }
 
@@ -289,14 +245,7 @@ export class QueryDataService {
       );
       return result.data;
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error(
-        { err },
-        'Failed to delete attachments for id: %s',
-        queryId,
-      );
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
+      throw new ServerError('Failed to delete attachments', err);
     }
   }
 }

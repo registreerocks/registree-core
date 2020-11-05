@@ -2,11 +2,11 @@ import { Injectable, Inject } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { StudentDataOptions } from './student-data.options';
 import { AuthService } from 'src/auth/auth.service';
-import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
 import { STUDENT_DATA_OPTIONS } from './student-data.constants';
 import { UniversityResponse } from './dto/university.response';
 import { FacultyResponse } from './dto/faculty.response';
 import { DegreeResponse } from './dto/degree.response';
+import { ServerError } from 'src/common/errors/server.error';
 
 @Injectable()
 export class StudentDataService {
@@ -17,8 +17,6 @@ export class StudentDataService {
   constructor(
     @Inject(STUDENT_DATA_OPTIONS) private readonly options: StudentDataOptions,
     private readonly authService: AuthService,
-    @InjectPinoLogger(StudentDataService.name)
-    private readonly logger: PinoLogger,
   ) {
     this.axiosInstances = options.studentApis.map(api =>
       axios.create({
@@ -46,10 +44,7 @@ export class StudentDataService {
       );
       return results.flat();
     } catch (err) {
-      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-      this.logger.error({ err }, 'Failed to get all universities');
-      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      throw err;
+      throw new ServerError('Failed to get all universities', err);
     }
   }
 

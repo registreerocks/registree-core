@@ -3,9 +3,12 @@ import { GqlArgumentsHost, GqlContextType } from '@nestjs/graphql';
 import { ApolloError } from 'apollo-server-express';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { WrappedError } from './common/errors/wrapped.error';
 
 @Catch()
 export class AllExceptionsFilter extends BaseExceptionFilter {
+  private readonly loggerContext = AllExceptionsFilter.name;
+
   constructor(
     @InjectPinoLogger(AllExceptionsFilter.name)
     private readonly logger: PinoLogger,
@@ -29,14 +32,10 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     if (err instanceof ApolloError) {
       // expected errors
       return err;
+    } else if (err instanceof WrappedError) {
+      return this.handleUnexpectedError(err.baseError, err.handlerClass);
     } else if (err instanceof Error) {
-      // unexpected errors
-      this.logger.error({ err }, 'Unexpected error thrown');
-      return new ApolloError(
-        'Internal Server Error',
-        'INTERNAL_SERVER_ERROR',
-        err,
-      );
+      return this.handleUnexpectedError(err);
     } else {
       // something that is not an error were thrown
       this.logger.error(
@@ -44,6 +43,22 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
         'Object thrown that is not an error',
       );
       return new ApolloError('Internal Server Error', 'INTERNAL_SERVER_ERROR');
+    }
+  }
+
+  private handleUnexpectedError(err: Error, context?: string): ApolloError {
+    try {
+      if (context) {
+        this.logger.setContext(context);
+      }
+      this.logger.error({ err }, 'Unexpected error thrown');
+      return new ApolloError(
+        'Internal Server Error',
+        'INTERNAL_SERVER_ERROR',
+        err,
+      );
+    } finally {
+      this.logger.setContext(this.loggerContext);
     }
   }
 }
