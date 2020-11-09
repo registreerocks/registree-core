@@ -1,16 +1,8 @@
 import { InputType, Field } from '@nestjs/graphql';
+import { InvitationState } from '../models/invitation-state.enum';
 
 @InputType()
 export class StudentQueryFilter {
-  @Field({ nullable: true })
-  accepted?: boolean;
-
-  @Field({ nullable: true })
-  attended?: boolean;
-
-  @Field({ nullable: true })
-  responded?: boolean;
-
-  @Field({ nullable: true })
-  viewed?: boolean;
+  @Field(_type => InvitationState, { nullable: true })
+  invitationState?: InvitationState;
 }
