@@ -216,7 +216,7 @@ type Query {
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
   getContact: Contact!
   getStudent: Student!
-  studentPrivacyPolicy: DateTime!
+  studentHasReadPrivacyPolicyVersion(privacyPolicyVersionDate: DateTime!): Boolean!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getStudentQueries(filter: StudentQueryFilter, after: String, before: String, first: Int, last: Int): EventQueryConnection!
@@ -259,7 +259,7 @@ type Mutation {
   createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
   createContact(customerId: ID!, createContactInput: CreateContactInput!): Contact!
   updateContact(updateUserInput: UpdateContactInput!): Contact!
-  setStudentPrivacyPolicy: DateTime!
+  setStudentPrivacyPolicyReadDate: DateTime!
   updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
   addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!

@@ -13,20 +13,24 @@ export class StudentsService {
     return this.getStudentResponseMapper(user);
   }
 
-  async getStudentPrivacyPolicyReadDate(userId: string): Promise<Date> {
+  async studentReadPrivacyPolicyVersion(
+    userId: string,
+    privacyPolicyVersionDate: Date,
+  ): Promise<boolean> {
     const user = await this.auth0DataService.getUser(userId);
-    return user.app_metadata.privacyPolicy
+    const userPrivacyPolicyReadDate = user.app_metadata.privacyPolicy
       ? new Date(user.app_metadata.privacyPolicy)
       : new Date(0);
+    return privacyPolicyVersionDate <= userPrivacyPolicyReadDate;
   }
 
-  async setStudentPrivacyPolicyReadDate(userId: string): Promise<Date> {
+  async setStudentPrivacyPolicyReadDate(userId: string) {
     const readDate = new Date();
-    const user = await this.auth0DataService.updateUser(
+    await this.auth0DataService.updateUser(
       userId,
       this.setPrivacyPolicyRequestMapper(readDate),
     );
-    return new Date(user.app_metadata.privacyPolicy!);
+    return readDate;
   }
 
   private getStudentResponseMapper(response: GetUserResponse): Student {
