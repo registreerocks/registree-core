@@ -82,22 +82,14 @@ export class EventDetailsResolver {
   }
 
   @Mutation(_returns => EventQuery)
-  async setQueryInviteToAccepted(
+  async setRsvp(
     @Args({ name: 'queryId', type: () => ID })
     queryId: string,
     @CurrentUser() user: User,
+    @Args({ name: 'willAttend', type: () => Boolean })
+    willAttend: boolean,
   ): Promise<EventQuery> {
-    const input = { accepted: true };
-    return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
-  }
-
-  @Mutation(_returns => EventQuery)
-  async setQueryInviteToDeclined(
-    @Args({ name: 'queryId', type: () => ID })
-    queryId: string,
-    @CurrentUser() user: User,
-  ): Promise<EventQuery> {
-    const input = { accepted: false };
+    const input = { accepted: willAttend };
     return this.queriesService.updateQueryInvite(queryId, user.dbId, input);
   }
 

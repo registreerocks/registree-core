@@ -270,8 +270,7 @@ type Mutation {
   addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
   setQueryInviteToViewed(queryId: ID!): EventQuery!
-  setQueryInviteToAccepted(queryId: ID!): EventQuery!
-  setQueryInviteToDeclined(queryId: ID!): EventQuery!
+  setRsvp(willAttend: Boolean!, queryId: ID!): EventQuery!
   setQueryInviteToAttendedAndLink(queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
   expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
