@@ -22,6 +22,7 @@ import { PricingService } from 'src/pricing/pricing.service';
 import { Customer } from 'src/customers/models/customer.model';
 import { CustomersService } from 'src/customers/customers.service';
 import { StudentQueryFilter } from '../dto/student-query-filter.input';
+import { calculateInvitationState } from '../models/invitation-state.enum';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
@@ -91,7 +92,7 @@ export class EventQueriesResolver {
 
     return {
       ...paginatedQueries,
-      totalCount: queries.length,
+      totalCount: filteredQueries.length,
     };
   }
 
@@ -100,28 +101,9 @@ export class EventQueriesResolver {
   ): (eventQuery: EventQuery) => boolean {
     const getInvite = (eventQuery: EventQuery) =>
       eventQuery.eventDetails.invites[0];
-    if (filter) {
-      const acceptedFilter =
-        filter.accepted != null
-          ? (eq: EventQuery) => getInvite(eq).accepted === filter.accepted
-          : _ => true;
-      const attendedFilter =
-        filter.attended != null
-          ? (eq: EventQuery) => getInvite(eq).attended === filter.attended
-          : _ => true;
-      const respondedFilter =
-        filter.responded != null
-          ? (eq: EventQuery) => !!getInvite(eq).respondedAt === filter.responded
-          : _ => true;
-      const viewedFilter =
-        filter.viewed != null
-          ? (eq: EventQuery) => !!getInvite(eq).viewedAt === filter.viewed
-          : _ => true;
+    if (filter && filter.invitationState) {
       return (eq: EventQuery) =>
-        acceptedFilter(eq) &&
-        attendedFilter(eq) &&
-        respondedFilter(eq) &&
-        viewedFilter(eq);
+        calculateInvitationState(getInvite(eq)) >= filter.invitationState!;
     } else {
       return _ => true;
     }

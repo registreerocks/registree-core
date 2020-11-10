@@ -19,6 +19,7 @@ import { LinkingDataAsyncOptions } from 'src/linking-data/linking-data.options';
 import { QueryTranscriptResolver } from './resolvers/query-transcript.resolver';
 import { UniversitiesModule } from 'src/universities/universities.module';
 import { DegreeSelectionResolver } from './resolvers/degree-selection.resolver';
+import { InvitationResolver } from './resolvers/invitation.resolver';
 
 @Module({
   imports: [UniversitiesModule],
@@ -29,6 +30,7 @@ import { DegreeSelectionResolver } from './resolvers/degree-selection.resolver';
     QueryDetailsResolver,
     QueryTranscriptResolver,
     DegreeSelectionResolver,
+    InvitationResolver,
   ],
 })
 export class QueriesModule {
