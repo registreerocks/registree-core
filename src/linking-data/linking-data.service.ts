@@ -19,11 +19,14 @@ export class LinkingDataService {
     });
   }
 
-  async getTranscriptId(identifyingId: string): Promise<string> {
+  async getTranscriptId(
+    identifyingId: string,
+    identifyingUrl: string,
+  ): Promise<string> {
     const accessToken = await this.authService.getAccessToken();
     try {
       const result = await this.axiosInstance.get<string>(
-        `/nft/get_id?ident_id=${identifyingId}`,
+        `/nft/get_id?ident_id=${identifyingId}&ident_url=${identifyingUrl}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
