@@ -14,19 +14,17 @@ export class StudentsResolver {
     return result;
   }
 
-  @Query(_returns => Date)
-  async studentPrivacyPolicy(@CurrentUser() user: User): Promise<Date> {
-    const result = await this.studentsService.getStudentPrivacyPolicyReadDate(
+  @Query(_returns => Boolean)
+  async acceptedPrivacyPolicy(@CurrentUser() user: User): Promise<boolean> {
+    const result = await this.studentsService.acceptedPrivacyPolicy(
       user.userId,
     );
     return result;
   }
 
   @Mutation(_returns => Date)
-  async setStudentPrivacyPolicy(@CurrentUser() user: User): Promise<Date> {
-    const result = await this.studentsService.setStudentPrivacyPolicyReadDate(
-      user.userId,
-    );
+  async acceptPrivacyPolicy(@CurrentUser() user: User): Promise<Date> {
+    const result = await this.studentsService.acceptPrivacyPolicy(user.userId);
     return result;
   }
 }
