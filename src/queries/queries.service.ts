@@ -201,6 +201,7 @@ export class QueriesService {
     );
     const transcriptId = await this.linkingDataService.getTranscriptId(
       identifyingData[0]['_id'],
+      'http://localhost:8001',
     );
     return transcriptId;
   }
