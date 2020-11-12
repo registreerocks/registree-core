@@ -23,6 +23,10 @@ import { Customer } from 'src/customers/models/customer.model';
 import { CustomersService } from 'src/customers/customers.service';
 import { StudentQueryFilter } from '../dto/student-query-filter.input';
 import { calculateInvitationState } from '../models/invitation-state.enum';
+import { CustomersLoader } from 'src/customers/loaders/customers.loader';
+import { Loader } from 'nestjs-graphql-dataloader';
+import DataLoader from 'dataloader';
+import { ServerError } from 'src/common/errors/server.error';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
@@ -131,15 +135,15 @@ export class EventQueriesResolver {
   @ResolveField('customer', _returns => Customer)
   async getCustomerInformation(
     @Parent() eventQuery: EventQuery,
+    @Loader(CustomersLoader)
+    loader: DataLoader<string, Customer>,
   ): Promise<Customer> {
-    const res = await this.customersService.findOneByCustomerId(
-      eventQuery.customerId,
-    );
-    if (res) {
-      return res;
-    } else {
-      throw new Error(
+    try {
+      return loader.load(eventQuery.customerId);
+    } catch (err) {
+      throw new ServerError(
         `Event Query with id: ${eventQuery.id} has an invalid customerId`,
+        err,
       );
     }
   }
