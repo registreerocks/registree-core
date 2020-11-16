@@ -17,12 +17,14 @@ export class AuthService {
   private readonly managementAudience: string;
   private tokenExpiry: Date = new Date();
   private managementTokenExpiry: Date = new Date();
+  private apiKeys: string[];
 
   constructor(@Inject(AUTH_OPTIONS) private readonly options: AuthOptions) {
     this.clientId = options.clientId;
     this.clientSecret = options.clientSecret;
     this.audience = options.audience;
     this.managementAudience = `https://${options.domain}/api/v2/`;
+    this.apiKeys = [options.auth0ApiKey];
 
     this.axiosInstance = axios.create({
       baseURL: `https://${options.domain}/oauth`,
@@ -82,5 +84,9 @@ export class AuthService {
       result.data.expires_in - 60,
     );
     this.managementToken = result.data.access_token;
+  }
+
+  validateApiKey(apiKey: string) {
+    return this.apiKeys.find(knownKey => apiKey === knownKey);
   }
 }

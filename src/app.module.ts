@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -27,6 +27,7 @@ import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader';
 import { AllExceptionsFilter } from './all-exceptions.filter';
 import { ErrorContextInterceptor } from './common/error-context.interceptor';
 import { StudentLinkingModule } from './student-linking/student-linking.module';
+import { RestAuthMiddleware } from './auth/rest-auth.middleware';
 
 @Module({
   imports: [
@@ -115,4 +116,8 @@ import { StudentLinkingModule } from './student-linking/student-linking.module';
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RestAuthMiddleware).forRoutes('customers');
+  }
+}
