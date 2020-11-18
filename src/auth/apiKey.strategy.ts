@@ -13,9 +13,9 @@ export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy) {
       (apiKey: string, done: any) => {
         const checkKey = authService.validateApiKey(apiKey);
         if (!checkKey) {
-          return done(false);
+          return done(null, false);
         }
-        return done(true);
+        return done(null, true);
       },
     );
     /* eslint-enable */
