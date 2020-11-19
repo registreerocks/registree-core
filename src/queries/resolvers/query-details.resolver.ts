@@ -1,7 +1,6 @@
 import { Resolver, Parent, ResolveField, Args } from '@nestjs/graphql';
 import { QueryTranscriptConnection } from '../models/pagination/query-transcript-connection.model';
 import { QueryDetails } from '../models/query-details.model';
-import { connectionFromArray } from 'graphql-relay';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import _ from 'lodash';
 import { Faculty } from 'src/universities/models/faculty.model';
@@ -12,6 +11,7 @@ import { DegreesLoader } from 'src/universities/loaders/degrees.loader';
 import { Degree } from 'src/universities/models/degree.model';
 import { QueryTranscriptFilter } from '../dto/query-transcript-filter.input';
 import { QueryTranscript } from '../models/query-transcript.model';
+import { paginateArray } from 'src/common/pagination/paginate-array';
 
 @Resolver(_of => QueryDetails)
 export class QueryDetailsResolver {
@@ -57,7 +57,7 @@ export class QueryDetailsResolver {
       'desc',
     ).filter(this.createTranscriptPredicate(filter));
 
-    const paginatedResults = connectionFromArray(results, args);
+    const paginatedResults = paginateArray(results, args);
 
     return {
       ...paginatedResults,
