@@ -161,9 +161,11 @@ export class QueriesService {
     );
 
     // WIP: Check if student already attended the event
-    /*const studentQueries = */ async () => {
-      await this.getStudentQueries(transcriptId);
-    };
+    const studentQueries = await this.getStudentQueries(studentNumber);
+
+    // Todo: filter to get the correct query
+
+    /*const attended = */ studentQueries[0].eventDetails.invites[0].attended;
 
     // Todo: Do not allow student to cancel RSVP if they attended already
     //
