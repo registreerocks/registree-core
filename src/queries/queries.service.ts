@@ -159,6 +159,15 @@ export class QueriesService {
     const transcriptId = await this.getTranscriptIdFromStudentNumber(
       studentNumber,
     );
+
+    // WIP: Check if student already attended the event
+    /*const studentQueries = */ async () => {
+      await this.getStudentQueries(transcriptId);
+    };
+
+    // Todo: Do not allow student to cancel RSVP if they attended already
+    //
+
     const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
       {
