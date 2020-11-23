@@ -2531,7 +2531,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/passport@npm:*":
+"@types/passport@npm:*, @types/passport@npm:^1.0.4":
   version: 1.0.4
   resolution: "@types/passport@npm:1.0.4"
   dependencies:
@@ -10912,6 +10912,16 @@ nestjs-graphql-dataloader@^0.1.28:
   languageName: node
   linkType: hard
 
+"passport-headerapikey@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "passport-headerapikey@npm:1.2.2"
+  dependencies:
+    lodash: ^4.17.15
+    passport-strategy: ^1.0.0
+  checksum: 252877ed485f2fa6142ec3483df2544fc845c440d71ccbf045c27acbaff29c27463e9904b9faa99a41bec6c4cffb0f02e0a31c7ef2f56886f5484c5de4ab3b3f
+  languageName: node
+  linkType: hard
+
 "passport-jwt@npm:^4.0.0":
   version: 4.0.0
   resolution: "passport-jwt@npm:4.0.0"
@@ -11701,6 +11711,7 @@ nestjs-graphql-dataloader@^0.1.28:
     "@types/lodash": ^4.14.161
     "@types/mongoose": ^5.7.36
     "@types/node": ^14.11.8
+    "@types/passport": ^1.0.4
     "@types/passport-jwt": ^3.0.3
     "@types/supertest": ^2.0.10
     "@typescript-eslint/eslint-plugin": 4.4.0
@@ -11731,6 +11742,7 @@ nestjs-graphql-dataloader@^0.1.28:
     nestjs-graphql-dataloader: "patch:nestjs-graphql-dataloader@^0.1.28#./add-nestjs-dataloader-types.diff"
     nestjs-pino: ^1.2.0
     passport: ^0.4.1
+    passport-headerapikey: ^1.2.2
     passport-jwt: ^4.0.0
     pino: ^6.7.0
     pino-pretty: ^4.3.0

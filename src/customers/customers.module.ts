@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Customer, CustomerSchema } from './models/customer.model';
 import { Auth0DataModule } from 'src/auth0-data/auth0-data.module';
 import { Auth0DataAsyncOptions } from 'src/auth0-data/auth0-data.options';
+import { CustomersController } from './customers.controller';
+import { CustomersLoader } from './loaders/customers.loader';
 
 @Module({
   imports: [
@@ -12,8 +14,10 @@ import { Auth0DataAsyncOptions } from 'src/auth0-data/auth0-data.options';
       { name: Customer.name, schema: CustomerSchema },
     ]),
   ],
-  exports: [CustomersService],
-  providers: [CustomersResolver, CustomersService],
+
+  exports: [CustomersService, CustomersLoader],
+  providers: [CustomersResolver, CustomersService, CustomersLoader],
+  controllers: [CustomersController],
 })
 export class CustomersModule {
   static forRootAsync(options: Auth0DataAsyncOptions): DynamicModule {
