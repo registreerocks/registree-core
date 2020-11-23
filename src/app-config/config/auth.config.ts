@@ -8,13 +8,15 @@ export const AuthConfig = registerAs('auth', () => {
   const ignoreExpiration = process.env.NODE_ENV === 'develop';
   const managementApi = process.env.AUTH0_MANAGEMENT_API;
   const connection = process.env.AUTH0_CONNECTION;
+  const auth0ApiKey = process.env.AUTH0_API_KEY;
   if (
     domain &&
     clientId &&
     clientSecret &&
     audience &&
     managementApi &&
-    connection
+    connection &&
+    auth0ApiKey
   ) {
     return {
       domain,
@@ -24,6 +26,7 @@ export const AuthConfig = registerAs('auth', () => {
       ignoreExpiration,
       managementApi,
       connection,
+      auth0ApiKey,
     };
   } else {
     throw new Error(

@@ -6,6 +6,7 @@ export interface AuthOptions {
   clientSecret: string;
   audience: string;
   ignoreExpiration: boolean;
+  auth0ApiKey: string;
 }
 
 export interface AuthAsyncOptions {
