@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Customer } from './models/customer.model';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateCustomerInput } from './dto/create-customer.input';
 import { ApolloError } from 'apollo-server-express';
 import { UpdateCustomerDetailsInput } from './dto/update-customer-details.input';
@@ -26,6 +26,14 @@ export class CustomersService {
       .findOne({
         contactIds: userId,
       })
+      .exec();
+  }
+
+  getCustomersById(keys: readonly string[]): Promise<Customer[]> {
+    return this.customerModel
+      .find()
+      .where('_id')
+      .in(keys.map(x => new Types.ObjectId(x)))
       .exec();
   }
 

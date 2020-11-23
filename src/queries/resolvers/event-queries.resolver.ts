@@ -16,13 +16,17 @@ import { CurrentUser } from 'src/auth/current-user.decorator';
 import { PaginationArgs } from 'src/common/pagination/pagination-args';
 import { EventQueryConnection } from '../models/pagination/event-query-connection.model';
 import { User } from 'src/common/interfaces/user.interface';
-import { connectionFromArray } from 'graphql-relay';
 import { Quote } from 'src/pricing/models/quote.model';
 import { PricingService } from 'src/pricing/pricing.service';
 import { Customer } from 'src/customers/models/customer.model';
 import { CustomersService } from 'src/customers/customers.service';
 import { StudentQueryFilter } from '../dto/student-query-filter.input';
 import { calculateInvitationState } from '../models/invitation-state.enum';
+import { CustomersLoader } from 'src/customers/loaders/customers.loader';
+import { Loader } from 'nestjs-graphql-dataloader';
+import DataLoader from 'dataloader';
+import { ServerError } from 'src/common/errors/server.error';
+import { paginateArray } from 'src/common/pagination/paginate-array';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
@@ -67,7 +71,7 @@ export class EventQueriesResolver {
   ): Promise<EventQueryConnection> {
     const queries = await this.queriesService.getCustomerQueries(customerId);
     // TODO: Default sorting
-    const paginatedQueries = connectionFromArray(queries, args);
+    const paginatedQueries = paginateArray(queries, args);
 
     return {
       ...paginatedQueries,
@@ -88,7 +92,7 @@ export class EventQueriesResolver {
     );
 
     // TODO: Default sorting
-    const paginatedQueries = connectionFromArray(filteredQueries, args);
+    const paginatedQueries = paginateArray(filteredQueries, args);
 
     return {
       ...paginatedQueries,
@@ -131,15 +135,15 @@ export class EventQueriesResolver {
   @ResolveField('customer', _returns => Customer)
   async getCustomerInformation(
     @Parent() eventQuery: EventQuery,
+    @Loader(CustomersLoader)
+    loader: DataLoader<string, Customer>,
   ): Promise<Customer> {
-    const res = await this.customersService.findOneByCustomerId(
-      eventQuery.customerId,
-    );
-    if (res) {
-      return res;
-    } else {
-      throw new Error(
+    try {
+      return loader.load(eventQuery.customerId);
+    } catch (err) {
+      throw new ServerError(
         `Event Query with id: ${eventQuery.id} has an invalid customerId`,
+        err,
       );
     }
   }
