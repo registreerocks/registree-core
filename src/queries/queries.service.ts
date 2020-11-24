@@ -164,11 +164,12 @@ export class QueriesService {
     try {
       const studentQueries = await this.getStudentQueries(studentNumber);
       const attended = studentQueries[0].eventDetails.invites[0].attended;
-
-      if (attended === false) {
-        // console.log("Allow change ", attended);
-      } else if (attended === true) {
-        // console.log("Do not allow change === ", attended);
+      const accepted = studentQueries[0].eventDetails.invites[0].accepted;
+      if (accepted === false && attended === true) {
+        //
+        //Do Not Allow change as attended = True
+      } else {
+        //Allow change
       }
     } catch (err) {
       throw new ServerError(
