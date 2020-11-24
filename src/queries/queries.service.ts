@@ -29,6 +29,7 @@ import { ApolloError, ValidationError } from 'apollo-server-express';
 import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-status.request';
 import { CustomersService } from 'src/customers/customers.service';
 import { UpdateStudentLink } from 'src/query-data/dto/update-student-link.request';
+import { ServerError } from 'src/common/errors/server.error';
 
 @Injectable()
 export class QueriesService {
@@ -160,15 +161,21 @@ export class QueriesService {
       studentNumber,
     );
 
-    // WIP: Check if student already attended the event
-    const studentQueries = await this.getStudentQueries(studentNumber);
+    try {
+      const studentQueries = await this.getStudentQueries(studentNumber);
+      const attended = studentQueries[0].eventDetails.invites[0].attended;
 
-    // Todo: filter to get the correct query
-
-    /*const attended = */ studentQueries[0].eventDetails.invites[0].attended;
-
-    // Todo: Do not allow student to cancel RSVP if they attended already
-    //
+      if (attended === false) {
+        // console.log("Allow change ", attended);
+      } else if (attended === true) {
+        // console.log("Do not allow change === ", attended);
+      }
+    } catch (err) {
+      throw new ServerError(
+        'Failed to get check Student attended status to process RSVP cancellation',
+        err,
+      );
+    }
 
     const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
