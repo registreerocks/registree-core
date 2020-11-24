@@ -162,15 +162,11 @@ export class QueriesService {
     );
 
     try {
-      const studentQueries = await this.getStudentQueries(studentNumber);
-      const attended = studentQueries[0].eventDetails.invites[0].attended;
-      const accepted = studentQueries[0].eventDetails.invites[0].accepted;
-      if (accepted === false && attended === true) {
-        //
-        //Do Not Allow change as attended = True
-      } else {
-        //Allow change
-      }
+      // if (accepted === false && attended === true) {
+      //Do Not Allow change as attended = True
+      // } else {
+      //Allow change
+      // }
     } catch (err) {
       throw new ServerError(
         'Failed to get check Student attended status to process RSVP cancellation',
