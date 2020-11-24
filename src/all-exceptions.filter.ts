@@ -29,7 +29,11 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     err: unknown,
     _gqlHost: GqlArgumentsHost,
   ): ApolloError {
-    if (err instanceof ApolloError) {
+    if (
+      err instanceof ApolloError &&
+      err.extensions.code &&
+      err.extensions.code !== 'INTERNAL_SERVER_ERROR'
+    ) {
       // expected errors
       return err;
     } else if (err instanceof WrappedError) {
