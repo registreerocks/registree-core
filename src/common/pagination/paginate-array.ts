@@ -4,6 +4,7 @@ import {
   cursorToOffset,
   offsetToCursor,
 } from 'graphql-relay';
+import { ApolloError } from 'apollo-server-core';
 
 export function paginateArray<Model extends { id: string }>(
   source: Model[],
@@ -64,13 +65,14 @@ function getLimit(
   direction: 'forward' | 'backward';
   limit: number;
 } {
-  if (first && first >= 0) {
+  if (first && first > 0) {
     return { direction: 'forward', limit: Math.min(max, first) };
-  } else if (last && last >= 0) {
+  } else if (last && last > 0) {
     return { direction: 'backward', limit: Math.min(max, last) };
   } else {
-    throw new Error(
+    throw new ApolloError(
       'Argument "first" or "last" must be a non-negative integer',
+      'VALIDATION_ERROR',
     );
   }
 }
