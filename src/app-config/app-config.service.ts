@@ -105,6 +105,13 @@ export class AppConfigService
     };
   }
 
+  createApiDependencyList(): { name: string; url: string | string[] }[] {
+    return Object.entries(this.apiConfig).map(([key, value]) => ({
+      name: key,
+      url: value,
+    }));
+  }
+
   createAppParams(): ConfigType<typeof AppConfig> {
     return this.appConfig;
   }
