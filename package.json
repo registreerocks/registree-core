@@ -129,6 +129,9 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage",
+    "coveragePathIgnorePatterns": [
+      "src/app-config/*"
+    ],
     "testEnvironment": "node"
   }
 }
