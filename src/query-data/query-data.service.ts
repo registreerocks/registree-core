@@ -151,29 +151,6 @@ export class QueryDataService {
   ): Promise<EventQueryResponse> {
     const accessToken = await this.authService.getAccessToken();
 
-    //WIPs
-
-    // get query first
-    // const queryIdReturned = await this.get(`query/${queryId}`,
-
-    // getQuery(queryId)
-
-    // {
-    //   headers: {
-    //     Authorization: `Bearer ${accessToken}`,
-    //   },
-    // },
-    // );
-
-    // async getQuery(queryId: string): Promise<EventQuery> {
-    // return mapEventQuery(response);
-    // }
-
-    // const resp = await this.getQuery(queryId);
-
-    //return this.getQuery(queryId);
-    // }
-
     try {
       await this.axiosInstance.post<string>(
         `/query/update_status/${queryId}`,
