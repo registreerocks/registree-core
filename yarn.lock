@@ -1897,6 +1897,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/terminus@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "@nestjs/terminus@npm:7.0.1"
+  dependencies:
+    check-disk-space: 2.1.0
+    deprecate: ^1.1.1
+  peerDependencies:
+    "@nestjs/common": ^7.0.0
+    "@nestjs/core": ^7.0.0
+    reflect-metadata: ^0.1.13
+    rxjs: ^6.5.4
+  checksum: 1252465a67623f8f4620d1d152d259a5a73e56bc5a638a5cffe4e1d420f06f335028ff633be00e6486f77f460c91dc2009592fff2e3b193eb266794a9a65b6e9
+  languageName: node
+  linkType: hard
+
 "@nestjs/testing@npm:^7.4.4":
   version: 7.4.4
   resolution: "@nestjs/testing@npm:7.4.4"
@@ -4604,6 +4619,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"check-disk-space@npm:2.1.0":
+  version: 2.1.0
+  resolution: "check-disk-space@npm:2.1.0"
+  checksum: ad9888954994aa87231c72cfa76a0f8d76cde8010a60d321e71de6a43e5a6ef47eec29396c9c402bde570efdc2513558553a5f69a74057fac363e7f39f3c68f3
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:3.4.2, chokidar@npm:^3.4.1":
   version: 3.4.2
   resolution: "chokidar@npm:3.4.2"
@@ -5533,6 +5555,13 @@ __metadata:
   version: 1.1.2
   resolution: "depd@npm:1.1.2"
   checksum: f45566ff7019a346852f095768a380778ed544de24e103b479fd5d3e61982d670efbb5234c09d0588d7fdb09c26c48283d7150e4be5e6ce5d3d37cd268d75c4d
+  languageName: node
+  linkType: hard
+
+"deprecate@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "deprecate@npm:1.1.1"
+  checksum: 8cb7b029e745f547d9dec01f5a28165cd7057298726ed80582283fd2f89297d1319264d494716f57811bceb8069ba6b78d6630a6f90fea4c2c995d145463bf1a
   languageName: node
   linkType: hard
 
@@ -11703,6 +11732,7 @@ nestjs-graphql-dataloader@^0.1.28:
     "@nestjs/passport": ^7.1.0
     "@nestjs/platform-express": ^7.4.4
     "@nestjs/schematics": ^7.1.2
+    "@nestjs/terminus": ^7.0.1
     "@nestjs/testing": ^7.4.4
     "@types/express": 4.17.8
     "@types/graphql-relay": ^0.6.0

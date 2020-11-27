@@ -15,7 +15,7 @@ async function bootstrap() {
   const appConfig = app
     .get<AppConfigService>(AppConfigService)
     .createAppParams();
-
+  app.enableShutdownHooks();
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: errors => new ArgumentValidationError(errors),
