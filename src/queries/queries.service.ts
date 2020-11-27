@@ -162,6 +162,9 @@ export class QueriesService {
     );
 
     try {
+      const event = await this.getQuery(queryId);
+      /*const invites = */ event.eventDetails.invites;
+
       //if (accepted === false && attended === true) {
       //Do Not Allow change as attended = True
       //} else {
