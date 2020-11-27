@@ -162,9 +162,9 @@ export class QueriesService {
     );
 
     try {
-      // if (accepted === false && attended === true) {
+      //if (accepted === false && attended === true) {
       //Do Not Allow change as attended = True
-      // } else {
+      //} else {
       //Allow change
       // }
     } catch (err) {
