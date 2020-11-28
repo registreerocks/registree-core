@@ -27,6 +27,8 @@ import { DataLoaderInterceptor } from 'nestjs-graphql-dataloader';
 import { AllExceptionsFilter } from './all-exceptions.filter';
 import { ErrorContextInterceptor } from './common/error-context.interceptor';
 import { StudentLinkingModule } from './student-linking/student-linking.module';
+import { HealthController } from './health/health.controller';
+import { TerminusModule } from '@nestjs/terminus';
 
 @Module({
   imports: [
@@ -106,8 +108,9 @@ import { StudentLinkingModule } from './student-linking/student-linking.module';
     StudentLinkingModule.forRootAsync({
       useExisting: AppConfigService,
     }),
+    TerminusModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, HealthController],
   providers: [
     AppService,
     { provide: APP_INTERCEPTOR, useClass: DataLoaderInterceptor },
