@@ -163,16 +163,24 @@ export class QueriesService {
 
     try {
       const event = await this.getQuery(queryId);
-      /*const invites = */ event.eventDetails.invites;
+      const invites = event.eventDetails.invites;
 
-      //if (accepted === false && attended === true) {
-      //Do Not Allow change as attended = True
-      //} else {
-      //Allow change
-      // }
+      const invite = invites.find(x => x.transcriptId === transcriptId);
+      if (invite) {
+        // Todo: confirm whether we allow changing to accepted after an event
+        if (invite.attended === true && input.accepted === false) {
+          //Do Not Allow change as attended = True
+        } else {
+          //Allow change
+        }
+      } else {
+        throw new ServerError( // Todo : different error?
+          'Failed to retrieve invite to allow RSVP submission change.',
+        );
+      }
     } catch (err) {
       throw new ServerError(
-        'Failed to get check Student attended status to process RSVP cancellation',
+        'Failed to retrieve invite to allow RSVP submission change.',
         err,
       );
     }
