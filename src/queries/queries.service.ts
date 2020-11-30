@@ -168,10 +168,31 @@ export class QueriesService {
       const invite = invites.find(x => x.transcriptId === transcriptId);
       if (invite) {
         // Todo: confirm whether we allow changing to accepted after an event
-        if (invite.attended === true && input.accepted === false) {
+        if (invite.attended === true) {
           //Do Not Allow change as attended = True
+          throw new ServerError(
+            'Not allowed to change invitation rsvp status after attending an event.',
+          );
         } else {
           //Allow change
+          const response = await this.queryDataService.updateQueryInviteStatus(
+            queryId,
+            {
+              ...input,
+              student_address: transcriptId,
+            },
+          );
+          const mappedResponse = mapEventQuery(response);
+          const filteredResponse = {
+            ...mappedResponse,
+            eventDetails: {
+              ...mappedResponse.eventDetails,
+              invites: mappedResponse.eventDetails.invites.filter(
+                x => x.transcriptId === transcriptId,
+              ),
+            },
+          };
+          return filteredResponse;
         }
       } else {
         throw new ServerError( // Todo : different error?
@@ -184,25 +205,6 @@ export class QueriesService {
         err,
       );
     }
-
-    const response = await this.queryDataService.updateQueryInviteStatus(
-      queryId,
-      {
-        ...input,
-        student_address: transcriptId,
-      },
-    );
-    const mappedResponse = mapEventQuery(response);
-    const filteredResponse = {
-      ...mappedResponse,
-      eventDetails: {
-        ...mappedResponse.eventDetails,
-        invites: mappedResponse.eventDetails.invites.filter(
-          x => x.transcriptId === transcriptId,
-        ),
-      },
-    };
-    return filteredResponse;
   }
 
   async linkStudent(
