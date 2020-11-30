@@ -167,14 +167,11 @@ export class QueriesService {
 
       const invite = invites.find(x => x.transcriptId === transcriptId);
       if (invite) {
-        // Todo: confirm whether we allow changing to accepted after an event
         if (invite.attended === true) {
-          //Do Not Allow change as attended = True
           throw new ServerError(
             'Not allowed to change invitation rsvp status after attending an event.',
           );
         } else {
-          //Allow change
           const response = await this.queryDataService.updateQueryInviteStatus(
             queryId,
             {
@@ -195,7 +192,7 @@ export class QueriesService {
           return filteredResponse;
         }
       } else {
-        throw new ServerError( // Todo : different error?
+        throw new ServerError(
           'Failed to retrieve invite to allow RSVP submission change.',
         );
       }
