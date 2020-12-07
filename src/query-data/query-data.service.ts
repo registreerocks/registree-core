@@ -150,7 +150,6 @@ export class QueryDataService {
     request: UpdateQueryInviteStatus,
   ): Promise<EventQueryResponse> {
     const accessToken = await this.authService.getAccessToken();
-
     try {
       await this.axiosInstance.post<string>(
         `/query/update_status/${queryId}`,
