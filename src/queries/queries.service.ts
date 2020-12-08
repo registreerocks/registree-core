@@ -161,40 +161,31 @@ export class QueriesService {
       studentNumber,
     );
 
-    try {
-      const event = await this.getQuery(queryId);
-      const invites = event.eventDetails.invites;
+    const event = await this.getQuery(queryId);
+    const invites = event.eventDetails.invites;
+    const invite = invites.find(x => x.transcriptId === transcriptId);
 
-      const invite = invites.find(x => x.transcriptId === transcriptId);
-      if (invite && invite.attended === true) {
-        throw new ServerError(
-          'Not allowed to change invitation rsvp status after attending an event.',
-        );
-      } else {
-        const response = await this.queryDataService.updateQueryInviteStatus(
-          queryId,
-          {
-            ...input,
-            student_address: transcriptId,
-          },
-        );
-        const mappedResponse = mapEventQuery(response);
-        const filteredResponse = {
-          ...mappedResponse,
-          eventDetails: {
-            ...mappedResponse.eventDetails,
-            invites: mappedResponse.eventDetails.invites.filter(
-              x => x.transcriptId === transcriptId,
-            ),
-          },
-        };
-        return filteredResponse;
-      }
-    } catch (err) {
-      throw new ServerError(
-        'Failed to retrieve invite to allow RSVP submission change.',
-        err,
+    if (invite && invite.attended === true) {
+      throw new ServerError('Not allowed to change invitation status.');
+    } else {
+      const response = await this.queryDataService.updateQueryInviteStatus(
+        queryId,
+        {
+          ...input,
+          student_address: transcriptId,
+        },
       );
+      const mappedResponse = mapEventQuery(response);
+      const filteredResponse = {
+        ...mappedResponse,
+        eventDetails: {
+          ...mappedResponse.eventDetails,
+          invites: mappedResponse.eventDetails.invites.filter(
+            x => x.transcriptId === transcriptId,
+          ),
+        },
+      };
+      return filteredResponse;
     }
   }
 
