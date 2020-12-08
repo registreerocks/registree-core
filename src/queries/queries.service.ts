@@ -167,26 +167,25 @@ export class QueriesService {
 
     if (invite && invite.attended === true) {
       throw new UserInputError('Not allowed to change invitation status.');
-    } else {
-      const response = await this.queryDataService.updateQueryInviteStatus(
-        queryId,
-        {
-          ...input,
-          student_address: transcriptId,
-        },
-      );
-      const mappedResponse = mapEventQuery(response);
-      const filteredResponse = {
-        ...mappedResponse,
-        eventDetails: {
-          ...mappedResponse.eventDetails,
-          invites: mappedResponse.eventDetails.invites.filter(
-            x => x.transcriptId === transcriptId,
-          ),
-        },
-      };
-      return filteredResponse;
     }
+    const response = await this.queryDataService.updateQueryInviteStatus(
+      queryId,
+      {
+        ...input,
+        student_address: transcriptId,
+      },
+    );
+    const mappedResponse = mapEventQuery(response);
+    const filteredResponse = {
+      ...mappedResponse,
+      eventDetails: {
+        ...mappedResponse.eventDetails,
+        invites: mappedResponse.eventDetails.invites.filter(
+          x => x.transcriptId === transcriptId,
+        ),
+      },
+    };
+    return filteredResponse;
   }
 
   async linkStudent(
