@@ -29,7 +29,7 @@ import { ApolloError, ValidationError } from 'apollo-server-express';
 import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-status.request';
 import { CustomersService } from 'src/customers/customers.service';
 import { UpdateStudentLink } from 'src/query-data/dto/update-student-link.request';
-import { ServerError } from 'src/common/errors/server.error';
+import { UserInputError } from 'apollo-server-express';
 
 @Injectable()
 export class QueriesService {
@@ -166,7 +166,7 @@ export class QueriesService {
     const invite = invites.find(x => x.transcriptId === transcriptId);
 
     if (invite && invite.attended === true) {
-      throw new ServerError('Not allowed to change invitation status.');
+      throw new UserInputError('Not allowed to change invitation status.');
     } else {
       const response = await this.queryDataService.updateQueryInviteStatus(
         queryId,
