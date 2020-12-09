@@ -161,12 +161,15 @@ export class QueriesService {
       studentNumber,
     );
 
-    const event = await this.getQuery(queryId);
-    const invites = event.eventDetails.invites;
-    const invite = invites.find(x => x.transcriptId === transcriptId);
+    const query = await this.getQuery(queryId);
+    const invite = query.eventDetails.invites.find(
+      x => x.transcriptId === transcriptId,
+    );
 
     if (invite && invite.attended === true) {
-      throw new UserInputError('Not allowed to change invitation status.');
+      throw new UserInputError(
+        'Not allowed to change event RSVP status after the event has occurred.',
+      );
     }
     const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
