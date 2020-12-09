@@ -168,7 +168,7 @@ export class QueriesService {
 
     if (invite && invite.attended === true) {
       throw new UserInputError(
-        'Not allowed to change event RSVP status after the event has occurred.',
+        'Not allowed to modify the event invite after the event has already occurred.',
       );
     }
     const response = await this.queryDataService.updateQueryInviteStatus(
