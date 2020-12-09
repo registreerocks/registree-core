@@ -29,6 +29,7 @@ import { ApolloError, ValidationError } from 'apollo-server-express';
 import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-status.request';
 import { CustomersService } from 'src/customers/customers.service';
 import { UpdateStudentLink } from 'src/query-data/dto/update-student-link.request';
+import { UserInputError } from 'apollo-server-express';
 
 @Injectable()
 export class QueriesService {
@@ -159,6 +160,17 @@ export class QueriesService {
     const transcriptId = await this.getTranscriptIdFromStudentNumber(
       studentNumber,
     );
+
+    const query = await this.getQuery(queryId);
+    const invite = query.eventDetails.invites.find(
+      x => x.transcriptId === transcriptId,
+    );
+
+    if (invite && invite.attended === true) {
+      throw new UserInputError(
+        'Not allowed to modify the event invite after the event has been attended.',
+      );
+    }
     const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
       {
