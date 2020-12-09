@@ -168,7 +168,7 @@ export class QueriesService {
 
     if (invite && invite.attended === true) {
       throw new UserInputError(
-        'Not allowed to modify the event invite after the event has already occurred.',
+        'Not allowed to modify the event invite after the event has been attended.',
       );
     }
     const response = await this.queryDataService.updateQueryInviteStatus(
