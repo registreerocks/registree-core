@@ -167,9 +167,8 @@ export class QueriesService {
     );
 
     if (invite && !invite.viewedAt) {
-      const viewed = true;
       await this.queryDataService.updateQueryInviteStatus(queryId, {
-        viewed: viewed,
+        viewed: true,
         student_address: transcriptId,
       });
     }
