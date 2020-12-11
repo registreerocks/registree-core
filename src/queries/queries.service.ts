@@ -167,12 +167,6 @@ export class QueriesService {
     );
 
     if (invite && invite.attended === true) {
-      if (!invite.viewedAt) {
-        await this.queryDataService.updateQueryInviteStatus(queryId, {
-          viewed: true,
-          student_address: transcriptId,
-        });
-      }
       throw new UserInputError(
         'Not allowed to modify the event invite after the event has been attended.',
       );
