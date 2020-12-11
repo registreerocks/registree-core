@@ -167,7 +167,7 @@ export class QueriesService {
     );
 
     if (invite && invite.attended === true) {
-      if (invite && !invite.viewedAt) {
+      if (!invite.viewedAt) {
         await this.queryDataService.updateQueryInviteStatus(queryId, {
           viewed: true,
           student_address: transcriptId,
