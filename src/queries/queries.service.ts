@@ -175,9 +175,9 @@ export class QueriesService {
     const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
       {
-        ...input,
-        viewed: invite && !invite.viewedAt ? true : undefined,
+        viewed: !!invite?.viewedAt ? undefined : true,
         student_address: transcriptId,
+        ...input,
       },
     );
     const mappedResponse = mapEventQuery(response);
