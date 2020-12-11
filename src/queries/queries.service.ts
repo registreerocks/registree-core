@@ -175,7 +175,7 @@ export class QueriesService {
     const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
       {
-        viewed: !!invite?.viewedAt ? undefined : true,
+        viewed: input.viewed ?? (!!invite?.viewedAt ? undefined : true),
         student_address: transcriptId,
         ...input,
       },
