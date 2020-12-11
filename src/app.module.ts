@@ -17,8 +17,6 @@ import { appConstants } from './constants';
 import { MongooseModule } from '@nestjs/mongoose';
 import { applyMiddleware } from 'graphql-middleware';
 import { IncomingMessage } from 'http';
-import { wrapSchema } from '@graphql-tools/wrap';
-import { ReplaceFieldWithFragment } from '@graphql-tools/delegate';
 import { throwNestedErrorPlugin } from './get-nested-error';
 import { appPermissions } from './rules';
 import { gqlAuthMiddleware } from './auth/gql-auth.middleware';
@@ -75,18 +73,8 @@ import { TerminusModule } from '@nestjs/terminus';
           { Query: gqlAuthMiddleware, Mutation: gqlAuthMiddleware },
           appPermissions,
         );
-        if (newSchema.schema && newSchema.fragmentReplacements) {
-          const transforms = [
-            new ReplaceFieldWithFragment(
-              newSchema.schema,
-              newSchema.fragmentReplacements,
-            ),
-          ];
-          const finalSchema = wrapSchema(newSchema.schema, transforms);
-          return finalSchema;
-        } else {
-          return newSchema;
-        }
+
+        return newSchema;
       },
     }),
     CustomersModule.forRootAsync({
