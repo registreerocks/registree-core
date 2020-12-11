@@ -5,7 +5,6 @@ import { ForbiddenError } from 'apollo-server-express';
 
 const isEventQueryOwner = rule({
   cache: 'strict',
-  fragment: 'fragment getId on EventQuery{customerId}',
 })(
   (parent: Record<string, unknown>, _args, { req }: ContextWithUser, _info) => {
     return parent?.customerId === req.user.dbId;
