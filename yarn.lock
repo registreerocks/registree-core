@@ -4708,10 +4708,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-transformer@npm:^0.3.1":
+class-transformer@^0.3.1:
   version: 0.3.1
   resolution: "class-transformer@npm:0.3.1"
   checksum: 3ae3ef2510d2822766a97d31eb7ca550dabda56cbfe70968f295420531667ca95b4d84cddfe2dc302abc41c8e26d667d43235b0f4759eee09a007741cc307bc8
+  languageName: node
+  linkType: hard
+
+"class-transformer@patch:class-transformer@^0.3.1#./skip-promises-class-transformer.diff::locator=registree-core%40workspace%3A.":
+  version: 0.3.1
+  resolution: "class-transformer@patch:class-transformer@npm%3A0.3.1#./skip-promises-class-transformer.diff::version=0.3.1&hash=9eb189&locator=registree-core%40workspace%3A."
+  checksum: 793a938f75d0745cc79fd06da7116c5ada02446ecfd56ed4275bb8aca2917c04c39e43da5f3a88a1115288ba0d0449ed3332fbd4101ac8286a2b9403dec6ab4e
   languageName: node
   linkType: hard
 
@@ -11748,7 +11755,7 @@ nestjs-graphql-dataloader@^0.1.28:
     apollo-server-express: 2.16.1
     aws-sdk: ^2.770.0
     axios: ^0.20.0
-    class-transformer: ^0.3.1
+    class-transformer: "patch:class-transformer@^0.3.1#./skip-promises-class-transformer.diff"
     class-validator: ^0.12.2
     dataloader: ^2.0.0
     date-fns: ^2.16.1
