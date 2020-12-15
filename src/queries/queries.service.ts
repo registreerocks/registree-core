@@ -171,10 +171,12 @@ export class QueriesService {
         'Not allowed to modify the event invite after the event has been attended.',
       );
     }
+
     const response = await this.queryDataService.updateQueryInviteStatus(
       queryId,
       {
         ...input,
+        viewed: input.viewed ?? (!!invite?.viewedAt ? undefined : true),
         student_address: transcriptId,
       },
     );
