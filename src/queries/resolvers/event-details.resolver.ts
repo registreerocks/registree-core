@@ -101,12 +101,7 @@ export class EventDetailsResolver {
   ): Promise<EventQuery> {
     const linkInput = { student_number: user.dbId, user_id: user.userId };
     await this.queriesService.linkStudent(queryId, user.dbId, linkInput);
-    const statusInput = { attended: true };
-    return this.queriesService.updateQueryInvite(
-      queryId,
-      user.dbId,
-      statusInput,
-    );
+    return this.queriesService.getStudentQuery(queryId, user.dbId);
   }
 
   @ResolveField('attachments', _returns => [UploadedFile])

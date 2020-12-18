@@ -30,6 +30,7 @@ import { UpdateQueryInviteStatus } from 'src/query-data/dto/update-query-invite-
 import { CustomersService } from 'src/customers/customers.service';
 import { UpdateStudentLink } from 'src/query-data/dto/update-student-link.request';
 import { UserInputError } from 'apollo-server-express';
+import { EventQueryResponse } from 'src/query-data/dto/event-query.response';
 
 @Injectable()
 export class QueriesService {
@@ -56,16 +57,21 @@ export class QueriesService {
     const response = await this.queryDataService.getStudentQueries(
       transcriptId,
     );
-    const mappedResponse = response.map(mapEventQuery).map(q => ({
-      ...q,
-      eventDetails: {
-        ...q.eventDetails,
-        invites: q.eventDetails.invites.filter(
-          x => x.transcriptId === transcriptId,
-        ),
-      },
-    }));
+    const mappedResponse = response.map(q =>
+      this.mapQueryStudentResponse(q, transcriptId),
+    );
     return orderBy(mappedResponse, [r => r.eventDetails.startDate], ['desc']);
+  }
+
+  async getStudentQuery(
+    queryId: string,
+    studentNumber: string,
+  ): Promise<EventQuery> {
+    const transcriptId = await this.getTranscriptIdFromStudentNumber(
+      studentNumber,
+    );
+    const response = await this.queryDataService.getQuery(queryId);
+    return this.mapQueryStudentResponse(response, transcriptId);
   }
 
   async getQuote(input: CreateEventQueryInput): Promise<Quote> {
@@ -180,17 +186,8 @@ export class QueriesService {
         student_address: transcriptId,
       },
     );
-    const mappedResponse = mapEventQuery(response);
-    const filteredResponse = {
-      ...mappedResponse,
-      eventDetails: {
-        ...mappedResponse.eventDetails,
-        invites: mappedResponse.eventDetails.invites.filter(
-          x => x.transcriptId === transcriptId,
-        ),
-      },
-    };
-    return filteredResponse;
+
+    return this.mapQueryStudentResponse(response, transcriptId);
   }
 
   async linkStudent(
@@ -205,6 +202,22 @@ export class QueriesService {
       ...input,
       student_address: transcriptId,
     });
+  }
+
+  private mapQueryStudentResponse(
+    response: EventQueryResponse,
+    transcriptId: string,
+  ): EventQuery {
+    const mappedResponse = mapEventQuery(response);
+    return {
+      ...mappedResponse,
+      eventDetails: {
+        ...mappedResponse.eventDetails,
+        invites: mappedResponse.eventDetails.invites.filter(
+          x => x.transcriptId === transcriptId,
+        ),
+      },
+    };
   }
 
   private async getTranscriptIdFromStudentNumber(
