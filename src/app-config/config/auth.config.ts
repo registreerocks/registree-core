@@ -9,6 +9,8 @@ export const AuthConfig = registerAs('auth', () => {
   const managementApi = process.env.AUTH0_MANAGEMENT_API;
   const connection = process.env.AUTH0_CONNECTION;
   const auth0ApiKey = process.env.AUTH0_API_KEY;
+  const adminApiKey = process.env.ADMIN_API_KEY;
+
   if (
     domain &&
     clientId &&
@@ -16,7 +18,8 @@ export const AuthConfig = registerAs('auth', () => {
     audience &&
     managementApi &&
     connection &&
-    auth0ApiKey
+    auth0ApiKey &&
+    adminApiKey
   ) {
     return {
       domain,
@@ -27,6 +30,7 @@ export const AuthConfig = registerAs('auth', () => {
       managementApi,
       connection,
       auth0ApiKey,
+      adminApiKey,
     };
   } else {
     throw new Error(

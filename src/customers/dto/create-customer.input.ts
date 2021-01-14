@@ -9,4 +9,7 @@ export class CreateCustomerInput {
   @IsNotEmpty()
   @Field()
   name!: string;
+
+  @Field()
+  initialContact?: string;
 }
