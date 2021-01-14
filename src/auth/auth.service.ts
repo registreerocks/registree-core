@@ -24,7 +24,7 @@ export class AuthService {
     this.clientSecret = options.clientSecret;
     this.audience = options.audience;
     this.managementAudience = `https://${options.domain}/api/v2/`;
-    this.apiKeys = [options.auth0ApiKey];
+    this.apiKeys = [options.auth0ApiKey, options.adminApiKey];
 
     this.axiosInstance = axios.create({
       baseURL: `https://${options.domain}/oauth`,

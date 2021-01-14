@@ -298,6 +298,7 @@ input UpdateCustomerDetailsInput {
 input CreateCustomerInput {
   description: String!
   name: String!
+  initialContact: String!
 }
 
 input CreateContactInput {

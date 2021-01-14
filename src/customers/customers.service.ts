@@ -45,7 +45,7 @@ export class CustomersService {
     const createdCustomer = new this.customerModel({
       name: input.name,
       description: input.description,
-      contactIds: [],
+      contactIds: input.initialContact ? [input.initialContact] : [],
       billingDetails: {
         city: null,
       },
