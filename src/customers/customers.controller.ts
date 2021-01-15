@@ -6,6 +6,7 @@ import {
   Post,
   Query,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { ApiKeyAuthGuard } from 'src/auth/apiKey-auth.guard';
@@ -15,6 +16,24 @@ import { Customer } from './models/customer.model';
 @Controller('customers')
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
+
+  @UseGuards(ApiKeyAuthGuard)
+  @Get()
+  async getCustomers(): Promise<Customer | Customer[]> {
+    const customers = await this.customersService.findAll();
+    if (customers) return customers;
+    else throw new NotFoundException();
+  }
+
+  @UseGuards(ApiKeyAuthGuard)
+  @Get(':id')
+  async getCustomerById(@Param('id') customerId: string): Promise<Customer> {
+    const customer = await this.customersService.findOneByCustomerId(
+      customerId,
+    );
+    if (customer) return customer;
+    else throw new NotFoundException();
+  }
 
   @UseGuards(ApiKeyAuthGuard)
   @Get('customerId')
