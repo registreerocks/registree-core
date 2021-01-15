@@ -17,6 +17,24 @@ export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
   @UseGuards(ApiKeyAuthGuard)
+  @Get()
+  async getCustomers(
+    @Query('customerId') customerId: string,
+  ): Promise<Customer | Customer[]> {
+    if (customerId) {
+      const customer = await this.customersService.findOneByCustomerId(
+        customerId,
+      );
+      if (customer) return customer;
+      else throw new NotFoundException();
+    } else {
+      const customers = await this.customersService.findAll();
+      if (customers) return customers;
+      else throw new NotFoundException();
+    }
+  }
+
+  @UseGuards(ApiKeyAuthGuard)
   @Get('customerId')
   async getCustomerIdByContactUserId(
     @Query('userId') userId: string,
