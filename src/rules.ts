@@ -101,3 +101,10 @@ type ContextWithUser = {
     user: User;
   };
 };
+
+// For test access:
+export const _private = {
+  isRecruiter,
+  isAdmin,
+  isStudent,
+};
