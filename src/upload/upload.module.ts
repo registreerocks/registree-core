@@ -1,4 +1,4 @@
-import { Module, DynamicModule, Provider} from '@nestjs/common';
+import { Module, DynamicModule, Provider } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { FsStorageService } from './fs-storage.service';
 import { S3StorageService } from './s3-storage.service';
@@ -10,11 +10,8 @@ import {
 } from './upload.options';
 import { IObjectStorageProvider } from './interfaces/object-storage-provider.interface';
 
-
 @Module({
-  providers: [
-    UploadService,
-  ],
+  providers: [UploadService],
   exports: [UploadService],
 })
 export class UploadModule {
