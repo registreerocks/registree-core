@@ -1,24 +1,23 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    target-branch: "staging"
+  - package-ecosystem: 'npm'
+    directory: '/'
+    target-branch: 'staging'
     schedule:
-      interval: "daily"
+      interval: 'daily'
     reviewers:
-      - "longtomjr"
-      - "sabinebertram"
+      - 'longtomjr'
+      - 'sabinebertram'
     assignees:
-      - "longtomjr"
+      - 'longtomjr'
 
-  - package-ecosystem: "docker"
-    directory: "/"
-    target-branch: "staging"
+  - package-ecosystem: 'docker'
+    directory: '/'
+    target-branch: 'staging'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     reviewers:
-      - "longtomjr"
-      - "sabinebertram"
+      - 'longtomjr'
+      - 'sabinebertram'
     assignees:
-      - "longtomjr"
-
+      - 'longtomjr'

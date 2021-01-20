@@ -18,12 +18,12 @@ jobs:
       - run:
           command: yarn test:cov -w 1
       - codecov/upload:
-          file: "coverage/lcov.info"
-  build: 
-    executor: 
+          file: 'coverage/lcov.info'
+  build:
+    executor:
       name: node/default
       tag: current
-    steps: 
+    steps:
       - checkout
       - node/install-packages:
           override-ci-command: yarn install --immutable
@@ -33,33 +33,33 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ".yarn"
+            - '.yarn'
             - package.json
             - dist
-            - ".pnp.js"
+            - '.pnp.js'
             - yarn.lock
 
 workflows:
-    build-and-push:
-      jobs:
-        - test
-        - build
-        - docker/publish:
-            filters:
-              branches:
-                only:
-                  - staging
-                  - master
-            executor:
-                name: docker/machine
-                # dlc: true
-            requires:
-              - build
-            after_checkout:
-              - attach_workspace:
-                  at: .
-            image: registree-core
-            registry: $DOCKER_REGISTRY
-            docker-password: DOCKER_LOGIN
-            docker-username: DOCKER_PASSWORD
-            tag: $CIRCLE_SHA1
+  build-and-push:
+    jobs:
+      - test
+      - build
+      - docker/publish:
+          filters:
+            branches:
+              only:
+                - staging
+                - master
+          executor:
+            name: docker/machine
+            # dlc: true
+          requires:
+            - build
+          after_checkout:
+            - attach_workspace:
+                at: .
+          image: registree-core
+          registry: $DOCKER_REGISTRY
+          docker-password: DOCKER_LOGIN
+          docker-username: DOCKER_PASSWORD
+          tag: $CIRCLE_SHA1
