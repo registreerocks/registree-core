@@ -1478,6 +1478,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hapi/hoek@npm:^9.0.0":
+  version: 9.1.1
+  resolution: "@hapi/hoek@npm:9.1.1"
+  checksum: e5be371c579bcdef755566b88ccd6bbf5c52ad2cc770e134ee909156cdcff2acf7aad3f4b5400d83742a27acc580a00a82d2cde8c812db0b0437e4e80fa0a6a0
+  languageName: node
+  linkType: hard
+
+"@hapi/topo@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@hapi/topo@npm:5.0.0"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+  checksum: f92797d5ef54bb801a3591a118ea483ed5a6b41cdd1aaa6f7bf427b64b5f76056bc7063447adf43be8f94b04408228cce12963ea498b8da8f9e01d01c78710ac
+  languageName: node
+  linkType: hard
+
 "@istanbuljs/load-nyc-config@npm:^1.0.0":
   version: 1.1.0
   resolution: "@istanbuljs/load-nyc-config@npm:1.1.0"
@@ -2164,6 +2180,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sideway/address@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "@sideway/address@npm:4.1.0"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+  checksum: 13f0a6b4178b03d7c0062894312313892d9a728987a5d07d43cb42c04bcdf55cd02092eb6f09ffb8d78a1dfae8cf5ce6c9b4ad66934771ea6a18e2b3fcd752d9
+  languageName: node
+  linkType: hard
+
+"@sideway/formula@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@sideway/formula@npm:3.0.0"
+  checksum: b83ecd35fea33e7b826ddcdc9f0735a79bd374927efea36885203200c418ad0f9975c329eaf9e990a7c61cf96f560ed2020227a35e699324ddd3c94dd3f4045f
+  languageName: node
+  linkType: hard
+
+"@sideway/pinpoint@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@sideway/pinpoint@npm:2.0.0"
+  checksum: e5528639aef1d266c23050897a6571c1e2aeccb59b6a22006a153fbd73aee78ae995bf19c022d70de5a00589a7f51372e78ef9aacd34a3dd9b13720c866aca7e
+  languageName: node
+  linkType: hard
+
 "@sindresorhus/fnv1a@npm:^1.2.0":
   version: 1.2.0
   resolution: "@sindresorhus/fnv1a@npm:1.2.0"
@@ -2519,10 +2558,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.3, @types/json-schema@npm:^7.0.4, @types/json-schema@npm:^7.0.5, @types/json-schema@npm:^7.0.6":
+"@types/joi@npm:^17.2.3":
+  version: 17.2.3
+  resolution: "@types/joi@npm:17.2.3"
+  dependencies:
+    joi: "*"
+  checksum: 346373b4b5e2e24de8f2d0c7a963ccd2020f0499f17ddbcb2d26e77beef7bd2ab62581bd8e8e6c5f52f4576f20004d58aba8b849392769f1c36b872d4a4732ae
+  languageName: node
+  linkType: hard
+
+"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.6":
   version: 7.0.7
   resolution: "@types/json-schema@npm:7.0.7"
   checksum: b9d2c509fa4e0b82f58e73f5e6ab76c60ff1884ba41bb82f37fb1cece226d4a3e5a62fedf78a43da0005373a6713d9abe61c1e592906402c41c08ad6ab26d52b
+  languageName: node
+  linkType: hard
+
+"@types/json-schema@npm:^7.0.3, @types/json-schema@npm:^7.0.4, @types/json-schema@npm:^7.0.5":
+  version: 7.0.6
+  resolution: "@types/json-schema@npm:7.0.6"
+  checksum: 820cabe35ac915b93e38b0c01957e5c49d7d9f69251dddfbf39af0ff4fe24f6e08b39e55603e0d212dea7bcaa383b1218b58a738d1c02013dc22df06547ff238
   languageName: node
   linkType: hard
 
@@ -8444,6 +8499,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"joi@npm:*, joi@npm:^17.3.0":
+  version: 17.3.0
+  resolution: "joi@npm:17.3.0"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+    "@hapi/topo": ^5.0.0
+    "@sideway/address": ^4.1.0
+    "@sideway/formula": ^3.0.0
+    "@sideway/pinpoint": ^2.0.0
+  checksum: 3a2a6a8df5df408b33661d61abf6389f21d71478748daebe4edf4be2176548a70396601fcf2fd4fc0bc44fc12ab67fa72de310509db47579ad21bca0f2e0611b
+  languageName: node
+  linkType: hard
+
 "joycon@npm:^2.2.5":
   version: 2.2.5
   resolution: "joycon@npm:2.2.5"
@@ -11116,6 +11184,7 @@ nestjs-graphql-dataloader@^0.1.28:
     "@types/graphql-upload": ^8.0.4
     "@types/har-format": ^1.2.5
     "@types/jest": 26.0.14
+    "@types/joi": ^17.2.3
     "@types/lodash": ^4.14.161
     "@types/node": ^14.11.8
     "@types/passport": ^1.0.4
@@ -11146,6 +11215,7 @@ nestjs-graphql-dataloader@^0.1.28:
     hasha: ^5.2.2
     husky: ^4.3.0
     jest: 26.5.2
+    joi: ^17.3.0
     jwks-rsa: ^1.10.1
     lint-staged: ^10.4.0
     lodash: ^4.17.20
