@@ -4,6 +4,8 @@
 
 import { gql } from 'apollo-server-core'; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { validate, ValidationError } from 'class-validator';
+import * as fc from 'fast-check';
+import { Arbitrary } from 'fast-check';
 import {
   DocumentNode,
   ExecutionResult,
@@ -152,4 +154,25 @@ export function hasAllKeys(
   keys: Array<string>,
 ): boolean {
   return keys.every(k => env[k]);
+}
+
+/** Arbitrary URL value. */
+export const arbitraryURL: Arbitrary<string> = fc.webUrl({
+  authoritySettings: {
+    withIPv4: true,
+    withIPv6: true,
+    withIPv4Extended: true,
+    withPort: true,
+    withUserInfo: true,
+  },
+});
+
+/** True if `s` is a valid HTTP/HTTPS URL. */
+export function isValidURL(s: string): boolean {
+  try {
+    const url = new URL(s);
+    return ['http:', 'https:'].includes(url.protocol);
+  } catch {
+    return false;
+  }
 }

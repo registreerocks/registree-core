@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import * as fc from 'fast-check';
 import * as fs from 'fs';
-import { withMockedEnv } from '../../common/test.helpers';
+import { isValidURL, withMockedEnv } from '../../common/test.helpers';
 import { AppConfig } from './app.config';
 
 describe('AppConfig', () => {
@@ -16,22 +16,49 @@ describe('AppConfig', () => {
     `);
   });
 
-  test.todo('invalid config fails');
+  test('invalid config fails', () => {
+    const invalidEnv = fc
+      .record(
+        {
+          PORT: fc
+            .string()
+            .filter(s => !(/^\d+$/.test(s) && parseInt(s) < 0x10000)),
+          HOST: fc.string(),
+          HTTP_LOG_LEVEL: fc.string().filter(s => !pinoLogLevels.includes(s)),
+          MONGO_URI: fc.string().filter(s => !isValidURL(s)),
+        },
+        { requiredKeys: [] },
+      )
+      .filter(env => Boolean(env.PORT || env.HTTP_LOG_LEVEL || env.MONGO_URI));
 
+    fc.assert(
+      fc.property(invalidEnv, env => {
+        expect(() => withMockedEnv(env, AppConfig)).toThrow(
+          new Error(
+            'AppConfig: ' +
+              // XXX: ugly!
+              [
+                env.PORT ? '"PORT" must be a number' : undefined,
+                env.HTTP_LOG_LEVEL
+                  ? '"HTTP_LOG_LEVEL" must be one of [fatal, error, warn, info, debug, trace]'
+                  : undefined,
+                env.MONGO_URI
+                  ? '"MONGO_URI" must be a valid uri with a scheme matching the mongodb|mongodb\\+srv pattern'
+                  : undefined,
+              ]
+                .filter(s => s !== undefined)
+                .join('. '),
+          ),
+        );
+      }),
+    );
+  });
   test('valid config', () => {
     const validEnv = fc.record(
       {
         PORT: fc.integer({ min: 0, max: 0xffff }).map(i => i.toString()),
-        HOST: fc.oneof(fc.ipV4(), fc.ipV4Extended(), fc.ipV6(), fc.domain()),
-        HTTP_LOG_LEVEL: fc.constantFrom(
-          // TODO: Reference pino log levels
-          'fatal',
-          'error',
-          'warn',
-          'info',
-          'debug',
-          'trace',
-        ),
+        HOST: fc.oneof(fc.ipV4(), fc.ipV6(), fc.domain()), // TODO: Non-domain hostnames?
+        HTTP_LOG_LEVEL: fc.constantFrom(...pinoLogLevels),
         MONGO_URI: mongoUri,
       },
       { requiredKeys: [] },
@@ -80,3 +107,6 @@ const mongoUri = fc.webUrl({
   },
   withQueryParameters: true,
 });
+
+// TODO: Reference pino log levels
+const pinoLogLevels = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'];

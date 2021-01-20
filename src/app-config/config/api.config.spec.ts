@@ -1,13 +1,28 @@
 import * as dotenv from 'dotenv';
 import * as fc from 'fast-check';
 import * as fs from 'fs';
-import { hasAllKeys, withMockedEnv } from '../../common/test.helpers';
+import {
+  arbitraryURL,
+  hasAllKeys,
+  isValidURL,
+  withMockedEnv,
+} from '../../common/test.helpers';
 import { ApiConfig } from './api.config';
 
 describe('ApiConfig', () => {
+  const apiKeys = [
+    'CUSTOMER_API',
+    'QUERY_API',
+    'STUDENT_API',
+    'LINKING_API',
+    'IDENTIFYING_API',
+  ];
+
   test('empty config fails', () => {
     expect(() => withMockedEnv({}, ApiConfig)).toThrow(
-      new Error('Missing API endpoint configuration'),
+      new Error(
+        'ApiConfig: ' + apiKeys.map(k => `"${k}" is required`).join('. '),
+      ),
     );
   });
 
@@ -15,29 +30,34 @@ describe('ApiConfig', () => {
     const invalidEnv = fc
       .record(
         {
-          CUSTOMER_API: fc.oneof(apiUrl, fc.string()),
-          QUERY_API: fc.oneof(apiUrl, fc.string()),
-          STUDENT_API: fc.oneof(apiUrl, fc.string()),
-          LINKING_API: fc.oneof(apiUrl, fc.string()),
-          IDENTIFYING_API: fc.oneof(apiUrl, fc.string()),
+          CUSTOMER_API: fc.oneof(arbitraryURL, fc.string()),
+          QUERY_API: fc.oneof(arbitraryURL, fc.string()),
+          STUDENT_API: fc.oneof(arbitraryURL, fc.string()),
+          LINKING_API: fc.oneof(arbitraryURL, fc.string()),
+          IDENTIFYING_API: fc.oneof(arbitraryURL, fc.string()),
         },
         { requiredKeys: [] },
       )
-      .filter(
-        env =>
-          !hasAllKeys(env, [
-            'CUSTOMER_API',
-            'QUERY_API',
-            'STUDENT_API',
-            'LINKING_API',
-            'IDENTIFYING_API',
-          ]),
-      );
+      .filter(env => !hasAllKeys(env, apiKeys));
 
     fc.assert(
       fc.property(invalidEnv, env => {
         expect(() => withMockedEnv(env, ApiConfig)).toThrow(
-          new Error('Missing API endpoint configuration'),
+          new Error(
+            'ApiConfig: ' +
+              apiKeys
+                .map(k =>
+                  env[k] === undefined
+                    ? `"${k}" is required`
+                    : env[k] === ''
+                    ? `"${k}" is not allowed to be empty`
+                    : !isValidURL(env[k])
+                    ? `"${k}" must be a valid uri with a scheme matching the http|https pattern`
+                    : undefined,
+                )
+                .filter(s => s !== undefined)
+                .join('. '),
+          ),
         );
       }),
     );
@@ -45,11 +65,11 @@ describe('ApiConfig', () => {
 
   test('valid config', () => {
     const validEnv = fc.record({
-      CUSTOMER_API: apiUrl,
-      QUERY_API: apiUrl,
-      STUDENT_API: apiUrl,
-      LINKING_API: apiUrl,
-      IDENTIFYING_API: apiUrl,
+      CUSTOMER_API: arbitraryURL,
+      QUERY_API: arbitraryURL,
+      STUDENT_API: arbitraryURL,
+      LINKING_API: arbitraryURL,
+      IDENTIFYING_API: arbitraryURL,
     });
 
     fc.assert(
@@ -82,14 +102,3 @@ describe('ApiConfig', () => {
 });
 
 // Helpers:
-
-/** Arbitrary API URL value. */
-const apiUrl = fc.webUrl({
-  authoritySettings: {
-    withIPv4: true,
-    withIPv6: true,
-    withIPv4Extended: true,
-    withPort: true,
-    withUserInfo: true,
-  },
-});

@@ -1,23 +1,38 @@
 import * as dotenv from 'dotenv';
 import * as fc from 'fast-check';
 import * as fs from 'fs';
-import { hasAllKeys, withMockedEnv } from '../../common/test.helpers';
+import {
+  arbitraryURL,
+  hasAllKeys,
+  isValidURL,
+  withMockedEnv,
+} from '../../common/test.helpers';
 import { AuthConfig } from './auth.config';
 
 describe('AuthConfig', () => {
+  const requiredKeys = [
+    'AUTH0_DOMAIN',
+    'AUTH0_CLIENT_ID',
+    'AUTH0_CLIENT_SECRET',
+    'AUTH0_AUDIENCE',
+    'AUTH0_MANAGEMENT_API',
+    'AUTH0_CONNECTION',
+    'AUTH0_API_KEY',
+    'ADMIN_API_KEY',
+  ];
+
   test('empty config fails', () => {
     expect(() => withMockedEnv({}, AuthConfig)).toThrow(
       new Error(
-        'Required environment variables not set for the auth namespace',
+        'AuthConfig: ' + requiredKeys.map(k => `"${k}" is required`).join('. '),
       ),
     );
   });
-
   test('invalid config fails', () => {
     const invalidEnv = fc
       .record(
         {
-          AUTH0_DOMAIN: fc.string(),
+          AUTH0_DOMAIN: fc.oneof(fc.domain(), fc.string()),
           AUTH0_CLIENT_ID: fc.string(),
           AUTH0_CLIENT_SECRET: fc.string(),
           AUTH0_AUDIENCE: fc.string(),
@@ -29,25 +44,26 @@ describe('AuthConfig', () => {
         },
         { requiredKeys: [] },
       )
-      .filter(
-        env =>
-          !hasAllKeys(env, [
-            'AUTH0_DOMAIN',
-            'AUTH0_CLIENT_ID',
-            'AUTH0_CLIENT_SECRET',
-            'AUTH0_AUDIENCE',
-            'AUTH0_MANAGEMENT_API',
-            'AUTH0_CONNECTION',
-            'AUTH0_API_KEY',
-            'ADMIN_API_KEY',
-          ]),
-      );
+      .filter(env => !hasAllKeys(env, requiredKeys));
 
     fc.assert(
       fc.property(invalidEnv, env => {
         expect(() => withMockedEnv(env, AuthConfig)).toThrow(
           new Error(
-            'Required environment variables not set for the auth namespace',
+            'AuthConfig: ' +
+              requiredKeys
+                .map(k =>
+                  env[k] === undefined
+                    ? `"${k}" is required`
+                    : env[k] === ''
+                    ? `"${k}" is not allowed to be empty`
+                    : ['AUTH0_AUDIENCE', 'AUTH0_MANAGEMENT_API'].includes(k) &&
+                      !isValidURL(env[k])
+                    ? `"${k}" must be a valid uri with a scheme matching the http|https pattern`
+                    : undefined,
+                )
+                .filter(s => s !== undefined)
+                .join('. '),
           ),
         );
       }),
@@ -59,8 +75,8 @@ describe('AuthConfig', () => {
       AUTH0_DOMAIN: fc.string({ minLength: 1 }),
       AUTH0_CLIENT_ID: fc.string({ minLength: 1 }),
       AUTH0_CLIENT_SECRET: fc.string({ minLength: 1 }),
-      AUTH0_AUDIENCE: fc.string({ minLength: 1 }),
-      AUTH0_MANAGEMENT_API: fc.string({ minLength: 1 }),
+      AUTH0_AUDIENCE: arbitraryURL,
+      AUTH0_MANAGEMENT_API: arbitraryURL,
       AUTH0_CONNECTION: fc.string({ minLength: 1 }),
       AUTH0_API_KEY: fc.string({ minLength: 1 }),
       ADMIN_API_KEY: fc.string({ minLength: 1 }),
