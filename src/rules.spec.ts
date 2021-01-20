@@ -37,11 +37,6 @@ describe.each([
   ['isAdmin', rules.isAdmin, 'registree'],
   ['isStudent', rules.isStudent, 'student'],
 ])('%s', (name: string, rule: IRule, targetScope: string) => {
-  test('empty context should not crash', async () => {
-    const result = await invokeWithContext(rule, {});
-    expect(result).toStrictEqual(new ForbiddenError('invalid scope'));
-  });
-
   // Generate some example scopes.
   // TODO(Pi): Migrate this to jsverify?
   const unauthorisedScopes: Array<string> = [
