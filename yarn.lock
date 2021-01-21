@@ -4604,6 +4604,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"check-more-types@npm:2.24.0":
+  version: 2.24.0
+  resolution: "check-more-types@npm:2.24.0"
+  checksum: e7b9d1f10a499ca9e2698d3b43ed76171d4209f471307425f1429df18b6f1215981f53dee49b18915211dea274571ca788939786c600416f74305285f1b36f87
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:3.5.1, chokidar@npm:^3.4.2":
   version: 3.5.1
   resolution: "chokidar@npm:3.5.1"
@@ -5254,6 +5261,15 @@ __metadata:
     supports-color:
       optional: true
   checksum: dcfb8ede26b4d899628a75806923ab9ad29daae7db0f6f1ca6227b660693ae0ca085c7f87261793abe0832ad56aff2afc33f907c6b5dc96a41fc208771feb465
+  languageName: node
+  linkType: hard
+
+"debug@npm:4.1.1":
+  version: 4.1.1
+  resolution: "debug@npm:4.1.1"
+  dependencies:
+    ms: ^2.1.1
+  checksum: 3601a6ce96e4698ed3edf0ee6e67ef0317adfcdae2f66a43b23d1b14e8888b422337429b16dbbcba6801e7bfa6cbb8de3128fbacfb8ae1cd9bd7615ea6baf970
   languageName: node
   linkType: hard
 
@@ -8719,6 +8735,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lazy-ass@npm:1.6.0":
+  version: 1.6.0
+  resolution: "lazy-ass@npm:1.6.0"
+  checksum: a4fa422498d35238905274eb350cbbd3768e06f61d221e3057f6cf1549362aad1275137785d52d05dbd479e030fb2812a40f2b88dd7e97800bd0140121d0c004
+  languageName: node
+  linkType: hard
+
 "leven@npm:2.1.0":
   version: 2.1.0
   resolution: "leven@npm:2.1.0"
@@ -9488,6 +9511,18 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: 9dd9792e891927b14ca02226dbe1daeb717b9517a001620d5e2658bbc72c5e4f06887b6cbcbb60595fa5a56e701073cf250f1ed69c1988a6b89faf9fd6a4d049
+  languageName: node
+  linkType: hard
+
+"mocked-env@npm:^1.3.2":
+  version: 1.3.2
+  resolution: "mocked-env@npm:1.3.2"
+  dependencies:
+    check-more-types: 2.24.0
+    debug: 4.1.1
+    lazy-ass: 1.6.0
+    ramda: 0.26.1
+  checksum: 64e08d2ff391063fc9701386e1a503c4f99d6152cd6e560be30afad560e30b39646a92fe252eca698b5d74ee836e9b2da41db1e71805593e8425229a1e4a87e6
   languageName: node
   linkType: hard
 
@@ -10867,6 +10902,13 @@ nestjs-graphql-dataloader@^0.1.28:
   languageName: node
   linkType: hard
 
+"ramda@npm:0.26.1":
+  version: 0.26.1
+  resolution: "ramda@npm:0.26.1"
+  checksum: 22e3fbfabdf45d7f7e8e0ff198be6c1f94d1cc16dd68f4c1786436b4583f8f1ef610a3bf0e8e8984c11346791da6ebadbe5b63dd29f2939bdfed7362d277c07b
+  languageName: node
+  linkType: hard
+
 "randombytes@npm:^2.1.0":
   version: 2.1.0
   resolution: "randombytes@npm:2.1.0"
@@ -11106,6 +11148,7 @@ nestjs-graphql-dataloader@^0.1.28:
     jwks-rsa: ^1.10.1
     lint-staged: ^10.4.0
     lodash: ^4.17.20
+    mocked-env: ^1.3.2
     mongoose: ^5.11.15
     nestjs-graphql-dataloader: "patch:nestjs-graphql-dataloader@^0.1.28#./add-nestjs-dataloader-types.diff"
     nestjs-pino: ^1.2.0
