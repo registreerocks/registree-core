@@ -5542,6 +5542,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "dotenv@npm:10.0.0"
+  checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
+  languageName: node
+  linkType: hard
+
 "ecc-jsbn@npm:~0.1.1":
   version: 0.1.2
   resolution: "ecc-jsbn@npm:0.1.2"
@@ -11138,6 +11145,7 @@ nestjs-graphql-dataloader@^0.1.28:
     class-validator: ^0.13.1
     dataloader: ^2.0.0
     date-fns: ^2.16.1
+    dotenv: ^10.0.0
     eslint: 7.10.0
     eslint-config-prettier: ^6.12.0
     eslint-plugin-import: ^2.22.1
