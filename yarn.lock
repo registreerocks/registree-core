@@ -5527,7 +5527,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:8.2.0":
+"dotenv@npm:8.2.0, dotenv@npm:^8.2.0":
   version: 8.2.0
   resolution: "dotenv@npm:8.2.0"
   checksum: 16cb89cbd7b98b053899b8aba8c5044c8fb61a2db8a81fe70360b75035fce5fed53bd7a34d772be717d0880c0321122a4c09423f518025e1b52d96791521b1a7
@@ -11133,6 +11133,7 @@ nestjs-graphql-dataloader@^0.1.28:
     class-validator: ^0.13.1
     dataloader: ^2.0.0
     date-fns: ^2.16.1
+    dotenv: ^8.2.0
     eslint: 7.10.0
     eslint-config-prettier: ^6.12.0
     eslint-plugin-import: ^2.22.1
