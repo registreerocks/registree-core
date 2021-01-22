@@ -108,7 +108,7 @@
       "prettier --write",
       "eslint --ext ts"
     ],
-    "*.{md,html,json,js}": [
+    "*.{md,html,json,js,yaml,yml}": [
       "prettier --write"
     ]
   },
