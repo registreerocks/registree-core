@@ -14,6 +14,7 @@ import {
   printError,
   Source,
 } from 'graphql';
+import mockedEnv from 'mocked-env';
 
 /** Wrap {@link validate} to return any validation errors as an error message string. */
 // Suppress warning: "Object" matches the type of class-validator's validate()
@@ -114,4 +115,41 @@ export async function execGraphQL(
   }
 
   return result;
+}
+
+/**
+ * Generic test helpers.
+ */
+
+/**
+ * Run `body` with a mocked `process.env`.
+ *
+ * This will clear and then restore the original environment.
+ *
+ * @example
+ * withMockedEnv({NODE_ENV: 'test'}, () => {
+ *   // …
+ * })
+ *
+ * @return the result of `body`
+ * @see mockedEnv
+ */
+export function withMockedEnv<R>(
+  env: Record<string, string | undefined>,
+  body: () => R,
+): R {
+  const restoreEnv = mockedEnv(env, { clear: true });
+  try {
+    return body();
+  } finally {
+    restoreEnv();
+  }
+}
+
+/** True if all the given keys of `env` have values. */
+export function hasAllKeys(
+  env: Record<string, unknown>,
+  keys: Array<string>,
+): boolean {
+  return keys.every(k => env[k]);
 }
