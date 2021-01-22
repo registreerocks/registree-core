@@ -5,7 +5,7 @@ export const StorageConfig = registerAs('storage', () => {
   const endpoint = process.env.S3_ENDPOINT;
   const accessKeyId = process.env.S3_ACCESS_KEY_ID;
   const secretAccessKey = process.env.S3_SECRET;
-  if (endpoint && accessKeyId && secretAccessKey) {
+  if (useLocal || (endpoint && accessKeyId && secretAccessKey)) {
     return {
       useLocal,
       endpoint,
