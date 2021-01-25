@@ -59,12 +59,16 @@ describe('StorageConfig', () => {
 
     fc.assert(
       fc.property(validEnv, env => {
-        expect(withMockedEnv(env, StorageConfig)).toStrictEqual({
-          useLocal: env.LOCAL_OBJECT_STORAGE === 'true',
-          endpoint: env.S3_ENDPOINT,
-          accessKeyId: env.S3_ACCESS_KEY_ID,
-          secretAccessKey: env.S3_SECRET,
-        });
+        expect(withMockedEnv(env, StorageConfig)).toStrictEqual(
+          env.LOCAL_OBJECT_STORAGE === 'true'
+            ? { useLocal: true }
+            : {
+                useLocal: false,
+                endpoint: env.S3_ENDPOINT,
+                accessKeyId: env.S3_ACCESS_KEY_ID,
+                secretAccessKey: env.S3_SECRET,
+              },
+        );
       }),
     );
   });
@@ -73,9 +77,6 @@ describe('StorageConfig', () => {
     const exampleEnv = dotenv.parse(fs.readFileSync('.env.example'));
     expect(withMockedEnv(exampleEnv, StorageConfig)).toMatchInlineSnapshot(`
       Object {
-        "accessKeyId": undefined,
-        "endpoint": undefined,
-        "secretAccessKey": undefined,
         "useLocal": true,
       }
     `);
