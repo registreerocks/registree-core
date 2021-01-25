@@ -17,6 +17,10 @@ commands:
           # Yarn 2 deprecates "--frozen-lockfile" in favour of "--immutable"
           override-ci-command: yarn install --immutable
 
+          # Yarn 1 default: "node_modules"
+          # Yarn 2 uses ".yarn/cache" instead
+          cache-path: .yarn/cache
+
 jobs:
   test:
     executor:
