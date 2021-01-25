@@ -6,6 +6,10 @@ orbs:
   codecov: codecov/codecov@1.1.2
 
 commands:
+  # The circleci/node orb doesn't support Yarn 2 natively yet.
+  #
+  # Upstream issue: https://github.com/CircleCI-Public/node-orb/issues/69
+  #
   install-packages-yarn-2:
     description: 'Install packages with Yarn 2'
     steps:
