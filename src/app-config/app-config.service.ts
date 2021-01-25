@@ -97,12 +97,7 @@ export class AppConfigService
   }
 
   createUploadOptions(): UploadOptions {
-    return {
-      accessKeyId: this.storageConfig.accessKeyId,
-      endpoint: this.storageConfig.endpoint,
-      secretAccessKey: this.storageConfig.secretAccessKey,
-      useLocal: this.storageConfig.useLocal,
-    };
+    return this.storageConfig;
   }
 
   createApiDependencyList(): { name: string; url: string | string[] }[] {
