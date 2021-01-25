@@ -9,8 +9,12 @@ commands:
   install-packages-yarn-2:
     description: 'Install packages with Yarn 2'
     steps:
+      # Reference: https://circleci.com/developer/orbs/orb/circleci/node#commands-install-packages
       - node/install-packages:
           pkg-manager: yarn
+
+          # Yarn 1 default: "yarn install --frozen-lockfile"
+          # Yarn 2 deprecates "--frozen-lockfile" in favour of "--immutable"
           override-ci-command: yarn install --immutable
 
 jobs:
