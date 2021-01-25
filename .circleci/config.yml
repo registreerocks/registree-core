@@ -5,6 +5,14 @@ orbs:
   kube-orb: circleci/kubernetes@0.11.0
   codecov: codecov/codecov@1.1.2
 
+commands:
+  install-packages-yarn-2:
+    description: 'Install packages with Yarn 2'
+    steps:
+      - node/install-packages:
+          pkg-manager: yarn
+          override-ci-command: yarn install --immutable
+
 jobs:
   test:
     executor:
@@ -12,9 +20,7 @@ jobs:
       tag: current
     steps:
       - checkout
-      - node/install-packages:
-          override-ci-command: yarn install --immutable
-          pkg-manager: yarn
+      - install-packages-yarn-2
       - run:
           command: yarn test:cov -w 1
       - codecov/upload:
@@ -25,9 +31,7 @@ jobs:
       tag: current
     steps:
       - checkout
-      - node/install-packages:
-          override-ci-command: yarn install --immutable
-          pkg-manager: yarn
+      - install-packages-yarn-2
       - run:
           command: yarn build
       - persist_to_workspace:
