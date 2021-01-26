@@ -1,9 +1,38 @@
 version: 2.1
 orbs:
-  node: circleci/node@3.0.0
+  node: circleci/node@4.1.0
   docker: circleci/docker@1.2.1
   kube-orb: circleci/kubernetes@0.11.0
   codecov: codecov/codecov@1.1.2
+
+commands:
+  # The circleci/node orb doesn't support Yarn 2 natively yet.
+  #
+  # Upstream issue: https://github.com/CircleCI-Public/node-orb/issues/69
+  #
+  install-packages-yarn-2:
+    description: 'Install packages with Yarn 2'
+    steps:
+      # Reference: https://circleci.com/developer/orbs/orb/circleci/node#commands-install-packages
+      - node/install-packages:
+          pkg-manager: yarn
+
+          # Yarn 1 default: "yarn install --frozen-lockfile"
+          # Yarn 2 deprecates "--frozen-lockfile" in favour of "--immutable"
+          override-ci-command: yarn install --immutable
+
+          # Yarn 1 default: "node_modules"
+          # Yarn 2 uses ".yarn/cache" instead
+          cache-path: .yarn/cache
+
+          # Disable this while the orb lacks more useful partial cache keys.
+          #
+          # Upstream bug: https://github.com/CircleCI-Public/node-orb/issues/63
+          #
+          # (The current behaviour is to prefix the with the branch name,
+          # which effectively clears the cache for every new branch.)
+          #
+          include-branch-in-cache-key: false
 
 jobs:
   test:
@@ -12,9 +41,7 @@ jobs:
       tag: current
     steps:
       - checkout
-      - node/install-packages:
-          override-ci-command: yarn install --immutable
-          pkg-manager: yarn
+      - install-packages-yarn-2
       - run:
           command: yarn test:cov -w 1
       - codecov/upload:
@@ -25,9 +52,7 @@ jobs:
       tag: current
     steps:
       - checkout
-      - node/install-packages:
-          override-ci-command: yarn install --immutable
-          pkg-manager: yarn
+      - install-packages-yarn-2
       - run:
           command: yarn build
       - persist_to_workspace:
