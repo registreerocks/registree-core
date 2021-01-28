@@ -1,4 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { InvitationState } from './invitation-state.enum';
 
 @ObjectType()
 export class Invitation {
@@ -19,4 +20,9 @@ export class Invitation {
 
   @Field({ nullable: true })
   email?: string;
+
+  @Field(_type => InvitationState)
+  invitationState?: InvitationState;
+
+  transcriptId!: string;
 }

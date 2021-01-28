@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { QueryDataService } from './query-data.service';
-import { getLoggerToken } from 'nestjs-pino';
 import { Provider } from '@nestjs/common';
 import { QueryDataOptions } from './query-data.options';
 import { QUERY_DATA_OPTIONS } from './query-data.constants';
@@ -23,10 +22,6 @@ describe('QueryDataService', () => {
         optionsProvider,
         {
           provide: AuthService,
-          useValue: {},
-        },
-        {
-          provide: getLoggerToken(QueryDataService.name),
           useValue: {},
         },
       ],

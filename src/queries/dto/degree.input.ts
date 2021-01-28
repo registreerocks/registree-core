@@ -6,17 +6,13 @@ export class DegreeInput {
   @Field()
   degreeId!: string;
 
-  // TODO: Remove this and get the degree name from a seperate list before doing a POST
-  @Field()
-  degreeName!: string;
-
   @Field(_type => Int, { nullable: true })
   @ValidateIf((o: DegreeInput) => !o.percentage)
   @IsDefined()
   @Min(1)
   absolute?: number;
 
-  // TODO: fail if both absolute and percentage
+  // TODO: fail if both or neither absolute and percentage
 
   @Field(_type => Int, { nullable: true })
   @ValidateIf((o: DegreeInput) => !o.absolute && o.percentage !== undefined)

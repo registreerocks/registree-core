@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID, Float } from '@nestjs/graphql';
-import { Degree } from 'src/degrees/models/degree.model';
 import { StudentLink } from 'src/student-linking/models/student-link.model';
+import { Degree } from 'src/universities/models/degree.model';
 
 @ObjectType()
 export class QueryTranscript {
@@ -17,7 +17,9 @@ export class QueryTranscript {
   latestTerm!: number;
 
   @Field(_type => Degree)
-  degree!: Degree;
+  degree?: Degree;
+
+  degreeId!: string;
 
   @Field(_type => StudentLink)
   studentLink!: StudentLink;

@@ -4,4 +4,6 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 export class Percentage {
   @Field(_type => Int)
   percentage!: number;
+
+  readonly amountType: 'Percentage' = 'Percentage';
 }

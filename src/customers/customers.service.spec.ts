@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CustomersService } from './customers.service';
-import { CustomersDataProvider } from './customers.data-provider';
+import { Customer } from './models/customer.model';
+import { getModelToken } from '@nestjs/mongoose';
+import { Auth0DataService } from 'src/auth0-data/auth0-data.service';
 
 describe('CustomersService', () => {
   let service: CustomersService;
@@ -10,7 +12,11 @@ describe('CustomersService', () => {
       providers: [
         CustomersService,
         {
-          provide: CustomersDataProvider,
+          provide: Auth0DataService,
+          useValue: {},
+        },
+        {
+          provide: getModelToken(Customer.name),
           useValue: {},
         },
       ],

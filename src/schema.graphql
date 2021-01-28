@@ -3,26 +3,55 @@
 # ------------------------------------------------------
 
 type BillingDetails {
+  addressee: String
   city: String
   country: String
+  email: String
   line1: String
   line2: String
   province: String
-  zip: String
   vat: String
+  zip: String
 }
 
 type Contact {
   email: String
   name: String
+  userId: ID!
+  dbId: ID!
 }
 
 type Customer {
   id: ID!
-  description: String!
+  description: String
   name: String!
   billingDetails: BillingDetails!
-  contact: Contact!
+  contacts: [Contact!]!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type CustomerEdge {
+  cursor: String!
+  node: Customer!
+}
+
+type CustomerConnection {
+  edges: [CustomerEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type Student {
+  email: String!
+  name: String!
+  userId: ID!
+  studentNumber: ID!
 }
 
 type RsvpCost {
@@ -33,6 +62,37 @@ type RsvpCost {
 type Quote {
   numberOfStudents: Int!
   rsvpCostBreakdown: [RsvpCost!]!
+}
+
+type Degree {
+  id: ID!
+  name: String!
+  description: String!
+  faculty: Faculty!
+  level: String!
+}
+
+type GroupedDegrees {
+  name: String!
+  degrees: [Degree!]!
+}
+
+type Faculty {
+  id: ID!
+  name: String!
+  description: String!
+  university: University!
+  groupedDegrees: [GroupedDegrees!]!
+  degrees: [Degree!]!
+}
+
+type University {
+  id: ID!
+  country: String!
+  name: String!
+  physicalAddress: String!
+  shortName: String!
+  faculties: [Faculty!]!
 }
 
 type UploadedFile {
@@ -49,12 +109,21 @@ type Invitation {
   sentAt: DateTime
   viewedAt: DateTime
   email: String
+  invitationState: InvitationState!
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+enum InvitationState {
+  NONE
+  VIEWED
+  RESPONDED
+  ACCEPTED
+  ATTENDED
+}
 
 type EventMetrics {
   acceptedCount: Int!
@@ -69,16 +138,12 @@ type EventDetails {
   endDate: DateTime!
   attachments: [UploadedFile!]!
   information: String!
+  message: String
   name: String!
   eventType: String!
   invites: [Invitation!]!
   metrics: EventMetrics!
-  password: String!
-}
-
-type Degree {
-  id: ID!
-  degreeName: String!
+  password: String
 }
 
 type DegreeSelection {
@@ -89,15 +154,11 @@ type DegreeSelection {
 union Amount = Absolute | Percentage
 
 type Absolute {
-  amount: Int!
+  absolute: Int!
 }
 
 type Percentage {
   percentage: Int!
-}
-
-type Student {
-  name: String!
 }
 
 type StudentLink {
@@ -114,24 +175,37 @@ type QueryTranscript {
   studentLink: StudentLink!
 }
 
+type QueryTranscriptEdge {
+  cursor: String!
+  node: QueryTranscript!
+}
+
+type QueryTranscriptConnection {
+  edges: [QueryTranscriptEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type QueryDetails {
   parameters: [DegreeSelection!]!
-  results: [QueryTranscript!]!
+  faculties: [Faculty!]!
+  results(filter: QueryTranscriptFilter, after: String, before: String, first: Int, last: Int): QueryTranscriptConnection!
   updatedAt: DateTime!
+}
+
+input QueryTranscriptFilter {
+  degreeIds: [ID!]
+  degreeCompleted: Boolean
+  eventAttended: Boolean
 }
 
 type EventQuery {
   id: ID!
-  customerId: ID!
+  customer: Customer!
   eventDetails: EventDetails!
   queryDetails: QueryDetails!
-}
-
-type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
+  quoteDetails: Quote!
+  currentPrice: Float!
 }
 
 type EventQueryEdge {
@@ -147,9 +221,16 @@ type EventQueryConnection {
 
 type Query {
   customer: Customer!
+  getCustomer(customerId: ID!): Customer!
+  getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
+  getContact: Contact!
+  getStudent: Student!
+  acceptedPrivacyPolicy: Boolean!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getStudentQueries(filter: StudentQueryFilter, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
+  getUniversities: [University!]!
 }
 
 input CreateEventQueryInput {
@@ -157,17 +238,16 @@ input CreateEventQueryInput {
   address: String!
   startDate: DateTime!
   endDate: DateTime!
-  info: String!
-  message: String!
+  information: String!
+  message: String
   degrees: [DegreeInput!]!
   eventType: String!
   attachments: [Upload!]
-  password: String!
+  password: String
 }
 
 input DegreeInput {
   degreeId: String!
-  degreeName: String!
   absolute: Int
   percentage: Int
 }
@@ -175,6 +255,74 @@ input DegreeInput {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
+input StudentQueryFilter {
+  invitationState: InvitationState
+}
+
 type Mutation {
+  updateBillingDetails(updateBillingDetailsInput: UpdateBillingDetailsInput!, customerId: ID!): Customer!
+  updateCustomerDetails(updateCustomerDetailsInput: UpdateCustomerDetailsInput!, customerId: ID!): Customer!
+  createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
+  createContact(customerId: ID!, createContactInput: CreateContactInput!): Contact!
+  updateContact(updateUserInput: UpdateContactInput!): Contact!
+  acceptPrivacyPolicy: DateTime!
+  updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
+  addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
+  deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
+  setQueryInviteToViewed(queryId: ID!): EventQuery!
+  setRsvp(willAttend: Boolean!, queryId: ID!): EventQuery!
+  setQueryInviteToAttendedAndLink(queryId: ID!): EventQuery!
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+  expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+}
+
+input UpdateBillingDetailsInput {
+  addressee: String
+  city: String
+  country: String
+  email: String
+  line1: String
+  line2: String
+  province: String
+
+  """The vat number of the company, must match '/^4d{9}$/'"""
+  vat: String
+  zip: String
+}
+
+input UpdateCustomerDetailsInput {
+  description: String
+  name: String!
+}
+
+input CreateCustomerInput {
+  description: String!
+  name: String!
+  initialContact: String!
+}
+
+input CreateContactInput {
+  email: String!
+  name: String!
+}
+
+input UpdateContactInput {
+  email: String
+  name: String
+  password: String
+}
+
+input UpdateEventInfoInput {
+  name: String
+  address: String
+  startDate: DateTime
+  endDate: DateTime
+  information: String
+  message: String
+  eventType: String
+  password: String
+}
+
+input ExpandEventQueryInput {
+  degrees: [DegreeInput!]!
 }

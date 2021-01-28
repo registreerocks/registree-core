@@ -1,6 +1,7 @@
 import { Module, Global, DynamicModule, Provider } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
+import { ApiKeyStrategy } from './apiKey.strategy';
 import { AuthService } from './auth.service';
 import {
   AuthOptions,
@@ -12,7 +13,7 @@ import { AUTH_OPTIONS } from './auth.constants';
 @Global()
 @Module({
   imports: [PassportModule.register({ defaultStrategy: 'jwt' })],
-  providers: [JwtStrategy, AuthService],
+  providers: [JwtStrategy, ApiKeyStrategy, AuthService],
   exports: [PassportModule, JwtStrategy, AuthService],
 })
 export class AuthModule {

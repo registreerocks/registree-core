@@ -15,6 +15,23 @@ import {
   PricingOptionsFactory,
   PricingOptions,
 } from 'src/pricing/pricing.options';
+import { StudentDataOptions } from 'src/student-data/student-data.options';
+import {
+  MongooseOptionsFactory,
+  MongooseModuleOptions,
+} from '@nestjs/mongoose';
+import {
+  Auth0DataOptionsFactory,
+  Auth0DataOptions,
+} from 'src/auth0-data/auth0-data.options';
+import {
+  LinkingDataOptionsFactory,
+  LinkingDataOptions,
+} from 'src/linking-data/linking-data.options';
+import {
+  IdentifyingDataOptions,
+  IdentifyingDataOptionsFactory,
+} from 'src/identifying-data/identifying-data.options';
 
 @Injectable()
 export class AppConfigService
@@ -22,7 +39,11 @@ export class AppConfigService
     AuthOptionsFactory,
     QueryDataOptionsFactory,
     UploadOptionsFactory,
-    PricingOptionsFactory {
+    PricingOptionsFactory,
+    MongooseOptionsFactory,
+    Auth0DataOptionsFactory,
+    LinkingDataOptionsFactory,
+    IdentifyingDataOptionsFactory {
   constructor(
     @Inject(AuthConfig.KEY)
     private readonly authConfig: ConfigType<typeof AuthConfig>,
@@ -49,6 +70,32 @@ export class AppConfigService
       queryApi: this.apiConfig.queryApi,
     };
   }
+
+  createAuth0DataOptions(): Auth0DataOptions {
+    return {
+      managementApi: this.authConfig.managementApi,
+      connection: this.authConfig.connection,
+    };
+  }
+
+  createStudentDataOptions(): StudentDataOptions {
+    return {
+      studentApis: this.apiConfig.studentApis,
+    };
+  }
+
+  createLinkingDataOptions(): LinkingDataOptions {
+    return {
+      linkingApi: this.apiConfig.linkingApi,
+    };
+  }
+
+  createIdentifyingDataOptions(): IdentifyingDataOptions {
+    return {
+      identifyingApi: this.apiConfig.identifyingApi,
+    };
+  }
+
   createUploadOptions(): UploadOptions {
     return {
       accessKeyId: this.storageConfig.accessKeyId,
@@ -58,11 +105,26 @@ export class AppConfigService
     };
   }
 
+  createApiDependencyList(): { name: string; url: string | string[] }[] {
+    return Object.entries(this.apiConfig).map(([key, value]) => ({
+      name: key,
+      url: value,
+    }));
+  }
+
   createAppParams(): ConfigType<typeof AppConfig> {
     return this.appConfig;
   }
 
   createPricingOptions(): PricingOptions {
     return this.pricingConfig;
+  }
+
+  createMongooseOptions(): MongooseModuleOptions {
+    return {
+      uri: this.appConfig.mongoUri,
+      sslValidate: false,
+      useFindAndModify: false,
+    };
   }
 }

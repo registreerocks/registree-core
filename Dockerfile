@@ -1,7 +1,9 @@
 FROM node:current-alpine
 WORKDIR /app
-COPY ./node_modules ./node_modules
 COPY ./package.json ./
 COPY ./dist ./dist
+COPY ./.yarn ./.yarn
+COPY ./.pnp.js ./
+COPY ./yarn.lock ./
 EXPOSE 3000
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "yarn", "start:prod" ]

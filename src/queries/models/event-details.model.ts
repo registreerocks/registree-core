@@ -20,6 +20,9 @@ export class EventDetails {
   @Field()
   information!: string;
 
+  @Field({ nullable: true })
+  message?: string;
+
   @Field()
   name!: string;
 
@@ -32,6 +35,6 @@ export class EventDetails {
   @Field(_type => EventMetrics)
   metrics!: EventMetrics;
 
-  @Field()
-  password!: string;
+  @Field({ nullable: true })
+  password?: string;
 }
