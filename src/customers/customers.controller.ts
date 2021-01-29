@@ -25,16 +25,10 @@ export class CustomersController {
     else throw new NotFoundException();
   }
 
-  @UseGuards(ApiKeyAuthGuard)
-  @Get(':id')
-  async getCustomerById(@Param('id') customerId: string): Promise<Customer> {
-    const customer = await this.customersService.findOneByCustomerId(
-      customerId,
-    );
-    if (customer) return customer;
-    else throw new NotFoundException();
-  }
-
+  // XXX: This overlaps with getCustomerById() below (so the order matters).
+  //
+  // FIXME: These methods need reworking and testing.
+  // See https://github.com/registreerocks/registree-core/issues/361
   @UseGuards(ApiKeyAuthGuard)
   @Get('customerId')
   async getCustomerIdByContactUserId(
@@ -42,6 +36,16 @@ export class CustomersController {
   ): Promise<string> {
     const customer = await this.customersService.findOneByUserId(userId);
     if (customer) return customer.id;
+    else throw new NotFoundException();
+  }
+
+  @UseGuards(ApiKeyAuthGuard)
+  @Get(':id')
+  async getCustomerById(@Param('id') customerId: string): Promise<Customer> {
+    const customer = await this.customersService.findOneByCustomerId(
+      customerId,
+    );
+    if (customer) return customer;
     else throw new NotFoundException();
   }
 
