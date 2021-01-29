@@ -25,6 +25,10 @@ export class CustomersController {
     else throw new NotFoundException();
   }
 
+  // XXX: This overlaps with getCustomerById() below (so the order matters).
+  //
+  // FIXME: These methods need reworking and testing.
+  // See https://github.com/registreerocks/registree-core/issues/361
   @UseGuards(ApiKeyAuthGuard)
   @Get('customerId')
   async getCustomerIdByContactUserId(
