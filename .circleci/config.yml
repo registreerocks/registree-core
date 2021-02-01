@@ -46,6 +46,21 @@ jobs:
           command: yarn test:cov -w 1
       - codecov/upload:
           file: 'coverage/lcov.info'
+
+  test-e2e:
+    docker:
+      - image: cimg/node:current
+      - image: circleci/mongo
+    steps:
+      - checkout
+      - install-packages-yarn-2
+      - run:
+          command: |
+            cp .env.tests .env
+            yarn test:e2e --coverage
+      - codecov/upload:
+          file: 'coverage/lcov.info'
+
   build:
     executor:
       name: node/default
@@ -68,6 +83,7 @@ workflows:
   build-and-push:
     jobs:
       - test
+      - test-e2e
       - build
       - docker/publish:
           filters:
