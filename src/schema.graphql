@@ -6,6 +6,21 @@ type Absolute {
   absolute: Int!
 }
 
+"""The academic year of study a student is in."""
+enum AcademicYearOfStudy {
+  YEAR_1
+  YEAR_2
+  YEAR_3_PLUS
+}
+
+"""A labelled academic year of study."""
+type AcademicYearOfStudyLabel {
+  academicYearOfStudy: AcademicYearOfStudy!
+
+  """User-facing label for this year."""
+  label: String!
+}
+
 union Amount = Absolute | Percentage
 
 type BillingDetails {
@@ -202,6 +217,9 @@ type Percentage {
 type Query {
   acceptedPrivacyPolicy: Boolean!
   customer: Customer!
+
+  """Get academic years of study to display."""
+  getAcademicYearOfStudyLabels: [AcademicYearOfStudyLabel!]!
   getContact: Contact!
   getCustomer(customerId: ID!): Customer!
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
