@@ -1,6 +1,92 @@
 import { gql } from 'apollo-server-core';
+import * as fc from 'fast-check';
 import * as graphql from 'graphql';
-import { execGraphQL } from './test.helpers';
+import {
+  coerceNullPrototypeObjects,
+  execGraphQL,
+  hasNullPrototype,
+  hasObjectPrototype,
+} from './test.helpers';
+
+/** For `fc.anything`: everything except null prototype objects. */
+const withoutNullPrototype: fc.ObjectConstraints = {
+  withBigInt: true,
+  withBoxedValues: true,
+  withDate: true,
+  withMap: true,
+  withObjectString: true,
+  withNullPrototype: false,
+  withSet: true,
+  withTypedArray: true,
+};
+
+describe('hasNullPrototype and hasObjectPrototype', () => {
+  test('Object.create(null): hasNullPrototype, not hasObjectPrototype', () => {
+    const o = Object.create(null) as { unknown: unknown };
+    expect(hasNullPrototype(o)).toBe(true);
+    expect(hasObjectPrototype(o)).toBe(false);
+  });
+
+  test('plain objects: hasObjectPrototype, not hasNullPrototype', () => {
+    fc.assert(
+      fc.property(
+        fc.object({ ...withoutNullPrototype, withNullPrototype: true }),
+        o => {
+          expect(hasObjectPrototype(o)).toBe(true);
+          expect(hasNullPrototype(o)).toBe(false);
+        },
+      ),
+    );
+  });
+
+  test('everything else: not hasNullPrototype', () => {
+    fc.assert(
+      fc.property(fc.anything(withoutNullPrototype), o => {
+        expect(hasNullPrototype(o)).toBe(false);
+      }),
+    );
+  });
+});
+
+describe('coerceNullPrototypeObjects', () => {
+  test('everything excluding null prototype objects', () => {
+    fc.assert(
+      fc.property(fc.anything(withoutNullPrototype), (input: unknown) => {
+        const result = coerceNullPrototypeObjects(input);
+        expect(result).toStrictEqual(input);
+      }),
+    );
+  });
+
+  test('everything including null prototype objects', () => {
+    // Helper: True if any objects or arrays in o contain a null prototype object.
+    const containsNullPrototype = (o: unknown) =>
+      hasNullPrototype(o) ||
+      (hasObjectPrototype(o) && Object.values(o).some(containsNullPrototype)) ||
+      (o instanceof Array && o.some(containsNullPrototype));
+
+    // Filter fc.anything() down to values that actually contain a null prototype object somewhere.
+    const anythingContainingNullPrototypes = fc
+      .anything({
+        ...withoutNullPrototype,
+        withNullPrototype: true,
+      })
+      .filter(containsNullPrototype);
+
+    fc.assert(
+      fc.property(anythingContainingNullPrototypes, input => {
+        const output = coerceNullPrototypeObjects(input);
+        // The input contains null prototypes, but the output should not.
+        expect(containsNullPrototype(input)).toBe(true);
+        expect(containsNullPrototype(output)).toBe(false);
+        // The difference between input and output should fail toStrictEqual,
+        // but still pass toEqual.
+        expect(output).not.toStrictEqual(input);
+        expect(output).toEqual(input);
+      }),
+    );
+  });
+});
 
 describe('execGraphQL', () => {
   let schema: graphql.GraphQLSchema;

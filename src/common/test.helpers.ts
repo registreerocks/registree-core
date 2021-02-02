@@ -12,6 +12,46 @@ import {
   printError,
 } from 'graphql';
 
+/** True for objects with the given prototype. */
+const hasPrototype = (o, prototype): o is InstanceType<typeof prototype> =>
+  typeof o === 'object' && o !== null && Object.getPrototypeOf(o) === prototype;
+
+/**
+ * True for null prototype objects, as returned by `Object.create(null)`).
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#custom_and_null_objects
+ */
+export const hasNullPrototype = (
+  o: unknown,
+): o is Record<keyof never, unknown> => hasPrototype(o, null);
+
+/**
+ * True for "plain" objects, but not null prototype objects.
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#custom_and_null_objects
+ */
+export const hasObjectPrototype = (
+  o: unknown,
+): o is Record<keyof never, unknown> => hasPrototype(o, Object.prototype);
+
+/**
+ * Return a mixed object tree with null prototype objects coerced to plain objects.
+ *
+ * This primarily intended to work around the problem of graphql-js using
+ * null prototype objects to represent maps.
+ *
+ * @see https://github.com/graphql/graphql-js/issues/484
+ */
+export function coerceNullPrototypeObjects(o: unknown): unknown {
+  if (hasNullPrototype(o) || hasObjectPrototype(o)) {
+    return Object.fromEntries(
+      Object.entries(o).map(([k, v]) => [k, coerceNullPrototypeObjects(v)]),
+    );
+  } else if (Array.isArray(o)) {
+    return Array.from(o, v => coerceNullPrototypeObjects(v));
+  } else {
+    return o;
+  }
+}
+
 /**
  * Like {@link graphql }, but accept a {@link DocumentNode DocumentNode} as query,
  * and throw on error.
