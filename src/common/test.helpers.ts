@@ -20,6 +20,7 @@ import {
  *
  * @param schema Should be the result of `app.get(GraphQLSchemaHost).schema`
  * @param query Should be the result of a {@link gql} template literal.
+ * @param variableValues Optional variable values.
  *
  * @throws any underlying execution result error(s)
  *
@@ -28,6 +29,7 @@ import {
 export async function execGraphQL(
   schema: GraphQLSchema,
   query: DocumentNode,
+  variableValues?: { [key: string]: unknown } | undefined,
 ): Promise<ExecutionResult> {
   // Get the query source.
   if (query.loc === undefined) {
@@ -36,7 +38,11 @@ export async function execGraphQL(
   const source: string = query.loc.source.body;
 
   // Throw error(s), if any.
-  const result: ExecutionResult = await graphql(schema, source);
+  const result: ExecutionResult = await graphql({
+    schema,
+    source,
+    variableValues,
+  });
   if (result.errors) {
     const errors: ReadonlyArray<GraphQLError> = result.errors;
     if (errors.length === 0) {

@@ -40,6 +40,22 @@ describe('execGraphQL', () => {
     `);
   });
 
+  test('dummy value with variable', async () => {
+    const query = gql`
+      query dummyQuery($dummyVar: Boolean!) {
+        dummyValue @include(if: $dummyVar)
+      }
+    `;
+    expect(await execGraphQL(schema, query, { dummyVar: true }))
+      .toMatchInlineSnapshot(`
+      Object {
+        "data": Object {
+          "dummyValue": "dummy value",
+        },
+      }
+    `);
+  });
+
   test('dummy error', async () => {
     const query = gql`
       {
