@@ -1,9 +1,10 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
-import { Min, Max, ValidateIf, IsDefined } from 'class-validator';
+import { IsDefined, IsString, Max, Min, ValidateIf } from 'class-validator';
 
 @InputType()
 export class DegreeInput {
   @Field()
+  @IsString()
   degreeId!: string;
 
   @Field(_type => Int, { nullable: true })
