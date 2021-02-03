@@ -3,6 +3,7 @@
  */
 
 import { gql } from 'apollo-server-core'; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { validate, ValidationError } from 'class-validator';
 import {
   DocumentNode,
   ExecutionResult,
@@ -11,6 +12,15 @@ import {
   GraphQLSchema,
   printError,
 } from 'graphql';
+
+/** Wrap {@link validate} to return any validation errors as an error message string. */
+// Suppress warning: "Object" matches the type of class-validator's validate()
+// eslint-disable-next-line @typescript-eslint/ban-types
+export async function validateToErrorMessage(object: Object): Promise<string> {
+  return (await validate(object))
+    .map((e: ValidationError) => e.toString())
+    .join('');
+}
 
 /** True for objects with the given prototype. */
 const hasPrototype = (o, prototype): o is InstanceType<typeof prototype> =>

@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server-core';
+import { IsAlpha, IsInt, IsOptional } from 'class-validator';
 import * as fc from 'fast-check';
 import * as graphql from 'graphql';
 import {
@@ -6,7 +7,34 @@ import {
   execGraphQL,
   hasNullPrototype,
   hasObjectPrototype,
+  validateToErrorMessage,
 } from './test.helpers';
+
+describe('validateToErrorMessage', () => {
+  class DummyInput {
+    @IsOptional() @IsAlpha() label?: string;
+    @IsOptional() @IsInt() count?: number;
+  }
+
+  test('no errors', async () => {
+    const input = new DummyInput();
+    expect(await validateToErrorMessage(input)).toStrictEqual('');
+  });
+
+  test('some errors', async () => {
+    const input: DummyInput = Object.assign(new DummyInput(), {
+      label: '123',
+      count: 1.5,
+    });
+    expect(await validateToErrorMessage(input)).toMatchInlineSnapshot(`
+      "An instance of DummyInput has failed the validation:
+       - property label has failed the following constraints: isAlpha 
+      An instance of DummyInput has failed the validation:
+       - property count has failed the following constraints: isInt 
+      "
+    `);
+  });
+});
 
 /** For `fc.anything`: everything except null prototype objects. */
 const withoutNullPrototype: fc.ObjectConstraints = {
