@@ -1,4 +1,8 @@
 import fc from 'fast-check';
+import {
+  AcademicYearOfStudy,
+  AcademicYearOfStudyLabels,
+} from '../models/academic-year-of-study.model';
 import { CreateEventQueryInput } from './create-event-query.input';
 import {
   arbitraryDegreeInput,
@@ -18,6 +22,7 @@ export function arbitraryCreateEventQueryInput(): fc.Arbitrary<
         information: fc.string({ minLength: 1 }),
         message: fc.string(),
         degrees: fc.array(arbitraryDegreeInput()),
+        academicYearOfStudyList: fc.shuffledSubarray(academicYearOfStudyValues),
         eventType: fc.string({ minLength: 1 }),
         // TODO: attachments?
         password: fc.string(),
@@ -30,6 +35,7 @@ export function arbitraryCreateEventQueryInput(): fc.Arbitrary<
           'endDate',
           'information',
           'degrees',
+          'academicYearOfStudyList',
           'eventType',
         ],
       },
@@ -50,6 +56,16 @@ export function arbitraryInvalidCreateEventQueryInput(): fc.Arbitrary<
     fc.array(arbitraryInvalidDegreeInput(), { minLength: 1 }),
     decoys,
   );
+  const notAcademicYearOfStudyList = fc.oneof(
+    fc.array(fc.constantFrom(...academicYearOfStudyValues), {
+      minLength: academicYearOfStudyValues.length + 1, // Ensure at least one duplicate.
+    }),
+    fc
+      .anything()
+      .filter(
+        o => !(Array.isArray(o) && o.every(v => v in AcademicYearOfStudy)),
+      ),
+  );
 
   const invalidFields = {
     name: notFullString,
@@ -59,6 +75,7 @@ export function arbitraryInvalidCreateEventQueryInput(): fc.Arbitrary<
     information: notFullString,
     message: notOptionalString,
     degrees: notDegrees,
+    academicYearOfStudyList: notAcademicYearOfStudyList,
     eventType: notFullString,
     // TODO: attachments?
     password: notOptionalString,
@@ -77,3 +94,5 @@ export function arbitraryInvalidCreateEventQueryInput(): fc.Arbitrary<
     invalidRecords.map(invalid => Object.assign(valid, invalid)),
   );
 }
+
+const academicYearOfStudyValues = Array.from(AcademicYearOfStudyLabels.keys());

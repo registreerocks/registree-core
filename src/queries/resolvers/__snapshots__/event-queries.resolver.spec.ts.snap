@@ -216,6 +216,7 @@ input CreateEventQueryInput {
   information: String!
   message: String
   degrees: [DegreeInput!]!
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
   eventType: String!
   attachments: [Upload!]
   password: String
@@ -225,6 +226,13 @@ input DegreeInput {
   degreeId: String!
   absolute: Int
   percentage: Int
+}
+
+\\"\\"\\"The academic year of study a student is in.\\"\\"\\"
+enum AcademicYearOfStudy {
+  YEAR_1
+  YEAR_2
+  YEAR_3_PLUS
 }
 
 \\"\\"\\"The \`Upload\` scalar type represents a file upload.\\"\\"\\"

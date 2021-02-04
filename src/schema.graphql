@@ -54,6 +54,7 @@ input CreateCustomerInput {
 }
 
 input CreateEventQueryInput {
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
   address: String!
   attachments: [Upload!]
   degrees: [DegreeInput!]!

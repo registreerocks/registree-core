@@ -1,9 +1,12 @@
 import { InputType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import { AcademicYearOfStudy } from '../models/academic-year-of-study.model';
 import { DegreeInput } from './degree.input';
 import {
+  ArrayUnique,
   IsArray,
   IsDate,
+  IsEnum,
   IsOptional,
   IsString,
   MinLength,
@@ -43,6 +46,11 @@ export class CreateEventQueryInput {
   @ValidateNested()
   @Type(_of => DegreeInput)
   degrees!: DegreeInput[];
+
+  @Field(_type => [AcademicYearOfStudy])
+  @IsEnum(AcademicYearOfStudy, { each: true })
+  @ArrayUnique()
+  academicYearOfStudyList!: AcademicYearOfStudy[];
 
   // TODO: Enum or | type
   @Field()
