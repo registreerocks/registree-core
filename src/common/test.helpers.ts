@@ -8,6 +8,7 @@ import {
   DocumentNode,
   ExecutionResult,
   graphql,
+  GraphQLArgs,
   GraphQLError,
   GraphQLSchema,
   printError,
@@ -70,7 +71,7 @@ export function coerceNullPrototypeObjects(o: unknown): unknown {
  *
  * @param schema Should be the result of `app.get(GraphQLSchemaHost).schema`
  * @param query Should be the result of a {@link gql} template literal.
- * @param variableValues Optional variable values.
+ * @param args Same as {@link graphql}
  *
  * @throws any underlying execution result error(s)
  *
@@ -79,7 +80,7 @@ export function coerceNullPrototypeObjects(o: unknown): unknown {
 export async function execGraphQL(
   schema: GraphQLSchema,
   query: DocumentNode,
-  variableValues?: { [key: string]: unknown } | undefined,
+  args?: Omit<GraphQLArgs, 'schema' | 'source'>,
 ): Promise<ExecutionResult> {
   // Get the query source.
   if (query.loc === undefined) {
@@ -87,12 +88,9 @@ export async function execGraphQL(
   }
   const source: string = query.loc.source.body;
 
+  const result: ExecutionResult = await graphql({ schema, source, ...args });
+
   // Throw error(s), if any.
-  const result: ExecutionResult = await graphql({
-    schema,
-    source,
-    variableValues,
-  });
   if (result.errors) {
     const errors: ReadonlyArray<GraphQLError> = result.errors;
     if (errors.length === 0) {

@@ -160,8 +160,11 @@ describe('execGraphQL', () => {
         dummyValue @include(if: $dummyVar)
       }
     `;
-    expect(await execGraphQL(schema, query, { dummyVar: true }))
-      .toMatchInlineSnapshot(`
+    expect(
+      await execGraphQL(schema, query, {
+        variableValues: { dummyVar: true },
+      }),
+    ).toMatchInlineSnapshot(`
       Object {
         "data": Object {
           "dummyValue": "dummy value",
