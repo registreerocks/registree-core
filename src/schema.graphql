@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Absolute {
+  absolute: Int!
+}
+
+union Amount = Absolute | Percentage
+
 type BillingDetails {
   addressee: String
   city: String
@@ -15,30 +21,42 @@ type BillingDetails {
 }
 
 type Contact {
+  dbId: ID!
   email: String
   name: String
   userId: ID!
-  dbId: ID!
+}
+
+input CreateContactInput {
+  email: String!
+  name: String!
+}
+
+input CreateCustomerInput {
+  description: String!
+  initialContact: String!
+  name: String!
+}
+
+input CreateEventQueryInput {
+  address: String!
+  attachments: [Upload!]
+  degrees: [DegreeInput!]!
+  endDate: DateTime!
+  eventType: String!
+  information: String!
+  message: String
+  name: String!
+  password: String
+  startDate: DateTime!
 }
 
 type Customer {
-  id: ID!
-  description: String
-  name: String!
   billingDetails: BillingDetails!
   contacts: [Contact!]!
-}
-
-type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-}
-
-type CustomerEdge {
-  cursor: String!
-  node: Customer!
+  description: String
+  id: ID!
+  name: String!
 }
 
 type CustomerConnection {
@@ -47,69 +65,9 @@ type CustomerConnection {
   totalCount: Int!
 }
 
-type Student {
-  email: String!
-  name: String!
-  userId: ID!
-  studentNumber: ID!
-}
-
-type RsvpCost {
-  cost: Float!
-  percent: Int!
-}
-
-type Quote {
-  numberOfStudents: Int!
-  rsvpCostBreakdown: [RsvpCost!]!
-}
-
-type Degree {
-  id: ID!
-  name: String!
-  description: String!
-  faculty: Faculty!
-  level: String!
-}
-
-type GroupedDegrees {
-  name: String!
-  degrees: [Degree!]!
-}
-
-type Faculty {
-  id: ID!
-  name: String!
-  description: String!
-  university: University!
-  groupedDegrees: [GroupedDegrees!]!
-  degrees: [Degree!]!
-}
-
-type University {
-  id: ID!
-  country: String!
-  name: String!
-  physicalAddress: String!
-  shortName: String!
-  faculties: [Faculty!]!
-}
-
-type UploadedFile {
-  id: ID!
-  filename: String!
-  mimetype: String!
-  url: String!
-}
-
-type Invitation {
-  accepted: Boolean!
-  attended: Boolean!
-  respondedAt: DateTime
-  sentAt: DateTime
-  viewedAt: DateTime
-  email: String
-  invitationState: InvitationState!
+type CustomerEdge {
+  cursor: String!
+  node: Customer!
 }
 
 """
@@ -117,12 +75,37 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-enum InvitationState {
-  NONE
-  VIEWED
-  RESPONDED
-  ACCEPTED
-  ATTENDED
+type Degree {
+  description: String!
+  faculty: Faculty!
+  id: ID!
+  level: String!
+  name: String!
+}
+
+input DegreeInput {
+  absolute: Int
+  degreeId: String!
+  percentage: Int
+}
+
+type DegreeSelection {
+  amount: Amount!
+  degree: Degree!
+}
+
+type EventDetails {
+  address: String!
+  attachments: [UploadedFile!]!
+  endDate: DateTime!
+  eventType: String!
+  information: String!
+  invites: [Invitation!]!
+  message: String
+  metrics: EventMetrics!
+  name: String!
+  password: String
+  startDate: DateTime!
 }
 
 type EventMetrics {
@@ -132,85 +115,13 @@ type EventMetrics {
   viewedCount: Int!
 }
 
-type EventDetails {
-  address: String!
-  startDate: DateTime!
-  endDate: DateTime!
-  attachments: [UploadedFile!]!
-  information: String!
-  message: String
-  name: String!
-  eventType: String!
-  invites: [Invitation!]!
-  metrics: EventMetrics!
-  password: String
-}
-
-type DegreeSelection {
-  amount: Amount!
-  degree: Degree!
-}
-
-union Amount = Absolute | Percentage
-
-type Absolute {
-  absolute: Int!
-}
-
-type Percentage {
-  percentage: Int!
-}
-
-type StudentLink {
-  id: ID!
-  student: Student
-}
-
-type QueryTranscript {
-  id: ID!
-  degreeAverage: Float!
-  degreeCompleted: Boolean!
-  latestTerm: Float!
-  degree: Degree!
-  studentLink: StudentLink!
-}
-
-type QueryTranscriptEdge {
-  cursor: String!
-  node: QueryTranscript!
-}
-
-type QueryTranscriptConnection {
-  edges: [QueryTranscriptEdge!]
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type QueryDetails {
-  parameters: [DegreeSelection!]!
-  faculties: [Faculty!]!
-  results(filter: QueryTranscriptFilter, after: String, before: String, first: Int, last: Int): QueryTranscriptConnection!
-  updatedAt: DateTime!
-}
-
-input QueryTranscriptFilter {
-  degreeIds: [ID!]
-  degreeCompleted: Boolean
-  eventAttended: Boolean
-}
-
 type EventQuery {
-  id: ID!
+  currentPrice: Float!
   customer: Customer!
   eventDetails: EventDetails!
+  id: ID!
   queryDetails: QueryDetails!
   quoteDetails: Quote!
-  currentPrice: Float!
-}
-
-type EventQueryEdge {
-  cursor: String!
-  node: EventQuery!
 }
 
 type EventQueryConnection {
@@ -219,61 +130,155 @@ type EventQueryConnection {
   totalCount: Int!
 }
 
+type EventQueryEdge {
+  cursor: String!
+  node: EventQuery!
+}
+
+input ExpandEventQueryInput {
+  degrees: [DegreeInput!]!
+}
+
+type Faculty {
+  degrees: [Degree!]!
+  description: String!
+  groupedDegrees: [GroupedDegrees!]!
+  id: ID!
+  name: String!
+  university: University!
+}
+
+type GroupedDegrees {
+  degrees: [Degree!]!
+  name: String!
+}
+
+type Invitation {
+  accepted: Boolean!
+  attended: Boolean!
+  email: String
+  invitationState: InvitationState!
+  respondedAt: DateTime
+  sentAt: DateTime
+  viewedAt: DateTime
+}
+
+enum InvitationState {
+  ACCEPTED
+  ATTENDED
+  NONE
+  RESPONDED
+  VIEWED
+}
+
+type Mutation {
+  acceptPrivacyPolicy: DateTime!
+  addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
+  createContact(createContactInput: CreateContactInput!, customerId: ID!): Contact!
+  createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
+  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+  deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
+  expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+  setQueryInviteToAttendedAndLink(queryId: ID!): EventQuery!
+  setQueryInviteToViewed(queryId: ID!): EventQuery!
+  setRsvp(queryId: ID!, willAttend: Boolean!): EventQuery!
+  updateBillingDetails(customerId: ID!, updateBillingDetailsInput: UpdateBillingDetailsInput!): Customer!
+  updateContact(updateUserInput: UpdateContactInput!): Contact!
+  updateCustomerDetails(customerId: ID!, updateCustomerDetailsInput: UpdateCustomerDetailsInput!): Customer!
+  updateEventInfo(queryId: ID!, updateEventInfoInput: UpdateEventInfoInput!): EventQuery!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Percentage {
+  percentage: Int!
+}
+
 type Query {
+  acceptedPrivacyPolicy: Boolean!
   customer: Customer!
+  getContact: Contact!
   getCustomer(customerId: ID!): Customer!
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
-  getContact: Contact!
-  getStudent: Student!
-  acceptedPrivacyPolicy: Boolean!
-  getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
-  getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
-  getStudentQueries(filter: StudentQueryFilter, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getQueries(after: String, before: String, customerId: ID!, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
+  getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
+  getStudent: Student!
+  getStudentQueries(after: String, before: String, filter: StudentQueryFilter, first: Int, last: Int): EventQueryConnection!
   getUniversities: [University!]!
 }
 
-input CreateEventQueryInput {
+type QueryDetails {
+  faculties: [Faculty!]!
+  parameters: [DegreeSelection!]!
+  results(after: String, before: String, filter: QueryTranscriptFilter, first: Int, last: Int): QueryTranscriptConnection!
+  updatedAt: DateTime!
+}
+
+type QueryTranscript {
+  degree: Degree!
+  degreeAverage: Float!
+  degreeCompleted: Boolean!
+  id: ID!
+  latestTerm: Float!
+  studentLink: StudentLink!
+}
+
+type QueryTranscriptConnection {
+  edges: [QueryTranscriptEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type QueryTranscriptEdge {
+  cursor: String!
+  node: QueryTranscript!
+}
+
+input QueryTranscriptFilter {
+  degreeCompleted: Boolean
+  degreeIds: [ID!]
+  eventAttended: Boolean
+}
+
+type Quote {
+  numberOfStudents: Int!
+  rsvpCostBreakdown: [RsvpCost!]!
+}
+
+type RsvpCost {
+  cost: Float!
+  percent: Int!
+}
+
+type Student {
+  email: String!
   name: String!
-  address: String!
-  startDate: DateTime!
-  endDate: DateTime!
-  information: String!
-  message: String
-  degrees: [DegreeInput!]!
-  eventType: String!
-  attachments: [Upload!]
-  password: String
+  studentNumber: ID!
+  userId: ID!
 }
 
-input DegreeInput {
-  degreeId: String!
-  absolute: Int
-  percentage: Int
+type StudentLink {
+  id: ID!
+  student: Student
 }
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
 
 input StudentQueryFilter {
   invitationState: InvitationState
 }
 
-type Mutation {
-  updateBillingDetails(updateBillingDetailsInput: UpdateBillingDetailsInput!, customerId: ID!): Customer!
-  updateCustomerDetails(updateCustomerDetailsInput: UpdateCustomerDetailsInput!, customerId: ID!): Customer!
-  createCustomer(createCustomerInput: CreateCustomerInput!): Customer!
-  createContact(customerId: ID!, createContactInput: CreateContactInput!): Contact!
-  updateContact(updateUserInput: UpdateContactInput!): Contact!
-  acceptPrivacyPolicy: DateTime!
-  updateEventInfo(updateEventInfoInput: UpdateEventInfoInput!, queryId: ID!): EventQuery!
-  addAttachments(attachments: [Upload!]!, queryId: ID!): EventQuery!
-  deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
-  setQueryInviteToViewed(queryId: ID!): EventQuery!
-  setRsvp(willAttend: Boolean!, queryId: ID!): EventQuery!
-  setQueryInviteToAttendedAndLink(queryId: ID!): EventQuery!
-  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
-  expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+type University {
+  country: String!
+  faculties: [Faculty!]!
+  id: ID!
+  name: String!
+  physicalAddress: String!
+  shortName: String!
 }
 
 input UpdateBillingDetailsInput {
@@ -290,39 +295,34 @@ input UpdateBillingDetailsInput {
   zip: String
 }
 
-input UpdateCustomerDetailsInput {
-  description: String
-  name: String!
-}
-
-input CreateCustomerInput {
-  description: String!
-  name: String!
-  initialContact: String!
-}
-
-input CreateContactInput {
-  email: String!
-  name: String!
-}
-
 input UpdateContactInput {
   email: String
   name: String
   password: String
 }
 
-input UpdateEventInfoInput {
-  name: String
-  address: String
-  startDate: DateTime
-  endDate: DateTime
-  information: String
-  message: String
-  eventType: String
-  password: String
+input UpdateCustomerDetailsInput {
+  description: String
+  name: String!
 }
 
-input ExpandEventQueryInput {
-  degrees: [DegreeInput!]!
+input UpdateEventInfoInput {
+  address: String
+  endDate: DateTime
+  eventType: String
+  information: String
+  message: String
+  name: String
+  password: String
+  startDate: DateTime
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type UploadedFile {
+  filename: String!
+  id: ID!
+  mimetype: String!
+  url: String!
 }
