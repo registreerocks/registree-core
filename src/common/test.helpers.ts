@@ -12,6 +12,7 @@ import {
   GraphQLError,
   GraphQLSchema,
   printError,
+  Source,
 } from 'graphql';
 
 /** Wrap {@link validate} to return any validation errors as an error message string. */
@@ -70,7 +71,7 @@ export function coerceNullPrototypeObjects(o: unknown): unknown {
  * This should provide tests with a nicer interface for testing GraphQL queries.
  *
  * @param schema Should be the result of `app.get(GraphQLSchemaHost).schema`
- * @param query Should be the result of a {@link gql} template literal.
+ * @param query Query source, or the result of a {@link gql} template literal.
  * @param args Same as {@link graphql}
  *
  * @throws any underlying execution result error(s)
@@ -79,14 +80,19 @@ export function coerceNullPrototypeObjects(o: unknown): unknown {
  */
 export async function execGraphQL(
   schema: GraphQLSchema,
-  query: DocumentNode,
+  query: GraphQLArgs['source'] | DocumentNode,
   args?: Omit<GraphQLArgs, 'schema' | 'source'>,
 ): Promise<ExecutionResult> {
   // Get the query source.
-  if (query.loc === undefined) {
-    throw new TypeError('execGraphQL: query.loc undefined');
+  function extractSource(query: DocumentNode): Source {
+    if (query.loc === undefined)
+      throw new TypeError('execGraphQL: DocumentNode query has no loc');
+    return query.loc.source;
   }
-  const source: string = query.loc.source.body;
+  const source: GraphQLArgs['source'] =
+    typeof query === 'string' || query instanceof Source
+      ? query
+      : extractSource(query);
 
   const result: ExecutionResult = await graphql({ schema, source, ...args });
 

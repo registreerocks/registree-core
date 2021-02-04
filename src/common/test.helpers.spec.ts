@@ -154,6 +154,21 @@ describe('execGraphQL', () => {
     `);
   });
 
+  test('string query source also works', async () => {
+    const query = `
+      {
+        dummyValue
+      }
+    `;
+    expect(await execGraphQL(schema, query)).toMatchInlineSnapshot(`
+      Object {
+        "data": Object {
+          "dummyValue": "dummy value",
+        },
+      }
+    `);
+  });
+
   test('dummy value with variable', async () => {
     const query = gql`
       query dummyQuery($dummyVar: Boolean!) {
@@ -222,7 +237,7 @@ describe('execGraphQL', () => {
     await expect(
       execGraphQL(schema, queryWithoutLoc),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"execGraphQL: query.loc undefined"`,
+      `"execGraphQL: DocumentNode query has no loc"`,
     );
   });
 });
