@@ -2464,23 +2464,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mongodb@npm:*":
-  version: 3.5.27
-  resolution: "@types/mongodb@npm:3.5.27"
+"@types/mongodb@npm:^3.5.27":
+  version: 3.6.6
+  resolution: "@types/mongodb@npm:3.6.6"
   dependencies:
     "@types/bson": "*"
     "@types/node": "*"
-  checksum: d9c8a445a5bdb356fbdb9efb9cff0c69d146f95fa3f4f63f999c6df0b0a29777efb46e7991ba13f40e8efe0d36e1b67da8d8da3361e2e7a2ca761457cfa10264
-  languageName: node
-  linkType: hard
-
-"@types/mongoose@npm:^5.7.36":
-  version: 5.7.36
-  resolution: "@types/mongoose@npm:5.7.36"
-  dependencies:
-    "@types/mongodb": "*"
-    "@types/node": "*"
-  checksum: 8d83e182bcd139f013e5419f8ad4c65507c0cdd4765068629d026ea274cc6894d962e509033071822f36147946554a8f7c905e24f2372791cd7efd7596915bc9
+  checksum: ea23d63aa9ef999dabdf902ad20f2024218f4efa5e5f9e64c1501b538602d8747145be895b2ee18e629c79bf2e104da45f1597becf4d51950f9065e05b258230
   languageName: node
   linkType: hard
 
@@ -9144,10 +9134,10 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"kareem@npm:2.3.1":
-  version: 2.3.1
-  resolution: "kareem@npm:2.3.1"
-  checksum: 6fc69a89f857aedccc16c1efaea1d6d72d7f47893797109443d31d354c7c70369c7d967fa1ad57c1b180670b828958dd4de513629695d2a1223d7c3f04898391
+"kareem@npm:2.3.2":
+  version: 2.3.2
+  resolution: "kareem@npm:2.3.2"
+  checksum: de7225607b86280e5c39c00d564e1cb4daee9f0a75076fa0c096af75069681ca9a97ea39d8d48ce58ff8dd4d3a738942b1b43101aa95982c4599284ec36e02b4
   languageName: node
   linkType: hard
 
@@ -10051,9 +10041,9 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mongodb@npm:3.6.2":
-  version: 3.6.2
-  resolution: "mongodb@npm:3.6.2"
+"mongodb@npm:3.6.3":
+  version: 3.6.3
+  resolution: "mongodb@npm:3.6.3"
   dependencies:
     bl: ^2.2.1
     bson: ^1.1.4
@@ -10064,7 +10054,20 @@ fsevents@~2.1.2:
   dependenciesMeta:
     saslprep:
       optional: true
-  checksum: 4cec5667142ec2df76497b670c2dd4e2a6314e69c7d619898b48d96d6c7c2f7ae4d7a09ca5b2b0457e00160bb6e370c001e3e330836fe17e0633a736e3409f89
+  peerDependenciesMeta:
+    aws4:
+      optional: true
+    bson-ext:
+      optional: true
+    kerberos:
+      optional: true
+    mongodb-client-encryption:
+      optional: true
+    mongodb-extjson:
+      optional: true
+    snappy:
+      optional: true
+  checksum: 85a80641803e75b93e76bb9e84c26429ec2c374e7138114562a25a6272880d1c18cf5dda21b8bd75c7dd110dac997d11572bb2da506c12c99c9faa4c668364c7
   languageName: node
   linkType: hard
 
@@ -10077,22 +10080,23 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mongoose@npm:5.10.8, mongoose@npm:^5.10.8":
-  version: 5.10.8
-  resolution: "mongoose@npm:5.10.8"
+"mongoose@npm:5.11.15, mongoose@npm:^5.11.15":
+  version: 5.11.15
+  resolution: "mongoose@npm:5.11.15"
   dependencies:
+    "@types/mongodb": ^3.5.27
     bson: ^1.1.4
-    kareem: 2.3.1
-    mongodb: 3.6.2
+    kareem: 2.3.2
+    mongodb: 3.6.3
     mongoose-legacy-pluralize: 1.0.2
-    mpath: 0.7.0
-    mquery: 3.2.2
+    mpath: 0.8.3
+    mquery: 3.2.3
     ms: 2.1.2
     regexp-clone: 1.0.0
     safe-buffer: 5.2.1
     sift: 7.0.1
     sliced: 1.0.1
-  checksum: 30205ba28c4b3d763cb10b1f22d123e974dda87ac442612f6c7858bc4eccb22392d1e89ce5a9a0a220e78365aad2bb3d2a0250db55f477c356c77d181e7460e2
+  checksum: b8670af3ac998605a89e895ce859c5336ef1789a80992b03f3a95824f30c3d94c84f975975da34bd8c2e057d93ce57b70a2d337bddf6cbf0204896e503b3aa24
   languageName: node
   linkType: hard
 
@@ -10110,23 +10114,23 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mpath@npm:0.7.0":
-  version: 0.7.0
-  resolution: "mpath@npm:0.7.0"
-  checksum: 76e271ff01a637452b1b8bb36825e74020e23d6fa1792455dc2992931b3fdfffcd637dcbe4c02a6bbb9e264f3920be4c5dcf42041f37176b00d5c8175604c4c1
+"mpath@npm:0.8.3":
+  version: 0.8.3
+  resolution: "mpath@npm:0.8.3"
+  checksum: 6c129da222169bcf2eb28ae73abca2a8a32c3c659748efd496308aed21c7dca7a9a923de53a5a1df3d898f5eba74c704fdf352ca68e5ecb602d2352a9d5ab90e
   languageName: node
   linkType: hard
 
-"mquery@npm:3.2.2":
-  version: 3.2.2
-  resolution: "mquery@npm:3.2.2"
+"mquery@npm:3.2.3":
+  version: 3.2.3
+  resolution: "mquery@npm:3.2.3"
   dependencies:
     bluebird: 3.5.1
     debug: 3.1.0
     regexp-clone: ^1.0.0
     safe-buffer: 5.1.2
     sliced: 1.0.1
-  checksum: 80b422ec102e1045999b3f818964db69a56ddf394a64ef7dac3bf164e4824d179717844d00cf414827fb39c61334a88fd3c1b1cab91b624cf6a78db302bd63c4
+  checksum: 4eecfd75bfd1f0094e24aa5905df70e96e630f002a3fbee5b0443cd56e21720930a8f38f8afff6a7d4318fcb3d04317d632bca2f7a06c3facd3913365bc32420
   languageName: node
   linkType: hard
 
@@ -11796,7 +11800,6 @@ nestjs-graphql-dataloader@^0.1.28:
     "@types/graphql-upload": ^8.0.4
     "@types/jest": 26.0.14
     "@types/lodash": ^4.14.161
-    "@types/mongoose": ^5.7.36
     "@types/node": ^14.11.8
     "@types/passport": ^1.0.4
     "@types/passport-jwt": ^3.0.3
@@ -11826,7 +11829,7 @@ nestjs-graphql-dataloader@^0.1.28:
     jwks-rsa: ^1.10.1
     lint-staged: ^10.4.0
     lodash: ^4.17.20
-    mongoose: ^5.10.8
+    mongoose: ^5.11.15
     nestjs-graphql-dataloader: "patch:nestjs-graphql-dataloader@^0.1.28#./add-nestjs-dataloader-types.diff"
     nestjs-pino: ^1.2.0
     passport: ^0.4.1
