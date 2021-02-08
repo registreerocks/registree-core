@@ -1,0 +1,15 @@
+# docker-compose file to run the tests.
+#
+# Usage:
+#   export COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1
+#   docker-compose -f docker-compose.tests.yaml up --build
+#
+version: '3.9'
+
+services:
+  registree-core-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+      target: base
+    command: ['yarn', 'test']
