@@ -6484,6 +6484,15 @@ class-transformer@^0.3.1:
   languageName: node
   linkType: hard
 
+"fast-check@npm:^2.12.1":
+  version: 2.12.1
+  resolution: "fast-check@npm:2.12.1"
+  dependencies:
+    pure-rand: ^4.1.1
+  checksum: 72df3b4244696efa336bef2ccb79510a4ea0f97528947f348409dae254e47e1bd09ed3cc7a77d990fc1202d5fd754a7866f24269caa0b2259dcecf9179277e69
+  languageName: node
+  linkType: hard
+
 "fast-deep-equal@npm:^3.1.1":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
@@ -11461,6 +11470,13 @@ nestjs-graphql-dataloader@^0.1.28:
   languageName: node
   linkType: hard
 
+"pure-rand@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "pure-rand@npm:4.1.1"
+  checksum: ee58642600299f2db55d8f4cd14b04df9e6dcfca764c9057909c78f0d0a20b20a33999920d008d6319c57563abfc6884485c5adc0b794547f7da2ce9283d6927
+  languageName: node
+  linkType: hard
+
 "q@npm:^1.5.1":
   version: 1.5.1
   resolution: "q@npm:1.5.1"
@@ -11762,6 +11778,7 @@ nestjs-graphql-dataloader@^0.1.28:
     eslint: 7.10.0
     eslint-config-prettier: ^6.12.0
     eslint-plugin-import: ^2.22.1
+    fast-check: ^2.12.1
     graphql: ^15.3.0
     graphql-middleware: ^4.0.2
     graphql-relay: ^0.6.0
