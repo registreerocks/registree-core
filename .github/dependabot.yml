@@ -10,6 +10,9 @@ updates:
       - 'sabinebertram'
     assignees:
       - 'longtomjr'
+    # Disable for now, pending Yarn 2 support.
+    # Upstream issue: https://github.com/dependabot/dependabot-core/issues/1297
+    open-pull-requests-limit: 0
 
   - package-ecosystem: 'docker'
     directory: '/'
