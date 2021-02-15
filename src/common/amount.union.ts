@@ -6,11 +6,14 @@ export const AmountUnion = createUnionType({
   name: 'Amount',
   types: () => [Absolute, Percentage],
   resolveType(value) {
+    // XXX: Return string references instead of type instances, to work around upstream
+    //      @nestjs/graphql bug.
+    // See: https://github.com/registreerocks/registree-core/issues/367
     if ((value as Absolute).absolute) {
-      return Absolute;
+      return 'Absolute';
     }
     if ((value as Percentage).percentage) {
-      return Percentage;
+      return 'Percentage';
     }
     return null;
   },
