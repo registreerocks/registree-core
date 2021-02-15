@@ -127,6 +127,9 @@
       "<rootDir>/src",
       "<rootDir>/test"
     ],
+    "setupFilesAfterEnv": [
+      "@spotify/polly-jest-presets"
+    ],
     "testRegex": "\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
