@@ -1,10 +1,10 @@
-import { Injectable, Inject } from '@nestjs/common';
-import addSeconds from 'date-fns/addSeconds';
+import { Inject, Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
-import { AccessTokenResponse } from './dto/access-token.response';
+import addSeconds from 'date-fns/addSeconds';
 import isAfter from 'date-fns/isAfter';
-import { AuthOptions } from './auth.options';
 import { AUTH_OPTIONS } from './auth.constants';
+import { AuthOptions } from './auth.options';
+import { AccessTokenResponse } from './dto/access-token.response';
 
 @Injectable()
 export class AuthService {
@@ -37,10 +37,8 @@ export class AuthService {
   async getAccessToken(): Promise<string> {
     if (isAfter(new Date(), this.tokenExpiry) || !this.accessToken) {
       await this.updateAccessToken();
-      return this.accessToken;
-    } else {
-      return this.accessToken;
     }
+    return this.accessToken;
   }
 
   async getManagementToken(): Promise<string> {
@@ -49,41 +47,50 @@ export class AuthService {
       !this.managementToken
     ) {
       await this.updateManagementToken();
-      return this.managementToken;
-    } else {
-      return this.managementToken;
     }
+    return this.managementToken;
   }
 
   private async updateAccessToken(): Promise<void> {
-    const result = await this.axiosInstance.post<AccessTokenResponse>(
-      '/token',
-      {
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
-        audience: this.audience,
-        grant_type: 'client_credentials',
-      },
-    );
-    this.tokenExpiry = addSeconds(new Date(), result.data.expires_in - 60);
-    this.accessToken = result.data.access_token;
+    ({
+      token: this.accessToken,
+      expiry: this.tokenExpiry,
+    } = await this.updateToken(this.audience));
   }
 
   private async updateManagementToken(): Promise<void> {
-    const result = await this.axiosInstance.post<AccessTokenResponse>(
-      '/token',
-      {
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
-        audience: this.managementAudience,
-        grant_type: 'client_credentials',
-      },
-    );
-    this.managementTokenExpiry = addSeconds(
-      new Date(),
-      result.data.expires_in - 60,
-    );
-    this.managementToken = result.data.access_token;
+    ({
+      token: this.managementToken,
+      expiry: this.managementTokenExpiry,
+    } = await this.updateToken(this.managementAudience));
+  }
+
+  private async updateToken(
+    audience: string,
+  ): Promise<{ token: string; expiry: Date }> {
+    try {
+      const result = await this.axiosInstance.post<AccessTokenResponse>(
+        '/token',
+        {
+          client_id: this.clientId,
+          client_secret: this.clientSecret,
+          audience: audience,
+          grant_type: 'client_credentials',
+        },
+      );
+      return {
+        token: result.data.access_token,
+        expiry: addSeconds(new Date(), result.data.expires_in - 60),
+      };
+    } catch (e) {
+      const message: string =
+        e instanceof Error
+          ? e.stack ?? e.toString()
+          : Object.prototype.toString.call(e);
+      throw new Error(
+        `AuthService: error refreshing ${audience} token: ${message}`,
+      );
+    }
   }
 
   validateApiKey(apiKey: string) {
