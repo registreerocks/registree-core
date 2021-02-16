@@ -75,6 +75,7 @@
     "@types/node": "^14.11.8",
     "@types/passport": "^1.0.4",
     "@types/passport-jwt": "^3.0.3",
+    "@types/pollyjs__core": "npm:^4.0.0",
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "4.4.0",
     "@typescript-eslint/parser": "4.4.0",
