@@ -37,7 +37,10 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
       // expected errors
       return err;
     } else if (err instanceof WrappedError) {
-      return this.handleUnexpectedError(err.baseError, err.handlerClass);
+      return this.handleUnexpectedError(
+        err.baseError,
+        err.handlerClass + '.' + err.handler, // XXX: Better?
+      );
     } else if (err instanceof Error) {
       return this.handleUnexpectedError(err);
     } else {

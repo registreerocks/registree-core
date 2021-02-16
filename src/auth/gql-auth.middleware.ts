@@ -29,8 +29,12 @@ const handleRequest = (
   _status,
 ): User => {
   if (err || !user) {
+    // XXX: Better error reporting.
     throw (
-      err || new AuthenticationError(info?.message || 'authentication failed')
+      err ||
+      new AuthenticationError(
+        info?.stack ?? info?.toString?.() ?? 'authentication failed',
+      )
     );
   }
   return user;
