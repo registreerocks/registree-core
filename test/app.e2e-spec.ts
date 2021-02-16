@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { pollyContext } from '@spotify/polly-jest-presets';
 import supertest from 'supertest';
 import { AppModule } from './../src/app.module';
 
@@ -17,6 +18,12 @@ describe('AppController (e2e)', () => {
 
   afterAll(async () => {
     await app.close();
+  });
+
+  beforeEach(() => {
+    // Polly: Pass through to the supertest server.
+    const supertestURL: string = supertest(app.getHttpServer()).get('/').url;
+    pollyContext.polly.server.get(supertestURL).passthrough();
   });
 
   it('/ (GET)', () => {
