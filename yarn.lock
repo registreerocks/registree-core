@@ -11770,6 +11770,7 @@ nestjs-graphql-dataloader@^0.1.28:
     reflect-metadata: ^0.1.13
     rimraf: ^3.0.2
     rxjs: ^6.6.3
+    src: "link:src"
     supertest: ^5.0.0
     transliteration: ^2.1.11
     ts-jest: 26.4.1
@@ -12705,6 +12706,12 @@ nestjs-graphql-dataloader@^0.1.28:
   checksum: 51df1bce9e577287f56822d79ac5bd94f6c634fccf193895f2a1d2db2e975b6aa7bc97afae9cf11d49b7c37fe4afc188ff5c4878be91f2c86eabd11c5df8b62c
   languageName: node
   linkType: hard
+
+"src@link:src::locator=registree-core%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "src@link:src::locator=registree-core%40workspace%3A."
+  languageName: node
+  linkType: soft
 
 "sshpk@npm:^1.7.0":
   version: 1.16.1

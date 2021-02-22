@@ -56,6 +56,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
+    "src": "link:src",
     "transliteration": "^2.1.11"
   },
   "devDependencies": {
@@ -119,15 +120,16 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".spec.ts$",
-    "moduleNameMapper": {
-      "^src/(.*)": "<rootDir>/$1"
-    },
+    "rootDir": ".",
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/test"
+    ],
+    "testRegex": "\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "coverage",
     "coveragePathIgnorePatterns": [
       "src/app-config/*"
     ],
