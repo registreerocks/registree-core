@@ -1,7 +1,9 @@
 import fc from 'fast-check';
 import { Header } from 'har-format';
 import {
+  hostMatches,
   redactHeaderInPlace,
+  redactHostSet,
   redactJSONStringKey,
   redactString,
   redactURL,
@@ -338,6 +340,102 @@ describe('redactURL', () => {
           ]),
         );
         expect(redactedParts).toStrictEqual(expectedParts);
+      }),
+    );
+  });
+});
+describe('hostMatches', () => {
+  test('same URL matches', () => {
+    fc.assert(
+      fc.property(normalisedURL(), (url: string) => {
+        expect(hostMatches(url, url)).toBe(true);
+      }),
+    );
+  });
+
+  // The scheme and netloc parts of URLs.
+  const netlocParts: (keyof URLParts)[] = ['protocol', 'hostname', 'port'];
+
+  test('different URLs mismatch', () => {
+    fc.assert(
+      fc.property(
+        normalisedURL(),
+        normalisedURL(),
+        (url1: string, url2: string) => {
+          // Precondition: URLs don't have the same protocol, host, and port
+          const u1 = new URL(url1);
+          const u2 = new URL(url2);
+          const partsDifferent = !netlocParts.every(
+            (part: keyof URLParts) => u1[part] === u2[part],
+          );
+          fc.pre(partsDifferent);
+
+          expect(hostMatches(url1, url2)).toBe(false);
+        },
+      ),
+    );
+  });
+
+  test('related URLs match', (): void => {
+    fc.assert(
+      fc.property(
+        normalisedURL(),
+        normalisedURL(),
+        fc.context(),
+        (url1, url2: string, ctx: fc.ContextValue) => {
+          const u1 = new URL(url1);
+          const u2 = new URL(url2);
+          netlocParts.forEach((part: keyof URLParts) => (u1[part] = u2[part]));
+          const modifiedURL = u1.toString();
+          ctx.log(`expecting ${modifiedURL} to match with ${url2})`);
+
+          expect(hostMatches(modifiedURL, url2)).toBe(true);
+        },
+      ),
+    );
+  });
+});
+
+describe('redactHostSet', () => {
+  test('identity: no redaction', () => {
+    fc.assert(
+      fc.property(
+        normalisedURL(),
+        fc.array(fc.tuple(normalisedURL(), fc.domain())),
+        (url: string, hostRedactions: [string, string][]) => {
+          // Precondition: none of the hostRedactions match.
+          const urlHostname = new URL(url).hostname;
+          fc.pre(
+            hostRedactions.every(
+              ([hostURL, _redactedHost]) =>
+                urlHostname !== new URL(hostURL).hostname,
+            ),
+          );
+
+          expect(redactHostSet(url, hostRedactions)).toBe(url);
+        },
+      ),
+    );
+  });
+
+  test('simple redaction', () => {
+    fc.assert(
+      fc.property(normalisedURL(), (url: string) => {
+        const u = new URL(url);
+        const matchingHostURL: string = Object.assign(new URL(url), {
+          protocol: u.protocol,
+          hostname: u.hostname,
+          port: u.port,
+        } as URLParts).toString();
+        const redactedURL: string = Object.assign(new URL(url), {
+          protocol: 'https',
+          hostname: 'redacted-host',
+          port: '',
+        } as URLParts).toString();
+
+        expect(redactHostSet(url, [[matchingHostURL, 'redacted-host']])).toBe(
+          redactedURL,
+        );
       }),
     );
   });

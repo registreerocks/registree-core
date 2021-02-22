@@ -107,3 +107,39 @@ export type URLParts = Partial<
 export function redactURL(s: string, parts: URLParts): string {
   return Object.assign(new URL(s), parts).toString();
 }
+
+/**
+ * Redact one of a set of hosts from a URL.
+ * Return non-matching URLs unmodified.
+ *
+ * This can be used for things like sets of API endpoints.
+ *
+ * @param sensitiveURL
+ * @param hostRedactions A set of sensitive host URLs, along with replacement hostnames.
+ * These will be matched protocol, hostname, and port, and redacted with the given host,
+ * a fixed protocol of "https", and no port.
+ */
+export function redactHostSet(
+  sensitiveURL: string,
+  hostRedactions: Iterable<[string, string]>,
+): string {
+  for (const [sensitiveHostURL, redactedHost] of hostRedactions) {
+    if (hostMatches(sensitiveURL, sensitiveHostURL)) {
+      return redactURL(sensitiveURL, {
+        protocol: 'https',
+        hostname: redactedHost,
+        port: '',
+      });
+    }
+  }
+  return sensitiveURL;
+}
+
+/** Helper: True if the URLs' protocol, hostname, and port match. */
+export function hostMatches(url1: string, url2: string): boolean {
+  const a = new URL(url1);
+  const b = new URL(url2);
+  return (
+    a.protocol === b.protocol && a.hostname == b.hostname && a.port == b.port
+  );
+}
