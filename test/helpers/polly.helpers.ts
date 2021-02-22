@@ -11,6 +11,7 @@ import { ApiConfig } from '../../src/app-config/config/api.config';
 import { AuthConfig } from '../../src/app-config/config/auth.config';
 import {
   redactHeaderInPlace,
+  redactHostSet,
   redactJSONStringKey,
   redactString,
   redactURL,
@@ -20,6 +21,31 @@ import {
 export function getPolly(): Polly {
   // XXX(Pi): This type doesn't seem to get inferred?
   return pollyContext.polly;
+}
+
+/**
+ * Configure Polly to match requests based on redacted API hosts.
+ * This allows the same recordings to work with different local endpoint configurations.
+ * This should be called during test setup.
+ */
+export function configurePollyRequestMatching(app: INestApplication): void {
+  const apiConfig: ConfigType<typeof ApiConfig> = app.get(ApiConfig.KEY);
+  const hostRedactions = new Map<string, string>([
+    [apiConfig.customerApi, 'redacted-query-customer-host'],
+    [apiConfig.queryApi, 'redacted-query-api-host'],
+    ...apiConfig.studentApis.map((studentApi: string, i: number): [
+      string,
+      string,
+    ] => [studentApi, `redacted-student-api-host-${i}`]),
+    [apiConfig.linkingApi, 'redacted-linking-api-host'],
+    [apiConfig.identifyingApi, 'redacted-identifying-api-host'],
+  ]);
+
+  getPolly().configure({
+    matchRequestsBy: {
+      url: requestURL => redactHostSet(requestURL, hostRedactions),
+    },
+  });
 }
 
 /**
