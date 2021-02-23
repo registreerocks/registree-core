@@ -106,16 +106,19 @@ export function persistRedactedQueryAPICalls(app: INestApplication): void {
 
   getPolly()
     .server.post(`${apiConfig.queryApi}/*`)
-    .on('beforePersist', handleQueryAPICall());
+    .on('beforePersist', handleAPICall('redacted-query-api-host'));
 }
 
-export function handleQueryAPICall(): RecordingEventListener {
+export function handleAPICall(redactedHost: string): RecordingEventListener {
   return (_req, { request }: Entry): void => {
     const redactedToken = 'Bearer redacted-auth0-access-token';
-    const redactedHost = 'redacted-query-api-host';
 
     redactHeaderInPlace(request.headers, 'authorization', _ => redactedToken);
     redactHeaderInPlace(request.headers, 'host', _ => redactedHost);
-    request.url = redactURL(request.url, { hostname: redactedHost, port: '' });
+    request.url = redactURL(request.url, {
+      protocol: 'https',
+      hostname: redactedHost,
+      port: '',
+    });
   };
 }

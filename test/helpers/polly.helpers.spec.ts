@@ -3,10 +3,7 @@ import type { ListenerEvent, Request } from '@pollyjs/core';
 import type { Entry } from 'har-format';
 import { AuthConfig } from '../../src/app-config/config/auth.config';
 import { makeEntry, makeRequestPOST, makeResponseOK } from './har.helpers';
-import {
-  handleAuth0AccessTokenUpdate,
-  handleQueryAPICall,
-} from './polly.helpers';
+import { handleAPICall, handleAuth0AccessTokenUpdate } from './polly.helpers';
 
 // Dummy values for unused parameters below:
 const _req = (null as unknown) as Request;
@@ -79,7 +76,7 @@ describe('handleAuth0AccessTokenUpdate', () => {
   });
 });
 
-describe('handleQueryAPICall', () => {
+describe('handleAPICall', () => {
   function describeAPICall(args: { host: string; accessToken: string }): Entry {
     // Hardcode these, for now:
     const path = '/mock/path';
@@ -88,7 +85,7 @@ describe('handleQueryAPICall', () => {
 
     return makeEntry(
       makeRequestPOST({
-        url: new URL(path, `http://${args.host}/`).toString(),
+        url: new URL(path, `https://${args.host}/`).toString(),
         headers: new Map([
           ['host', args.host],
           ['authorization', `Bearer ${args.accessToken}`],
@@ -103,7 +100,7 @@ describe('handleQueryAPICall', () => {
 
   function expectedCall() {
     return describeAPICall({
-      host: 'sensitive-query-api.example.com:8080',
+      host: 'sensitive-api.example.com:8080',
       accessToken: 'sensitive-auth0-access-token',
     });
   }
@@ -111,10 +108,10 @@ describe('handleQueryAPICall', () => {
   test('redact expected call', async () => {
     const entry = expectedCall();
 
-    await handleQueryAPICall()(_req, entry, _event);
+    await handleAPICall('redacted-api-host')(_req, entry, _event);
     expect(entry).toStrictEqual(
       describeAPICall({
-        host: 'redacted-query-api-host',
+        host: 'redacted-api-host',
         accessToken: 'redacted-auth0-access-token',
       }),
     );
