@@ -16,8 +16,8 @@ import { CreateEventQueryInput } from '../src/queries/dto/create-event-query.inp
 import { appPermissions } from '../src/rules';
 import {
   configurePollyRequestMatching,
+  persistRedactedAPICalls,
   persistRedactedAuth0AccessTokenUpdates,
-  persistRedactedQueryAPICalls,
 } from './helpers/polly.helpers';
 
 describe('queries (e2e)', () => {
@@ -51,7 +51,7 @@ describe('queries (e2e)', () => {
   beforeEach(() => {
     configurePollyRequestMatching(app);
     persistRedactedAuth0AccessTokenUpdates(app);
-    persistRedactedQueryAPICalls(app);
+    persistRedactedAPICalls(app);
   });
 
   test('getQuote', async () => {

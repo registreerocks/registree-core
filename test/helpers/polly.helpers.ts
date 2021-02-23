@@ -23,14 +23,12 @@ export function getPolly(): Polly {
   return pollyContext.polly;
 }
 
-/**
- * Configure Polly to match requests based on redacted API hosts.
- * This allows the same recordings to work with different local endpoint configurations.
- * This should be called during test setup.
- */
-export function configurePollyRequestMatching(app: INestApplication): void {
+/** Helper: Get the set of Registree service API endpoints to redact. */
+export function getAPIHostRedactions(
+  app: INestApplication,
+): Map<string, string> {
   const apiConfig: ConfigType<typeof ApiConfig> = app.get(ApiConfig.KEY);
-  const hostRedactions = new Map<string, string>([
+  return new Map<string, string>([
     [apiConfig.customerApi, 'redacted-query-customer-host'],
     [apiConfig.queryApi, 'redacted-query-api-host'],
     ...apiConfig.studentApis.map((studentApi: string, i: number): [
@@ -40,10 +38,17 @@ export function configurePollyRequestMatching(app: INestApplication): void {
     [apiConfig.linkingApi, 'redacted-linking-api-host'],
     [apiConfig.identifyingApi, 'redacted-identifying-api-host'],
   ]);
+}
 
+/**
+ * Configure Polly to match requests based on redacted API hosts.
+ * This allows the same recordings to work with different local endpoint configurations.
+ * This should be called during test setup.
+ */
+export function configurePollyRequestMatching(app: INestApplication): void {
   getPolly().configure({
     matchRequestsBy: {
-      url: requestURL => redactHostSet(requestURL, hostRedactions),
+      url: requestURL => redactHostSet(requestURL, getAPIHostRedactions(app)),
     },
   });
 }
@@ -98,15 +103,16 @@ export function handleAuth0AccessTokenUpdate(
 }
 
 /**
- * Enable redaction of Registree Query API calls.
+ * Enable redaction of Registree service API calls.
  * This should be called during test setup.
  */
-export function persistRedactedQueryAPICalls(app: INestApplication): void {
-  const apiConfig: ConfigType<typeof ApiConfig> = app.get(ApiConfig.KEY);
-
-  getPolly()
-    .server.post(`${apiConfig.queryApi}/*`)
-    .on('beforePersist', handleAPICall('redacted-query-api-host'));
+export function persistRedactedAPICalls(app: INestApplication): void {
+  for (const [hostURL, redactedHost] of getAPIHostRedactions(app)) {
+    const matchingURL = new URL('*', hostURL).toString(); // "*" relative to hostURL
+    getPolly()
+      .server.post(matchingURL)
+      .on('beforePersist', handleAPICall(redactedHost));
+  }
 }
 
 export function handleAPICall(redactedHost: string): RecordingEventListener {

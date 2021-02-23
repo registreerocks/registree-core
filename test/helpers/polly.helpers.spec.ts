@@ -1,13 +1,56 @@
+import { INestApplication } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
 import type { ListenerEvent, Request } from '@pollyjs/core';
 import type { Entry } from 'har-format';
+import { AppConfigModule } from '../../src/app-config/app-config.module';
 import { AuthConfig } from '../../src/app-config/config/auth.config';
 import { makeEntry, makeRequestPOST, makeResponseOK } from './har.helpers';
-import { handleAPICall, handleAuth0AccessTokenUpdate } from './polly.helpers';
+import {
+  getAPIHostRedactions,
+  handleAPICall,
+  handleAuth0AccessTokenUpdate,
+} from './polly.helpers';
 
 // Dummy values for unused parameters below:
 const _req = (null as unknown) as Request;
 const _event = (null as unknown) as ListenerEvent;
+
+describe('getAPIHostRedactions', () => {
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppConfigModule],
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  test('keys are valid URLs', () => {
+    const hostRedactions = getAPIHostRedactions(app);
+    for (const hostURL of hostRedactions.keys()) {
+      expect(new URL(hostURL)).toBeInstanceOf(URL);
+    }
+  });
+
+  test('values are redacted hosts', () => {
+    const hostRedactions = getAPIHostRedactions(app);
+    expect(Array.from(hostRedactions.values())).toMatchInlineSnapshot(`
+      Array [
+        "redacted-query-customer-host",
+        "redacted-query-api-host",
+        "redacted-student-api-host-0",
+        "redacted-linking-api-host",
+        "redacted-identifying-api-host",
+      ]
+    `);
+  });
+});
 
 describe('handleAuth0AccessTokenUpdate', () => {
   const mockAuthConfig: ConfigType<typeof AuthConfig> = {
