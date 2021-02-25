@@ -1,58 +1,14 @@
-import { INestApplication } from '@nestjs/common';
-import { getApolloServer, GqlModuleOptions } from '@nestjs/graphql';
-import { GRAPHQL_MODULE_OPTIONS } from '@nestjs/graphql/dist/graphql.constants';
-import { Test, TestingModule } from '@nestjs/testing';
 import { gql } from 'apollo-server-core';
-import {
-  ApolloServerTestClient,
-  createTestClient,
-} from 'apollo-server-testing';
 import { ExecutionResult } from 'graphql';
-import { applyMiddleware } from 'graphql-middleware';
-import { AppModule } from '../src/app.module';
-import { throwNestedErrorPlugin } from '../src/get-nested-error';
 import { Quote } from '../src/pricing/models/quote.model';
 import { CreateEventQueryInput } from '../src/queries/dto/create-event-query.input';
-import { appPermissions } from '../src/rules';
 import {
-  configurePollyRequestMatching,
-  persistRedactedAPICalls,
-  persistRedactedAuth0AccessTokenUpdates,
-} from './helpers/polly.helpers';
+  SharedTestContext,
+  sharedTestSetup,
+} from './helpers/shared-test-setup';
 
 describe('queries (e2e)', () => {
-  let app: INestApplication;
-  let client: ApolloServerTestClient;
-
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(GRAPHQL_MODULE_OPTIONS)
-      .useValue({
-        autoSchemaFile: true, // Keep in-memory
-        introspection: true,
-        plugins: [throwNestedErrorPlugin],
-        // XXX: Skip client auth, for now.
-        transformSchema: schema => applyMiddleware(schema, appPermissions),
-      } as GqlModuleOptions)
-      .compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-
-    client = createTestClient(getApolloServer(app));
-  });
-
-  afterAll(async () => {
-    await app.close();
-  });
-
-  beforeEach(() => {
-    configurePollyRequestMatching(app);
-    persistRedactedAuth0AccessTokenUpdates(app);
-    persistRedactedAPICalls(app);
-  });
+  const ctx: SharedTestContext = sharedTestSetup();
 
   test('getQuote', async () => {
     const query = gql`
@@ -76,7 +32,7 @@ describe('queries (e2e)', () => {
       eventType: 'dummy eventType',
     };
 
-    const result: ExecutionResult<{ quote: Quote }> = await client.query({
+    const result: ExecutionResult<{ quote: Quote }> = await ctx.client.query({
       query,
       variables: { input },
     });
