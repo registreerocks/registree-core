@@ -110,7 +110,7 @@ export function persistRedactedAPICalls(app: INestApplication): void {
   for (const [hostURL, redactedHost] of getAPIHostRedactions(app)) {
     const matchingURL = new URL('*', hostURL).toString(); // "*" relative to hostURL
     getPolly()
-      .server.post(matchingURL)
+      .server.any(matchingURL)
       .on('beforePersist', handleAPICall(redactedHost));
   }
 }
