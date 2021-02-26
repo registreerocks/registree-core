@@ -5,6 +5,8 @@
 import { INestApplication } from '@nestjs/common';
 import { getApolloServer, GqlModuleOptions } from '@nestjs/graphql';
 import { GRAPHQL_MODULE_OPTIONS } from '@nestjs/graphql/dist/graphql.constants';
+import { MongooseModuleOptions } from '@nestjs/mongoose';
+import { MONGOOSE_MODULE_OPTIONS } from '@nestjs/mongoose/dist/mongoose.constants';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   ApolloServerTestClient,
@@ -37,7 +39,8 @@ export type SharedTestContext = {
  * const ctx: SharedTestContext = sharedTestSetup();
  * ```
  *
- * This will set up {@link AppModule}, along with Polly.
+ * This will set up {@link AppModule}, along with Polly,
+ * and use a separate Mongo test database.
  */
 export function sharedTestSetup(): SharedTestContext {
   const ctx: SharedTestContext = {
@@ -46,6 +49,20 @@ export function sharedTestSetup(): SharedTestContext {
   };
 
   beforeAll(async () => {
+    /**
+     * Override MongooseModule's options to use a test database (`TEST_MONGO_URI`).
+     * @see AppConfigService.createMongooseOptions
+     */
+    const mongooseModuleOptions: MongooseModuleOptions = {
+      uri: getTestMongoURI(),
+      sslValidate: false,
+      useFindAndModify: false,
+    };
+
+    /**
+     * Override GraphQLModule's options with a simpler configuration.
+     * @see AppModule
+     */
     const gqlModuleOptions: GqlModuleOptions = {
       autoSchemaFile: true, // Keep in-memory
       introspection: true,
@@ -59,6 +76,8 @@ export function sharedTestSetup(): SharedTestContext {
     })
       .overrideProvider(GRAPHQL_MODULE_OPTIONS)
       .useValue(gqlModuleOptions)
+      .overrideProvider(MONGOOSE_MODULE_OPTIONS)
+      .useValue(mongooseModuleOptions)
       .compile();
 
     ctx.app = moduleFixture.createNestApplication();
@@ -78,4 +97,21 @@ export function sharedTestSetup(): SharedTestContext {
   });
 
   return ctx;
+}
+
+/**
+ * Get the Mongo test database from `TEST_MONGO_URI`, or bail out with an error message.
+ *
+ * This should **not** proceed or default to `MONGO_URI` if the `TEST_MONGO_URI`
+ * variable is not set, to avoid running the E2E tests against non-test databases.
+ */
+function getTestMongoURI(): string {
+  const testMongoUri: string | undefined = process.env.TEST_MONGO_URI;
+  if (testMongoUri) {
+    return testMongoUri;
+  } else {
+    throw new Error(
+      'shared-test-setup: Set TEST_MONGO_URI in environment before running E2E tests',
+    );
+  }
 }
