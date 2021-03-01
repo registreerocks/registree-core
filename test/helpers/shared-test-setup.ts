@@ -13,6 +13,7 @@ import {
   createTestClient,
 } from 'apollo-server-testing';
 import { applyMiddleware } from 'graphql-middleware';
+import mongoose, { Connection } from 'mongoose';
 import { AppModule } from '../../src/app.module';
 import { User } from '../../src/common/interfaces/user.interface';
 import { throwNestedErrorPlugin } from '../../src/get-nested-error';
@@ -64,7 +65,7 @@ export function sharedTestSetup(): SharedTestContext {
      * @see AppConfigService.createMongooseOptions
      */
     const mongooseModuleOptions: MongooseModuleOptions = {
-      uri: getTestMongoURI(),
+      uri: await getTestMongoURI(),
       sslValidate: false,
       useFindAndModify: false,
     };
@@ -121,9 +122,32 @@ export function sharedTestSetup(): SharedTestContext {
  * This should **not** proceed or default to `MONGO_URI` if the `TEST_MONGO_URI`
  * variable is not set, to avoid running the E2E tests against non-test databases.
  */
-function getTestMongoURI(): string {
+async function getTestMongoURI(): Promise<string> {
   const testMongoUri: string | undefined = process.env.TEST_MONGO_URI;
   if (testMongoUri) {
+    // Test the connection before returning the URI.
+    // This tries to make the test suite fail early with a useful error message if
+    // something's misconfigured, rather than just timing out with no details.
+    try {
+      const connection: Connection = await mongoose.createConnection(
+        testMongoUri,
+        { connectTimeoutMS: 1000 },
+      );
+      await connection.close();
+    } catch (err) {
+      const details: string =
+        err instanceof Error
+          ? err.toString()
+          : Object.prototype.toString.apply(err);
+      throw new Error(
+        [
+          `shared-test-setup: failed to connect to test database: ${testMongoUri} (Is it running?)`,
+          'Caused by:',
+          details,
+        ].join('\n\n'),
+      );
+    }
+
     return testMongoUri;
   } else {
     throw new Error(
