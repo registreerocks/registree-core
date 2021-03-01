@@ -54,7 +54,7 @@ jobs:
       - image: cimg/node:current
       - image: circleci/mongo
     environment:
-      TEST_MONGO_URI: mongodb://localhost/registree-core-test
+      TEST_MONGO_URI: mongodb://localhost/registree-core-test-WORKER
     steps:
       - checkout
       - install-packages-yarn-2

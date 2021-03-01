@@ -119,20 +119,30 @@ export function sharedTestSetup(): SharedTestContext {
 /**
  * Get the Mongo test database from `TEST_MONGO_URI`, or bail out with an error message.
  *
+ * The URI must contain the placeholder string `WORKER`, which will be replaced with
+ * a per-worker ID to isolate test workers from each other.
+ *
  * This should **not** proceed or default to `MONGO_URI` if the `TEST_MONGO_URI`
  * variable is not set, to avoid running the E2E tests against non-test databases.
  */
 async function getTestMongoURI(): Promise<string> {
   const testMongoUri: string | undefined = process.env.TEST_MONGO_URI;
   if (testMongoUri) {
+    if (!testMongoUri.includes('WORKER')) {
+      throw new Error(
+        'shared-test-setup: TEST_MONGO_URI must include the placeholder string "WORKER"',
+      );
+    }
+    const jestWorkerID: string = process.env.JEST_WORKER_ID ?? 'default';
+    const uri = testMongoUri.replace('WORKER', `worker-${jestWorkerID}`);
+
     // Test the connection before returning the URI.
     // This tries to make the test suite fail early with a useful error message if
     // something's misconfigured, rather than just timing out with no details.
     try {
-      const connection: Connection = await mongoose.createConnection(
-        testMongoUri,
-        { connectTimeoutMS: 1000 },
-      );
+      const connection: Connection = await mongoose.createConnection(uri, {
+        connectTimeoutMS: 1000,
+      });
       await connection.close();
     } catch (err) {
       const details: string =
@@ -141,14 +151,14 @@ async function getTestMongoURI(): Promise<string> {
           : Object.prototype.toString.apply(err);
       throw new Error(
         [
-          `shared-test-setup: failed to connect to test database: ${testMongoUri} (Is it running?)`,
+          `shared-test-setup: failed to connect to test database: ${uri} (Is it running?)`,
           'Caused by:',
           details,
         ].join('\n\n'),
       );
     }
 
-    return testMongoUri;
+    return uri;
   } else {
     throw new Error(
       'shared-test-setup: Set TEST_MONGO_URI in environment before running E2E tests',
