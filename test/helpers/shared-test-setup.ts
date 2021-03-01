@@ -14,6 +14,7 @@ import {
 } from 'apollo-server-testing';
 import { applyMiddleware } from 'graphql-middleware';
 import { AppModule } from '../../src/app.module';
+import { User } from '../../src/common/interfaces/user.interface';
 import { throwNestedErrorPlugin } from '../../src/get-nested-error';
 import { appPermissions } from '../../src/rules';
 import {
@@ -28,6 +29,14 @@ export type SharedTestContext = {
 
   /** @see https://www.apollographql.com/docs/apollo-server/testing/testing/ */
   client: ApolloServerTestClient;
+
+  /**
+   * (Optional) User to associate with the request.
+   *
+   * By default, requests will have no associated user: each test must set one,
+   * if desired, and this will be reset to `null` after each test.
+   */
+  user: User | null;
 };
 
 /**
@@ -46,6 +55,7 @@ export function sharedTestSetup(): SharedTestContext {
   const ctx: SharedTestContext = {
     app: (null as unknown) as INestApplication,
     client: (null as unknown) as ApolloServerTestClient,
+    user: null,
   };
 
   beforeAll(async () => {
@@ -64,6 +74,8 @@ export function sharedTestSetup(): SharedTestContext {
      * @see AppModule
      */
     const gqlModuleOptions: GqlModuleOptions = {
+      // Add requesting user to the context, if set.
+      context: () => (ctx.user !== null ? { req: { user: ctx.user } } : {}),
       autoSchemaFile: true, // Keep in-memory
       introspection: true,
       plugins: [throwNestedErrorPlugin],
@@ -94,6 +106,10 @@ export function sharedTestSetup(): SharedTestContext {
     configurePollyRequestMatching(ctx.app);
     persistRedactedAuth0AccessTokenUpdates(ctx.app);
     persistRedactedAPICalls(ctx.app);
+  });
+
+  afterEach(() => {
+    ctx.user = null;
   });
 
   return ctx;
