@@ -43,7 +43,9 @@ jobs:
       - checkout
       - install-packages-yarn-2
       - run:
-          command: yarn test:cov -w 1
+          command: |
+            cp .env.tests .env
+            yarn test:cov -w 1
       - codecov/upload:
           file: 'coverage/lcov.info'
 
@@ -51,6 +53,8 @@ jobs:
     docker:
       - image: cimg/node:current
       - image: circleci/mongo
+    environment:
+      TEST_MONGO_URI: mongodb://localhost/registree-core-test-WORKER
     steps:
       - checkout
       - install-packages-yarn-2

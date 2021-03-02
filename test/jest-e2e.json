@@ -2,6 +2,7 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "..",
   "roots": ["<rootDir>/test"],
+  "setupFilesAfterEnv": ["@spotify/polly-jest-presets"],
   "testEnvironment": "node",
   "testRegex": "\\.e2e-spec\\.ts$",
   "transform": {

@@ -1,0 +1,494 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UniversitiesResolver (E2E) getUniversities 1`] = `
+Object {
+  "universities": Array [
+    Object {
+      "country": "South Africa",
+      "faculties": Array [
+        Object {
+          "groupedDegrees": Array [
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Actuarial Science",
+                  "id": "5ef1144a1c7d4d99fe6d9814",
+                  "level": "BBusSc in Actuarial Science",
+                  "name": "Actuarial Science",
+                },
+                Object {
+                  "description": "BCom Actuarial Science",
+                  "id": "5ef1144a1c7d4d99fe6d9815",
+                  "level": "BCom in Actuarial Science",
+                  "name": "Actuarial Science",
+                },
+                Object {
+                  "description": "BBusSc Act Sc 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9816",
+                  "level": "BBusSc in Actuarial Science",
+                  "name": "Actuarial Science",
+                },
+                Object {
+                  "description": "BCom Act Sc 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9817",
+                  "level": "BCom in Actuarial Science",
+                  "name": "Actuarial Science",
+                },
+                Object {
+                  "description": "BBusSc Act Sc 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9818",
+                  "level": "BBusSc in Actuarial Science",
+                  "name": "Actuarial Science",
+                },
+                Object {
+                  "description": "BCom Act Sc 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9819",
+                  "level": "BCom in Actuarial Science",
+                  "name": "Actuarial Science",
+                },
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d981a",
+                  "level": "Bachelor of Commerce",
+                  "name": "Actuarial Science",
+                },
+              ],
+              "name": "Actuarial Science",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d981b",
+                  "level": "Bachelor of Business Science",
+                  "name": "Analytics",
+                },
+                Object {
+                  "description": "BBusSc MS 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d981c",
+                  "level": "Bachelor of Business Science",
+                  "name": "Analytics",
+                },
+                Object {
+                  "description": "BBusSc MS 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d981d",
+                  "level": "Bachelor of Business Science",
+                  "name": "Analytics",
+                },
+              ],
+              "name": "Analytics",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d981e",
+                  "level": "Bachelor of Business Science",
+                  "name": "Computer Science",
+                },
+              ],
+              "name": "Computer Science",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d981f",
+                  "level": "Bachelor of Business Science",
+                  "name": "Economics",
+                },
+                Object {
+                  "description": "BBusSc MS 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9820",
+                  "level": "Bachelor of Business Science",
+                  "name": "Economics",
+                },
+                Object {
+                  "description": "BBusSc MS 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9821",
+                  "level": "Bachelor of Business Science",
+                  "name": "Economics",
+                },
+              ],
+              "name": "Economics",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d9822",
+                  "level": "Bachelor of Commerce",
+                  "name": "Economics & Finance",
+                },
+                Object {
+                  "description": "BCom 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9823",
+                  "level": "Bachelor of Commerce",
+                  "name": "Economics & Finance",
+                },
+                Object {
+                  "description": "BCom 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9824",
+                  "level": "Bachelor of Commerce",
+                  "name": "Economics & Finance",
+                },
+              ],
+              "name": "Economics & Finance",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d9825",
+                  "level": "Bachelor of Commerce",
+                  "name": "Economics & Statistics",
+                },
+                Object {
+                  "description": "BCom 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9826",
+                  "level": "Bachelor of Commerce",
+                  "name": "Economics & Statistics",
+                },
+                Object {
+                  "description": "BCom 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9827",
+                  "level": "Bachelor of Commerce",
+                  "name": "Economics & Statistics",
+                },
+              ],
+              "name": "Economics & Statistics",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d9828",
+                  "level": "Bachelor of Business Science",
+                  "name": "Economics with Law",
+                },
+                Object {
+                  "description": "BBusSc MS 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9829",
+                  "level": "Bachelor of Business Science",
+                  "name": "Economics with Law",
+                },
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d982a",
+                  "level": "Bachelor of Commerce",
+                  "name": "Economics with Law",
+                },
+              ],
+              "name": "Economics with Law",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d982b",
+                  "level": "Bachelor of Commerce",
+                  "name": "Fin Acc: General Acc Stream",
+                },
+                Object {
+                  "description": "BCom 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d982c",
+                  "level": "Bachelor of Commerce",
+                  "name": "Fin Acc: General Acc Stream",
+                },
+                Object {
+                  "description": "BCom 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d982d",
+                  "level": "Bachelor of Commerce",
+                  "name": "Fin Acc: General Acc Stream",
+                },
+              ],
+              "name": "Fin Acc: General Acc Stream",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d982e",
+                  "level": "Bachelor of Commerce",
+                  "name": "FinAcc: Chartered Acc Stream",
+                },
+                Object {
+                  "description": "BCom 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d982f",
+                  "level": "Bachelor of Commerce",
+                  "name": "FinAcc: Chartered Acc Stream",
+                },
+                Object {
+                  "description": "BCom 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9830",
+                  "level": "Bachelor of Commerce",
+                  "name": "FinAcc: Chartered Acc Stream",
+                },
+              ],
+              "name": "FinAcc: Chartered Acc Stream",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d9831",
+                  "level": "Bachelor of Business Science",
+                  "name": "Finance",
+                },
+                Object {
+                  "description": "BBusSc MS 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9832",
+                  "level": "Bachelor of Business Science",
+                  "name": "Finance",
+                },
+                Object {
+                  "description": "BBusSc MS 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9833",
+                  "level": "Bachelor of Business Science",
+                  "name": "Finance",
+                },
+              ],
+              "name": "Finance",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d9834",
+                  "level": "Bachelor of Business Science",
+                  "name": "Finance with Accounting",
+                },
+                Object {
+                  "description": "BBusSc MS 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9835",
+                  "level": "Bachelor of Business Science",
+                  "name": "Finance with Accounting",
+                },
+                Object {
+                  "description": "BBusSc MS 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9836",
+                  "level": "Bachelor of Business Science",
+                  "name": "Finance with Accounting",
+                },
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d9837",
+                  "level": "Bachelor of Business Science",
+                  "name": "Finance with Accounting",
+                },
+              ],
+              "name": "Finance with Accounting",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d9838",
+                  "level": "Bachelor of Commerce",
+                  "name": "Financial Acc:Accounting & Law",
+                },
+              ],
+              "name": "Financial Acc:Accounting & Law",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d9839",
+                  "level": "Bachelor of Business Science",
+                  "name": "Information Systems",
+                },
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d983a",
+                  "level": "Bachelor of Commerce",
+                  "name": "Information Systems",
+                },
+                Object {
+                  "description": "BBusSc MS 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d983b",
+                  "level": "Bachelor of Business Science",
+                  "name": "Information Systems",
+                },
+                Object {
+                  "description": "BCom 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d983c",
+                  "level": "Bachelor of Commerce",
+                  "name": "Information Systems",
+                },
+                Object {
+                  "description": "BCom 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d983d",
+                  "level": "Bachelor of Commerce",
+                  "name": "Information Systems",
+                },
+                Object {
+                  "description": "BBusSc MS 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d983e",
+                  "level": "Bachelor of Business Science",
+                  "name": "Information Systems",
+                },
+              ],
+              "name": "Information Systems",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d983f",
+                  "level": "Bachelor of Commerce",
+                  "name": "Information Systems & Comp Sci",
+                },
+                Object {
+                  "description": "BCom 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9840",
+                  "level": "Bachelor of Commerce",
+                  "name": "Information Systems & Comp Sci",
+                },
+              ],
+              "name": "Information Systems & Comp Sci",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d9841",
+                  "level": "Bachelor of Commerce",
+                  "name": "Management Studies",
+                },
+                Object {
+                  "description": "BCom 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9842",
+                  "level": "Bachelor of Commerce",
+                  "name": "Management Studies",
+                },
+                Object {
+                  "description": "BCom 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9843",
+                  "level": "Bachelor of Commerce",
+                  "name": "Management Studies",
+                },
+              ],
+              "name": "Management Studies",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc MS 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9844",
+                  "level": "Bachelor of Business Science",
+                  "name": "Marketing",
+                },
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d9845",
+                  "level": "Bachelor of Business Science",
+                  "name": "Marketing",
+                },
+                Object {
+                  "description": "BBusSc MS 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9846",
+                  "level": "Bachelor of Business Science",
+                  "name": "Marketing",
+                },
+              ],
+              "name": "Marketing",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Management Studies",
+                  "id": "5ef1144a1c7d4d99fe6d9847",
+                  "level": "Bachelor of Business Science",
+                  "name": "Organisational Psychology",
+                },
+                Object {
+                  "description": "BBusSc MS 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9848",
+                  "level": "Bachelor of Business Science",
+                  "name": "Organisational Psychology",
+                },
+                Object {
+                  "description": "BBusSc MS 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9849",
+                  "level": "Bachelor of Business Science",
+                  "name": "Organisational Psychology",
+                },
+              ],
+              "name": "Organisational Psychology",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BCom 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d984a",
+                  "level": "Bachelor of Commerce",
+                  "name": "Philosophy, Politics & Econom",
+                },
+                Object {
+                  "description": "BCom",
+                  "id": "5ef1144a1c7d4d99fe6d984b",
+                  "level": "Bachelor of Commerce",
+                  "name": "Philosophy, Politics & Econom",
+                },
+                Object {
+                  "description": "BCom 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d984c",
+                  "level": "Bachelor of Commerce",
+                  "name": "Philosophy, Politics & Econom",
+                },
+              ],
+              "name": "Philosophy, Politics & Econom",
+            },
+            Object {
+              "degrees": Array [
+                Object {
+                  "description": "BBusSc in Actuarial Science",
+                  "id": "5ef1144a1c7d4d99fe6d984d",
+                  "level": "BBusSc in Actuarial Science",
+                  "name": "Quantitative Finance",
+                },
+                Object {
+                  "description": "BBusSc Act Sc 5 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d984e",
+                  "level": "BBusSc in Actuarial Science",
+                  "name": "Quantitative Finance",
+                },
+                Object {
+                  "description": "BBusSc Act Sc 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d984f",
+                  "level": "BBusSc in Actuarial Science",
+                  "name": "Quantitative Finance",
+                },
+                Object {
+                  "description": "BCom Actuarial Science",
+                  "id": "5ef1144a1c7d4d99fe6d9850",
+                  "level": "BCom in Actuarial Science",
+                  "name": "Quantitative Finance",
+                },
+                Object {
+                  "description": "BCom Act Sc 4 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9851",
+                  "level": "BCom in Actuarial Science",
+                  "name": "Quantitative Finance",
+                },
+                Object {
+                  "description": "BCom Act Sc 3 year programme",
+                  "id": "5ef1144a1c7d4d99fe6d9852",
+                  "level": "Bachelor of Commerce",
+                  "name": "Quantitative Finance",
+                },
+              ],
+              "name": "Quantitative Finance",
+            },
+          ],
+          "id": "5ef1144a1c7d4d99fe6d9813",
+          "name": "Faculty of Commerce",
+        },
+      ],
+      "id": "5ef1144a1c7d4d99fe6d9812",
+      "name": "University of Cape Town",
+    },
+  ],
+}
+`;
