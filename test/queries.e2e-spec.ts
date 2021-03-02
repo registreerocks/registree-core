@@ -40,6 +40,7 @@ describe('queries (e2e)', () => {
       endDate: new Date(2020, 2, 20, 16),
       information: 'dummy information',
       degrees: [],
+      academicYearOfStudyList: [],
       eventType: 'dummy eventType',
     };
 
@@ -106,6 +107,7 @@ describe('queries (e2e)', () => {
         endDate: new Date(2020, 2, 20, 16),
         information: 'dummy information',
         degrees: [],
+        academicYearOfStudyList: [],
         eventType: 'dummy eventType',
       };
 
