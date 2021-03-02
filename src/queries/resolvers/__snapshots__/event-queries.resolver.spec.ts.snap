@@ -249,6 +249,7 @@ type Mutation {
 
 input ExpandEventQueryInput {
   degrees: [DegreeInput!]!
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
 }
 "
 `;

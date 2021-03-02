@@ -152,6 +152,7 @@ type EventQueryEdge {
 }
 
 input ExpandEventQueryInput {
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
   degrees: [DegreeInput!]!
 }
 

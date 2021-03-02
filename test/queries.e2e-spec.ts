@@ -5,6 +5,7 @@ import { assertDefined } from '../src/common/helpers';
 import { Quote } from '../src/pricing/models/quote.model';
 import { CreateEventQueryInput } from '../src/queries/dto/create-event-query.input';
 import { ExpandEventQueryInput } from '../src/queries/dto/expand-event-query.input';
+import { AcademicYearOfStudy } from '../src/queries/models/academic-year-of-study.model';
 import { EventQuery } from '../src/queries/models/event-query.model';
 import { Degree } from '../src/universities/models/degree.model';
 import {
@@ -124,7 +125,10 @@ describe('queries (e2e)', () => {
 
     async function runExpandQuery(
       queryId: string,
-      queryInput: ExpandEventQueryInput = { degrees: [] },
+      queryInput: ExpandEventQueryInput = {
+        degrees: [],
+        academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
+      },
     ) {
       const expandQueryMutation = gql`
         mutation($queryInput: ExpandEventQueryInput!, $queryId: ID!) {
@@ -213,6 +217,7 @@ describe('queries (e2e)', () => {
             { degreeId: degrees[0].id, absolute: 10 },
             { degreeId: degrees[1].id, percentage: 5 },
           ],
+          academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
         }),
       ).toMatchInlineSnapshot(`
         Object {
@@ -267,6 +272,7 @@ describe('queries (e2e)', () => {
       expect(
         await runExpandQuery(queryId, {
           degrees: [{ degreeId, absolute: 10 }],
+          academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
         }),
       ).toMatchInlineSnapshot(`
         Object {
@@ -302,6 +308,7 @@ describe('queries (e2e)', () => {
       expect(
         await runExpandQuery(queryId, {
           degrees: [{ degreeId: degreeId, absolute: 5 }],
+          academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
         }),
       ).toMatchInlineSnapshot(`
         Object {
