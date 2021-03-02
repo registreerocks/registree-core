@@ -166,9 +166,17 @@ type QueryTranscriptConnection {
 
 type QueryDetails {
   parameters: [DegreeSelection!]!
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
   faculties: [Faculty!]!
   results: [QueryTranscriptConnection!]!
   updatedAt: DateTime!
+}
+
+\\"\\"\\"The academic year of study a student is in.\\"\\"\\"
+enum AcademicYearOfStudy {
+  YEAR_1
+  YEAR_2
+  YEAR_3_PLUS
 }
 
 type RsvpCost {
@@ -226,13 +234,6 @@ input DegreeInput {
   degreeId: String!
   absolute: Int
   percentage: Int
-}
-
-\\"\\"\\"The academic year of study a student is in.\\"\\"\\"
-enum AcademicYearOfStudy {
-  YEAR_1
-  YEAR_2
-  YEAR_3_PLUS
 }
 
 \\"\\"\\"The \`Upload\` scalar type represents a file upload.\\"\\"\\"

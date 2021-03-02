@@ -150,6 +150,7 @@ describe('queries (e2e)', () => {
                   description
                 }
               }
+              academicYearOfStudyList
             }
           }
         }
@@ -190,6 +191,9 @@ describe('queries (e2e)', () => {
           "data": Object {
             "expandQuery": Object {
               "queryDetails": Object {
+                "academicYearOfStudyList": Array [
+                  "YEAR_1",
+                ],
                 "parameters": Array [],
               },
             },
@@ -224,6 +228,9 @@ describe('queries (e2e)', () => {
           "data": Object {
             "expandQuery": Object {
               "queryDetails": Object {
+                "academicYearOfStudyList": Array [
+                  "YEAR_1",
+                ],
                 "parameters": Array [
                   Object {
                     "amount": Object {
@@ -279,6 +286,9 @@ describe('queries (e2e)', () => {
           "data": Object {
             "expandQuery": Object {
               "queryDetails": Object {
+                "academicYearOfStudyList": Array [
+                  "YEAR_1",
+                ],
                 "parameters": Array [
                   Object {
                     "amount": Object {

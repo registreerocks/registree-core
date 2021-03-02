@@ -234,6 +234,7 @@ type Query {
 }
 
 type QueryDetails {
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
   faculties: [Faculty!]!
   parameters: [DegreeSelection!]!
   results(after: String, before: String, filter: QueryTranscriptFilter, first: Int, last: Int): QueryTranscriptConnection!

@@ -1,4 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { AcademicYearOfStudy } from './academic-year-of-study.model';
 import { DegreeSelection } from './degree-selection.model';
 import { QueryTranscript } from './query-transcript.model';
 import { QueryTranscriptConnection } from './pagination/query-transcript-connection.model';
@@ -8,6 +9,9 @@ import { Faculty } from 'src/universities/models/faculty.model';
 export class QueryDetails {
   @Field(_type => [DegreeSelection])
   parameters!: DegreeSelection[];
+
+  @Field(_type => [AcademicYearOfStudy])
+  academicYearOfStudyList!: AcademicYearOfStudy[];
 
   rawResults!: QueryTranscript[];
 
