@@ -1761,9 +1761,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/common@npm:^7.0.7, @nestjs/common@npm:^7.6.11":
-  version: 7.6.11
-  resolution: "@nestjs/common@npm:7.6.11"
+"@nestjs/common@npm:^7.0.7, @nestjs/common@npm:^7.6.13":
+  version: 7.6.13
+  resolution: "@nestjs/common@npm:7.6.13"
   dependencies:
     axios: 0.21.1
     iterare: 1.2.1
@@ -1782,7 +1782,7 @@ __metadata:
       optional: true
     class-validator:
       optional: true
-  checksum: 681044546333db7aa95c6558f2eb72816118facbd3b043f9a006db3006b72d01439e2bc761c9598bfbd51595297fbf5785accc5ced39e2dd4fc30351335f7d02
+  checksum: af5a41a41a7ee018635ea2c46284ee4e8f0f2e892ba77dbf996ed5338d95d6d16f1d7ac0dd14f9849741d3234ae1e8a834c8715f56cb569ff5a09b395103de1a
   languageName: node
   linkType: hard
 
@@ -1804,9 +1804,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/core@npm:^7.0.7, @nestjs/core@npm:^7.6.11":
-  version: 7.6.11
-  resolution: "@nestjs/core@npm:7.6.11"
+"@nestjs/core@npm:^7.0.7, @nestjs/core@npm:^7.6.13":
+  version: 7.6.13
+  resolution: "@nestjs/core@npm:7.6.13"
   dependencies:
     "@nuxtjs/opencollective": 0.3.2
     fast-safe-stringify: 2.0.7
@@ -1829,13 +1829,13 @@ __metadata:
       optional: true
     "@nestjs/websockets":
       optional: true
-  checksum: a7e4ccf42605513a6287ce72d6f85aebc5cd68f60449ec7b7815d56871276ca4c5a1bfabe125f7ba364ac599e1a398fe51043ab747fe175338783bc7e637e12f
+  checksum: d3a1ffdf2002b45e4c0723e74177296e7ec3d287928366c467faba2887c661f537a9b200ef9ecd26feb22f8df4a193620657a03e47b2fa463db97744f5e81e47
   languageName: node
   linkType: hard
 
-"@nestjs/graphql@npm:^7.1.5, @nestjs/graphql@npm:^7.9.8":
-  version: 7.9.8
-  resolution: "@nestjs/graphql@npm:7.9.8"
+"@nestjs/graphql@npm:^7.1.5, @nestjs/graphql@npm:^7.9.11":
+  version: 7.9.11
+  resolution: "@nestjs/graphql@npm:7.9.11"
   dependencies:
     "@apollo/gateway": ^0.17.0
     "@graphql-tools/merge": 6.2.7
@@ -1865,7 +1865,7 @@ __metadata:
       optional: true
     ts-morph:
       optional: true
-  checksum: 659e56d5ddba0b56af9dbb0b6ae343fffb8af5bc3c0ed3a36e1ccbe93f64200def49dd948bd6bef2cc56c292f35ee7108d7d891a97e9842f9a1ebc0b1b4c5da5
+  checksum: a78d27ab488570f7b996de3c65c642a6440b3f63c67accbe9ea182a47658cc5281804b83a71b0b7899a313ea01313a4d9b1e2d03f4a7f807675ed83506ad80be
   languageName: node
   linkType: hard
 
@@ -1881,16 +1881,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/mongoose@npm:^7.2.3":
-  version: 7.2.3
-  resolution: "@nestjs/mongoose@npm:7.2.3"
+"@nestjs/mongoose@npm:^7.2.4":
+  version: 7.2.4
+  resolution: "@nestjs/mongoose@npm:7.2.4"
   peerDependencies:
     "@nestjs/common": ^6.0.0 || ^7.0.0
     "@nestjs/core": ^6.0.0 || ^7.0.0
     mongoose: ^5.11.15
     reflect-metadata: ^0.1.12
     rxjs: ^6.0.0
-  checksum: a4038e61ff7c490093251cf3b72cf0cde712d8d2b1cd8fd32da127cd8d019cbdd476b5eeaaa94858fb6291625fb023b8d61aba640674ed4d220b0620fdd0e087
+  checksum: 9d30bbdda7fe564e1fd6511bee45652e3feab38e8f94ecdd02bf8eb774c02ec200a9ec233be7d44d7b50ee01bcf9ed7f000a6f837277126d4144ffe1a97df36d
   languageName: node
   linkType: hard
 
@@ -1904,9 +1904,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/platform-express@npm:^7.6.11":
-  version: 7.6.11
-  resolution: "@nestjs/platform-express@npm:7.6.11"
+"@nestjs/platform-express@npm:^7.6.13":
+  version: 7.6.13
+  resolution: "@nestjs/platform-express@npm:7.6.13"
   dependencies:
     body-parser: 1.19.0
     cors: 2.8.5
@@ -1916,7 +1916,7 @@ __metadata:
   peerDependencies:
     "@nestjs/common": ^7.0.0
     "@nestjs/core": ^7.0.0
-  checksum: 2dadc955533e1284b566a8c8035066f21d3ef7e3a597b1d85724a131bdfb959a4ed6559e61091fd49593be7d145bc4c51a83bf8ffacbd5cf2d2dffa02a625805
+  checksum: 093ae253c42c9e827d2af1ecc883bc74ad1042dba502a78ca2d05cfebd5e1343ff0d4c35eec19a0e386a24f0df0296fe72c04dc5dc9171e64ee2df1c383e3c7f
   languageName: node
   linkType: hard
 
@@ -11937,13 +11937,13 @@ nestjs-graphql-dataloader@^0.1.28:
     "@commitlint/cli": ^11.0.0
     "@commitlint/config-conventional": ^11.0.0
     "@nestjs/cli": ^7.5.1
-    "@nestjs/common": ^7.6.11
+    "@nestjs/common": ^7.6.13
     "@nestjs/config": ^0.6.3
-    "@nestjs/core": ^7.6.11
-    "@nestjs/graphql": ^7.9.8
-    "@nestjs/mongoose": ^7.2.3
+    "@nestjs/core": ^7.6.13
+    "@nestjs/graphql": ^7.9.11
+    "@nestjs/mongoose": ^7.2.4
     "@nestjs/passport": ^7.1.5
-    "@nestjs/platform-express": ^7.6.11
+    "@nestjs/platform-express": ^7.6.13
     "@nestjs/schematics": ^7.1.2
     "@nestjs/terminus": ^7.1.0
     "@nestjs/testing": ^7.4.4
