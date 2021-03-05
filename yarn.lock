@@ -11128,7 +11128,7 @@ nestjs-graphql-dataloader@^0.1.28:
     ts-loader: ^8.0.4
     ts-node: ^9.0.0
     tsconfig-paths: ^3.9.0
-    typescript: ^3.9.7
+    typescript: 4.1.5
     typescript-language-server: ^0.4.0
   languageName: unknown
   linkType: soft
@@ -12988,16 +12988,6 @@ nestjs-graphql-dataloader@^0.1.28:
   languageName: node
   linkType: hard
 
-typescript@^3.9.7:
-  version: 3.9.7
-  resolution: "typescript@npm:3.9.7"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: d549bf1d3a93796b45be9d1dbebbef63777f8cc4d788461f4bfdb6cb07371a97d3e471c7f39dbe31107e8a25d6d8b2ef5e967af7e8e1768d9560bd95095b360b
-  languageName: node
-  linkType: hard
-
 "typescript@patch:typescript@4.1.5#~builtin<compat/typescript>, typescript@patch:typescript@~4.1.3#~builtin<compat/typescript>":
   version: 4.1.5
   resolution: "typescript@patch:typescript@npm%3A4.1.5#~builtin<compat/typescript>::version=4.1.5&hash=32657b"
@@ -13005,16 +12995,6 @@ typescript@^3.9.7:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 15f7630d7aa22b770f8e448c9f1b6f14a1d7b969008ef09475b9c377f908e2144ace8dac99ffe0c4830dc42a9970ca333533c9affd75035a17011da7fd03c423
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@^3.9.7#~builtin<compat/typescript>":
-  version: 3.9.7
-  resolution: "typescript@patch:typescript@npm%3A3.9.7#~builtin<compat/typescript>::version=3.9.7&hash=32657b"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 46b87576ee37cc91c86965922ddef0fbee3ba49fc1627a9b6dce77cb41dc72d93f5643cefd175928a2d76e68189123e20c24db382d8b289ac6c27cfb4b7993a6
   languageName: node
   linkType: hard
 
