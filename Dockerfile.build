@@ -30,7 +30,6 @@ COPY --chown=node .yarn/releases/ .yarn/releases/
 COPY --chown=node .yarnrc.yml .
 # Yarn patches:
 COPY --chown=node add-nestjs-dataloader-types.diff .
-COPY --chown=node skip-promises-class-transformer.diff .
 # registree-core:
 COPY --chown=node package.json .
 COPY --chown=node yarn.lock .
