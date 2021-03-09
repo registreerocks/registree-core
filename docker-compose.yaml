@@ -1,0 +1,28 @@
+# docker-compose file to run a registree-core server.
+#
+# Usage: Put your configuration in ".env", then run:
+#
+#   export COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1
+#   docker-compose up
+#
+# Using BuildKit optional, but makes building significantly better and faster:
+# https://www.docker.com/blog/faster-builds-in-compose-thanks-to-buildkit-support/
+#
+version: '3.9'
+
+services:
+  registree-core:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    env_file:
+      - .env
+    environment:
+      HOST: '0.0.0.0'
+      PORT: '3000'
+    ports:
+      - '127.0.0.1:3000:3000'
+
+    # Node needs this to handle stop signals.
+    # See https://docs.docker.com/compose/faq/#why-do-my-services-take-10-seconds-to-recreate-or-stop
+    init: true

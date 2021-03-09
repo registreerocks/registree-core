@@ -61,6 +61,7 @@ import { TerminusModule } from '@nestjs/terminus';
         req,
       }),
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
+      sortSchema: true, // Keep the schema in a durable order for version control.
       uploads: {
         maxFileSize: appConstants.fileSize * 1000 * 1000,
         maxFiles: 5,

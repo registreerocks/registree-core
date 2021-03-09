@@ -2,5 +2,4 @@
 .log/
 coverage/
 npm-debug.log
-test/
 uploads/
