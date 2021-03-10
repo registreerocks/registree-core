@@ -11,6 +11,7 @@ import { FacultiesLoader } from './loaders/faculties.loader';
 import { UniversitiesLoader } from './loaders/universities.loader';
 import { DegreesLoader } from './loaders/degrees.loader';
 import { FacultyDegreesLoader } from './loaders/faculty-degrees.loader';
+import { FacultiesService } from './faculies.service';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { FacultyDegreesLoader } from './loaders/faculty-degrees.loader';
     UniversitiesService,
     UniversitiesResolver,
     FacultiesResolver,
+    FacultiesService,
     DegreesResolver,
     FacultiesLoader,
     UniversitiesLoader,
