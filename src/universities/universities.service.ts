@@ -35,6 +35,14 @@ export class UniversitiesService {
       .exec();
   }
 
+  async getFacultyById(facultyId: string): Promise<Faculty | null> {
+    return await this.facultyModel
+      .findOne({
+        _id: facultyId,
+      })
+      .exec();
+  }
+
   async getDegreesById(keys: readonly string[]): Promise<Degree[]> {
     return this.degreeModel
       .find()

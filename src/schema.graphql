@@ -225,6 +225,7 @@ type Query {
   getContact: Contact!
   getCustomer(customerId: ID!): Customer!
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
+  getFacultyById(facultyId: ID!): Faculty!
   getQueries(after: String, before: String, customerId: ID!, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
