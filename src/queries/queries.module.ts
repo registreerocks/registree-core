@@ -4,6 +4,7 @@ import { UploadModule } from 'src/upload/upload.module';
 import { QueryDataModule } from 'src/query-data/query-data.module';
 import { QueryDataAsyncOptions } from 'src/query-data/query-data.options';
 import { UploadAsyncOptions } from 'src/upload/upload.options';
+import { AcademicYearOfStudyResolver } from './resolvers/academic-year-of-study.resolver';
 import { EventDetailsResolver } from './resolvers/event-details.resolver';
 import { EventQueriesResolver } from './resolvers/event-queries.resolver';
 import { PricingModule } from 'src/pricing/pricing.module';
@@ -24,6 +25,7 @@ import { InvitationResolver } from './resolvers/invitation.resolver';
 @Module({
   imports: [UniversitiesModule],
   providers: [
+    AcademicYearOfStudyResolver,
     EventQueriesResolver,
     EventDetailsResolver,
     QueriesService,

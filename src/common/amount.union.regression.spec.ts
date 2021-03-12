@@ -59,6 +59,7 @@ async function withScenario(
           amount: { amountType: 'Absolute', absolute: 10 },
         },
       ],
+      academicYearOfStudyList: [],
       rawResults: [],
       updatedAt: new Date(),
     },
