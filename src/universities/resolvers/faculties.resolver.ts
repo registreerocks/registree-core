@@ -1,7 +1,6 @@
 import { Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
 import { NotFoundException } from '@nestjs/common';
 import { UniversitiesService } from '../universities.service';
-import { FacultiesService } from '../faculies.service';
 import { Faculty } from '../models/faculty.model';
 import { Degree } from '../models/degree.model';
 import { Args, ID } from '@nestjs/graphql';
@@ -15,17 +14,14 @@ import { FacultyDegreesLoader } from '../loaders/faculty-degrees.loader';
 
 @Resolver(_of => Faculty)
 export class FacultiesResolver {
-  constructor(
-    private readonly universitiesService: UniversitiesService,
-    private readonly facultiesService: FacultiesService,
-  ) {}
+  constructor(private readonly universitiesService: UniversitiesService) {}
 
   @Query(_returns => Faculty)
   async getFacultyById(
     @Args({ name: 'facultyId', type: () => ID })
     facultyId: string,
   ): Promise<Faculty> {
-    const res = await this.facultiesService.getFacultyById(facultyId);
+    const res = await this.universitiesService.getFacultyById(facultyId);
     if (res) return res;
     else throw new NotFoundException();
   }
