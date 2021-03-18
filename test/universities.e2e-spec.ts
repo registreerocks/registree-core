@@ -4,6 +4,7 @@
 
 import { gql } from 'apollo-server-core';
 import { ExecutionResult } from 'graphql';
+import { Faculty } from '../src/universities/models/faculty.model';
 import { University } from '../src/universities/models/university.model';
 import { Fixture } from './data-fixtures/fixture.helpers';
 import {
@@ -56,5 +57,53 @@ describe('UniversitiesResolver (E2E)', () => {
 
     expect(result.errors).toStrictEqual(undefined);
     expect(result.data).toMatchSnapshot();
+  });
+
+  describe('getFacultyById', () => {
+    const query = gql`
+      query GetFacultyById($facultyId: ID!) {
+        faculty: getFacultyById(facultyId: $facultyId) {
+          id
+          name
+          description
+        }
+      }
+    `;
+    // Type aliases for readability
+    type TData = { faculty: Faculty };
+    type TVars = { facultyId: string };
+    type TResult = ExecutionResult<TData, never>;
+
+    test('found', async () => {
+      const result: TResult = await ctx.client.query<TData, TVars>({
+        query,
+        variables: { facultyId: '5ef1144a1c7d4d99fe6d9813' },
+      });
+
+      expect(result.errors).toStrictEqual(undefined);
+      expect(result.data).toMatchInlineSnapshot(`
+        Object {
+          "faculty": Object {
+            "description": "Commerce degree programmes prepare students for the personnel needs of the fast-growing world of financial service industries and prepare them for participation in the global economy.",
+            "id": "5ef1144a1c7d4d99fe6d9813",
+            "name": "Faculty of Commerce",
+          },
+        }
+      `);
+    });
+
+    test('not found', async () => {
+      const result: TResult = await ctx.client.query<TData, TVars>({
+        query,
+        variables: { facultyId: '000000000000000000000000' },
+      });
+
+      expect(result.errors).toStrictEqual(undefined);
+      expect(result.data).toMatchInlineSnapshot(`
+        Object {
+          "faculty": null,
+        }
+      `);
+    });
   });
 });
