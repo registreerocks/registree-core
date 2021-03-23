@@ -12084,11 +12084,11 @@ nestjs-graphql-dataloader@^0.1.28:
   linkType: hard
 
 "ssri@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "ssri@npm:8.0.0"
+  version: 8.0.1
+  resolution: "ssri@npm:8.0.1"
   dependencies:
     minipass: ^3.1.1
-  checksum: 97964745a80846b4a50d4506b10b08d35384c3cec482d687cae5f4b7c842afe239c8c368d620f5d7d92642ab75379b409aa809072c2b8e94ec15d9c70d843da5
+  checksum: d45f9a1d5676f8ebd888a3ae469772d75858e4095087217c2361a6b07a6eefd5a85350bb0fed63128b0025fdf242e81813be0979e6cb956a38dbf26295dca09c
   languageName: node
   linkType: hard
 
