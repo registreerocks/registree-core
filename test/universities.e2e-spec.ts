@@ -59,10 +59,10 @@ describe('UniversitiesResolver (E2E)', () => {
     expect(result.data).toMatchSnapshot();
   });
 
-  describe('getFacultyById', () => {
+  describe('getFaculty', () => {
     const query = gql`
-      query GetFacultyById($facultyId: ID!) {
-        faculty: getFacultyById(facultyId: $facultyId) {
+      query GetFaculty($facultyId: ID!) {
+        faculty: getFaculty(facultyId: $facultyId) {
           id
           name
           description
@@ -98,12 +98,12 @@ describe('UniversitiesResolver (E2E)', () => {
         variables: { facultyId: '000000000000000000000000' },
       });
 
-      expect(result.errors).toStrictEqual(undefined);
-      expect(result.data).toMatchInlineSnapshot(`
-        Object {
-          "faculty": null,
-        }
+      expect(result.errors).toMatchInlineSnapshot(`
+        Array [
+          [GraphQLError: Internal Server Error],
+        ]
       `);
+      expect(result.data).toMatchInlineSnapshot(`null`);
     });
   });
 });
