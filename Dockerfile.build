@@ -18,7 +18,7 @@
 
 # STAGE: base-yarn
 # Base with Yarn config and registree-core package definition.
-FROM node:15-alpine AS base-yarn
+FROM node:16-alpine AS base-yarn
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 USER node
 RUN mkdir /home/node/app
