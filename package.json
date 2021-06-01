@@ -100,7 +100,8 @@
   },
   "resolutions": {
     "fs-capacitor": "^6.2.0",
-    "graphql-upload": "^11.0.0"
+    "graphql-upload": "^11.0.0",
+    "ws": "^7.4.6"
   },
   "husky": {
     "hooks": {
