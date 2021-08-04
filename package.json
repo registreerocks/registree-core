@@ -141,5 +141,6 @@
       "src/app-config/*"
     ],
     "testEnvironment": "node"
-  }
+  },
+  "packageManager": "yarn@3.0.2"
 }

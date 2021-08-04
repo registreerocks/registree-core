@@ -80,7 +80,7 @@ jobs:
             - '.yarn'
             - package.json
             - dist
-            - '.pnp.js'
+            - '.pnp.cjs'
             - yarn.lock
 
 workflows:
