@@ -12486,8 +12486,8 @@ resolve@^1.20.0:
   linkType: hard
 
 "tar@npm:^6.0.1, tar@npm:^6.0.2":
-  version: 6.0.5
-  resolution: "tar@npm:6.0.5"
+  version: 6.1.6
+  resolution: "tar@npm:6.1.6"
   dependencies:
     chownr: ^2.0.0
     fs-minipass: ^2.0.0
@@ -12495,7 +12495,7 @@ resolve@^1.20.0:
     minizlib: ^2.1.1
     mkdirp: ^1.0.3
     yallist: ^4.0.0
-  checksum: 7ae26210927bdf590686db21e66d5579020ccbebda93a1adffe266eb88ca8b152c56dd8ce0df87d81e3dbe709bfe8562b29c584871ba015ec868dec9062e91ea
+  checksum: 45b87c0026e639b7eca2c318c934a4376c6adc6f39c5c4dc9ee8fb7a09b95515b22432c57438dc6b6a621410a06f1789a6bfb5151217a43f0db64f4fb5e99d24
   languageName: node
   linkType: hard
 
