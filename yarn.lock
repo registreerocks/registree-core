@@ -10002,9 +10002,9 @@ nestjs-graphql-dataloader@^0.1.28:
   linkType: hard
 
 "object-path@npm:^0.11.4":
-  version: 0.11.4
-  resolution: "object-path@npm:0.11.4"
-  checksum: 5e3d4690d00cd6febeb19f888858ac0da8dc9f83a0a364401259d9dfaad0fd58c638632a78e63f81710d4e9a59b3f1f9e4aadacf61f31ab9cb1602194fd76d81
+  version: 0.11.7
+  resolution: "object-path@npm:0.11.7"
+  checksum: 1b4bb5393fe9af7c2192fe5512216345875cf16797c0fdafa7aef2e2df089b38210bcff6f9ce8f532fe5a57e5c7922d38d913a481dc45a26441b60e2b196f743
   languageName: node
   linkType: hard
 
