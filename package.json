@@ -139,9 +139,6 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "coverage",
-    "coveragePathIgnorePatterns": [
-      "src/app-config/*"
-    ],
     "testEnvironment": "node"
   },
   "packageManager": "yarn@3.0.2"
