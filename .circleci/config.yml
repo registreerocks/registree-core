@@ -34,6 +34,13 @@ commands:
           #
           include-branch-in-cache-key: false
 
+  # Install standalone yq from https://github.com/mikefarah/yq
+  install-yq:
+    description: 'Install yq from binary for updating yaml files'
+    steps:
+      - run:
+          command: "wget https://github.com/mikefarah/yq/releases/download/v4.13.5/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq"
+
 jobs:
   test:
     executor:
@@ -64,6 +71,18 @@ jobs:
             yarn test:e2e --coverage
       - codecov/upload:
           file: 'coverage/lcov.info'
+
+  deploy-staging:
+    docker:
+      - image: digitalocean/doctl
+    steps:
+      - install-yq
+      - run: /app/doctl auth init -t $DIGITALOCEAN_ACCESS_TOKEN
+      - run:
+          command: |
+            /app/doctl apps spec get $STAGING_APP_ID > app_spec.yaml && \
+            yq eval '.services[0].image.tag = strenv(CIRCLE_SHA1)' app_spec.yaml > updated_spec.yaml && \
+            /app/doctl apps update --wait $STAGING_APP_ID --spec=updated_spec.yaml
 
   build:
     executor:
@@ -100,6 +119,8 @@ workflows:
             # dlc: true
           requires:
             - build
+            - test
+            - test-e2e
           after_checkout:
             - attach_workspace:
                 at: .
@@ -108,3 +129,10 @@ workflows:
           docker-password: DOCKER_LOGIN
           docker-username: DOCKER_PASSWORD
           tag: $CIRCLE_SHA1
+      - deploy-staging:
+          filters:
+            branches:
+              only:
+                - staging
+          requires:
+            - docker/publish
