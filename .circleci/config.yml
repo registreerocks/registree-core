@@ -124,6 +124,10 @@ workflows:
           after_checkout:
             - attach_workspace:
                 at: .
+          before_build:
+            # XXX(PI): Hack in BuildKit support. See upstream PR:
+            #          <https://github.com/CircleCI-Public/docker-orb/pull/84>
+            - run: echo 'export DOCKER_BUILDKIT=1' >> $BASH_ENV
           image: registree-core
           registry: $DOCKER_REGISTRY
           docker-password: DOCKER_LOGIN
