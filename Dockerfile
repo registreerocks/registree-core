@@ -16,13 +16,18 @@
 #
 
 
-# STAGE: base-yarn
-# Base with Yarn config and registree-core package definition.
-FROM node:15-alpine AS base-yarn
+# STAGE: base-node
+# Base node with non-root user, and /app dir.
+FROM node:16-alpine AS base-node
+
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 USER node
-RUN mkdir /home/node/app
-WORKDIR /home/node/app
+WORKDIR /app
+
+
+# STAGE: base-yarn
+# Base with Yarn config and registree-core package definition.
+FROM base-node AS base-yarn
 # Yarn config:
 RUN mkdir .yarn
 COPY --chown=node .yarn/plugins/ .yarn/plugins/
@@ -47,8 +52,8 @@ RUN --mount=type=cache,uid=1000,gid=1000,target=/home/node/.yarn/berry/cache \
 # STAGE: base-deps
 # Base with dependencies ready for use.
 FROM base-yarn AS base-deps
-COPY --from=build-deps /home/node/app/.yarn/ .yarn/
-COPY --from=build-deps /home/node/app/.pnp.cjs .
+COPY --from=build-deps /app/.yarn/ .yarn/
+COPY --from=build-deps /app/.pnp.cjs .
 
 # STAGE: base
 # Base with dependencies and registree-core's source code ready for use.
@@ -67,7 +72,14 @@ RUN yarn build
 
 # STAGE: run
 # Run the built registree-core.
-FROM base-deps AS run
-COPY --from=build /home/node/app/dist/ ./dist
+FROM base-node AS run
+COPY --from=build-deps /app/.yarn/cache/ /app/.yarn/cache/
+COPY --from=build-deps /app/.yarn/unplugged/ /app/.yarn/unplugged/
+COPY --from=build-deps /app/.pnp.cjs /app/.pnp.cjs
+COPY --from=build /app/dist/ /app/dist/
+
 EXPOSE 3000
-CMD [ "yarn", "start:prod" ]
+
+# https://yarnpkg.com/features/pnp#initializing-pnp
+ENV NODE_OPTIONS="--require /app/.pnp.cjs"
+CMD ["node", "/app/dist/main.js"]
