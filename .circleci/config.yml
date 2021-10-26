@@ -100,7 +100,29 @@ workflows:
       - test
       - test-e2e
       - build
+
+      # Build and validate the image with goss, without pushing.
       - docker/publish:
+          name: docker-build
+          deploy: false
+          image: registree-core
+          # XXX(Pi): This needs an accessible MongoDB, so for now, just pull and start a detached one,
+          #          and use host networking to access it.
+          before_build:
+            # XXX(PI): Hack in BuildKit support. See upstream PR:
+            #          <https://github.com/CircleCI-Public/docker-orb/pull/84>
+            - run: echo 'export DOCKER_BUILDKIT=1' >> $BASH_ENV
+            - docker/pull:
+                images: 'mongo'
+            - docker/install-goss
+          after_build:
+            - run:
+                command: |
+                  docker run --rm --publish '127.0.0.1:27017:27017' --detach mongo
+                  dgoss run --network host --env-file .env.tests registree-core:$CIRCLE_SHA1
+
+      - docker/publish:
+          name: docker-publish
           filters:
             branches:
               only:
@@ -110,6 +132,7 @@ workflows:
             name: docker/machine
             # dlc: true
           requires:
+            - docker-build
             - build
             - test
             - test-e2e
@@ -128,4 +151,4 @@ workflows:
               only:
                 - staging
           requires:
-            - docker/publish
+            - docker-publish
