@@ -20,6 +20,9 @@
 # Base node with non-root user, and /app dir.
 FROM node:16-alpine AS base-node
 
+# XXX: Work around USER / WORKDIR interactions in older Docker
+RUN mkdir /app && chown node:node /app
+
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 USER node
 WORKDIR /app
