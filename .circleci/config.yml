@@ -93,14 +93,6 @@ jobs:
       - install-packages-yarn-2
       - run:
           command: yarn build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '.yarn'
-            - package.json
-            - dist
-            - '.pnp.cjs'
-            - yarn.lock
 
 workflows:
   build-and-push:
@@ -121,9 +113,6 @@ workflows:
             - build
             - test
             - test-e2e
-          after_checkout:
-            - attach_workspace:
-                at: .
           before_build:
             # XXX(PI): Hack in BuildKit support. See upstream PR:
             #          <https://github.com/CircleCI-Public/docker-orb/pull/84>
