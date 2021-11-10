@@ -18,7 +18,7 @@
 
 # STAGE: base-node
 # Base node with non-root user, and /app dir.
-FROM node:16-alpine AS base-node
+FROM node:17-alpine AS base-node
 
 # XXX: Work around USER / WORKDIR interactions in older Docker
 RUN mkdir /app && chown node:node /app
