@@ -13321,9 +13321,9 @@ typescript@^3.9.7:
   linkType: hard
 
 "validator@npm:^13.5.2":
-  version: 13.5.2
-  resolution: "validator@npm:13.5.2"
-  checksum: 28655521e2d80bd41af856f8691d199e4081396d87adab34f9b66926873e4654e6a2acbd5a22d7dc96835d8caa6ba3d829da12e86d668dc709d9ab97e16183bd
+  version: 13.7.0
+  resolution: "validator@npm:13.7.0"
+  checksum: 2b83283de1222ca549a7ef57f46e8d49c6669213348db78b7045bce36a3b5843ff1e9f709ebf74574e06223461ee1f264f8cc9a26a0060a79a27de079d8286ef
   languageName: node
   linkType: hard
 
