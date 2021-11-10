@@ -14,7 +14,6 @@ services:
   registree-core:
     build:
       context: .
-      dockerfile: Dockerfile.build
     env_file:
       - .env
     environment:

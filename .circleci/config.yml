@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@4.1.0
-  docker: circleci/docker@1.2.1
+  docker: circleci/docker@1.7.0
   kube-orb: circleci/kubernetes@0.11.0
   codecov: codecov/codecov@3.2.0
 
@@ -39,7 +39,7 @@ commands:
     description: 'Install yq from binary for updating yaml files'
     steps:
       - run:
-          command: "wget https://github.com/mikefarah/yq/releases/download/v4.13.5/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq"
+          command: 'wget https://github.com/mikefarah/yq/releases/download/v4.13.5/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq'
 
 jobs:
   test:
@@ -93,14 +93,6 @@ jobs:
       - install-packages-yarn-2
       - run:
           command: yarn build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '.yarn'
-            - package.json
-            - dist
-            - '.pnp.cjs'
-            - yarn.lock
 
 workflows:
   build-and-push:
@@ -108,7 +100,29 @@ workflows:
       - test
       - test-e2e
       - build
+
+      # Build and validate the image with goss, without pushing.
       - docker/publish:
+          name: docker-build
+          deploy: false
+          image: registree-core
+          # XXX(Pi): This needs an accessible MongoDB, so for now, just pull and start a detached one,
+          #          and use host networking to access it.
+          before_build:
+            # XXX(PI): Hack in BuildKit support. See upstream PR:
+            #          <https://github.com/CircleCI-Public/docker-orb/pull/84>
+            - run: echo 'export DOCKER_BUILDKIT=1' >> $BASH_ENV
+            - docker/pull:
+                images: 'mongo'
+            - docker/install-goss
+          after_build:
+            - run:
+                command: |
+                  docker run --rm --publish '127.0.0.1:27017:27017' --detach mongo
+                  dgoss run --network host --env-file .env.tests registree-core:$CIRCLE_SHA1
+
+      - docker/publish:
+          name: docker-publish
           filters:
             branches:
               only:
@@ -118,12 +132,14 @@ workflows:
             name: docker/machine
             # dlc: true
           requires:
+            - docker-build
             - build
             - test
             - test-e2e
-          after_checkout:
-            - attach_workspace:
-                at: .
+          before_build:
+            # XXX(PI): Hack in BuildKit support. See upstream PR:
+            #          <https://github.com/CircleCI-Public/docker-orb/pull/84>
+            - run: echo 'export DOCKER_BUILDKIT=1' >> $BASH_ENV
           image: registree-core
           registry: $DOCKER_REGISTRY
           docker-password: DOCKER_LOGIN
@@ -135,4 +151,4 @@ workflows:
               only:
                 - staging
           requires:
-            - docker/publish
+            - docker-publish
