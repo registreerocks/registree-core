@@ -41,11 +41,12 @@ commands:
       - run:
           command: 'wget https://github.com/mikefarah/yq/releases/download/v4.13.5/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq'
 
+# XXX(Pi): The cimg/node image only supports major.minor version tags, not major-only.
+#          Issue: Docker image aliases for major version #130 <https://github.com/CircleCI-Public/cimg-node/issues/130>
 jobs:
   test:
-    executor:
-      name: node/default
-      tag: current
+    docker:
+      - image: cimg/node:16.13
     steps:
       - checkout
       - install-packages-yarn-2
@@ -58,7 +59,7 @@ jobs:
 
   test-e2e:
     docker:
-      - image: cimg/node:current
+      - image: cimg/node:16.13
       - image: circleci/mongo
     environment:
       TEST_MONGO_URI: mongodb://localhost/registree-core-test-WORKER
@@ -85,9 +86,8 @@ jobs:
             /app/doctl apps update --wait $STAGING_APP_ID --spec=updated_spec.yaml
 
   build:
-    executor:
-      name: node/default
-      tag: current
+    docker:
+      - image: cimg/node:16.13
     steps:
       - checkout
       - install-packages-yarn-2
