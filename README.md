@@ -26,6 +26,9 @@ $ yarn start:prod
 ## Test
 
 ```bash
+# create .env from .env.tests
+$ cp .env.tests .env
+
 # unit tests
 $ yarn test
 
