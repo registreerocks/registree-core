@@ -18,6 +18,7 @@ type Contact {
   name: String
   userId: ID!
   dbId: ID!
+  calendlyLink: String
 }
 
 type Customer {
