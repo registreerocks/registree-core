@@ -7,6 +7,7 @@ export interface UpdateUserRequest extends JsonObject {
   password?: string;
   name?: string;
   app_metadata?: Metadata;
+  calendlyLink?: string;
 }
 
 type Metadata = {
