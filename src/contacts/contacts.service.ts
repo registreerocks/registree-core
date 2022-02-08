@@ -90,6 +90,7 @@ export class ContactsService {
       input.email
         ? { email: input.email, email_verified: false, verify_email: true }
         : null,
+      input.calendlyLink ? { calendlyLink: input.calendlyLink } : null,
     );
     return request;
   }
@@ -100,6 +101,7 @@ export class ContactsService {
       email: response.email,
       userId: response.user_id,
       dbId: response.app_metadata.db_id,
+      calendlyLink: response.calendlyLink,
     };
   }
 }

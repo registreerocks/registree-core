@@ -13,4 +13,7 @@ export class UpdateContactInput {
 
   @Field({ nullable: true })
   password?: string;
+
+  @Field({ nullable: true })
+  calendlyLink?: string;
 }

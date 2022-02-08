@@ -20,6 +20,7 @@ export interface GetUserResponse extends JsonObject {
   logins_count?: number;
   given_name?: string;
   family_name?: string;
+  calendlyLink: string;
 }
 
 type Metadata = {

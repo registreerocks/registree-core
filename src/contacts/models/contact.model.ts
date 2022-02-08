@@ -13,4 +13,7 @@ export class Contact {
 
   @Field(_type => ID)
   dbId?: string;
+
+  @Field({ nullable: true })
+  calendlyLink?: string;
 }
