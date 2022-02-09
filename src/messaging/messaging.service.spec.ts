@@ -6,8 +6,8 @@ import { TwilioModule } from 'nestjs-twilio';
 describe('MessagingService', () => {
   let service: MessagingService;
 
-  const TWILIO_ACCOUNT_SID = 'AC444a14dd86d281653c5ce85f4422573e';
-  const TWILIO_AUTH_TOKEN = '21572244fbaa1329a5fda35fa0c7938d';
+  const TWILIO_ACCOUNT_SID = 'ACsomeaccountsid';
+  const TWILIO_AUTH_TOKEN = 'someauthtoken';
 
   const config: TwilioModuleOptions = {
     accountSid: TWILIO_ACCOUNT_SID,
