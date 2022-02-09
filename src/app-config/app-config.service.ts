@@ -11,6 +11,7 @@ import { UploadOptionsFactory, UploadOptions } from 'src/upload/upload.options';
 import { StorageConfig } from './config/storage.config';
 import { AuthOptionsFactory, AuthOptions } from 'src/auth/auth.options';
 import { PricingConfig } from './config/pricing.config';
+import { TwilioConfig } from './config/twilio.config';
 import {
   PricingOptionsFactory,
   PricingOptions,
@@ -32,6 +33,7 @@ import {
   IdentifyingDataOptions,
   IdentifyingDataOptionsFactory,
 } from 'src/identifying-data/identifying-data.options';
+import { TwilioModuleOptions, TwilioOptionsFactory } from 'nestjs-twilio';
 
 @Injectable()
 export class AppConfigService
@@ -43,7 +45,8 @@ export class AppConfigService
     MongooseOptionsFactory,
     Auth0DataOptionsFactory,
     LinkingDataOptionsFactory,
-    IdentifyingDataOptionsFactory {
+    IdentifyingDataOptionsFactory,
+    TwilioOptionsFactory {
   constructor(
     @Inject(AuthConfig.KEY)
     private readonly authConfig: ConfigType<typeof AuthConfig>,
@@ -59,6 +62,9 @@ export class AppConfigService
 
     @Inject(PricingConfig.KEY)
     private readonly pricingConfig: ConfigType<typeof PricingConfig>,
+
+    @Inject(TwilioConfig.KEY)
+    private readonly twilioConfig: ConfigType<typeof TwilioConfig>,
   ) {}
 
   createAuthOptions(): AuthOptions {
@@ -113,6 +119,10 @@ export class AppConfigService
 
   createPricingOptions(): PricingOptions {
     return this.pricingConfig;
+  }
+
+  createTwilioOptions(): TwilioModuleOptions {
+    return this.twilioConfig;
   }
 
   createMongooseOptions(): MongooseModuleOptions {
