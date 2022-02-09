@@ -5,9 +5,10 @@ import {
   TwilioModuleAsyncOptions,
   TwilioOptionsFactory,
 } from 'nestjs-twilio';
+import { MessagingResolver } from './resolvers/messaging.resolver';
 
 @Module({
-  providers: [MessagingService],
+  providers: [MessagingService, MessagingResolver],
   exports: [MessagingService],
 })
 export class MessagingModule {

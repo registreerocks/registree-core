@@ -3,20 +3,21 @@ import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 
 @Injectable()
 export class MessagingService {
-  public constructor(
+  constructor(
     @InjectTwilio()
     private readonly client: TwilioClient,
   ) {}
 
-  async sendSMS(to: string, body: string) {
+  async sendSMS(to: string, body: string): Promise<string> {
     try {
-      await this.client.messages.create({
+      const result = await this.client.messages.create({
         body,
         to,
         from: process.env.TWILIO_PHONE_NUMBER,
       });
-    } catch (e) {
-      throw new InternalServerErrorException(e);
+      return result.sid;
+    } catch (err) {
+      throw new InternalServerErrorException(err);
     }
   }
 }
