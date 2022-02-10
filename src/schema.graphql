@@ -101,6 +101,7 @@ type Degree {
 
 input DegreeInput {
   absolute: Int
+  average: Int
   degreeId: String!
   percentage: Int
 }
