@@ -5,7 +5,7 @@ import { Average } from './average.model';
 
 export const AmountUnion = createUnionType({
   name: 'Amount',
-  types: () => [Absolute, Percentage],
+  types: () => [Absolute, Percentage, Average],
   resolveType(value) {
     // XXX: Return string references instead of type instances, to work around upstream
     //      @nestjs/graphql bug.
@@ -31,5 +31,21 @@ export const getUnionValue = (amount: Percentage | Absolute | Average) => {
       return amount.absolute;
     case 'Average':
       return amount.average;
+  }
+};
+
+export const getDegreeAmountAsUnion = (degree: {
+  absolute?: number;
+  percentage?: number;
+  average?: number;
+}): Absolute | Percentage | Average => {
+  if (degree.absolute) {
+    return { absolute: degree.absolute, amountType: 'Absolute' };
+  } else if (degree.average) {
+    return { average: degree.average, amountType: 'Average' };
+  } else if (degree.percentage) {
+    return { percentage: degree.percentage, amountType: 'Percentage' };
+  } else {
+    return { percentage: 0, amountType: 'Percentage' };
   }
 };

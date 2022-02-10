@@ -21,7 +21,11 @@ type AcademicYearOfStudyLabel {
   label: String!
 }
 
-union Amount = Absolute | Percentage
+union Amount = Absolute | Average | Percentage
+
+type Average {
+  average: Int!
+}
 
 type BillingDetails {
   addressee: String
