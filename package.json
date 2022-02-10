@@ -48,7 +48,6 @@
     "mongoose": "^5.11.15",
     "nestjs-graphql-dataloader": "patch:nestjs-graphql-dataloader@^0.1.28#./add-nestjs-dataloader-types.diff",
     "nestjs-pino": "^1.2.0",
-    "nestjs-twilio": "^2.1.0",
     "passport": "^0.4.1",
     "passport-headerapikey": "^1.2.2",
     "passport-jwt": "^4.0.0",

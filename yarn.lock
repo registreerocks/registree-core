@@ -9785,17 +9785,6 @@ nestjs-graphql-dataloader@^0.1.28:
   languageName: node
   linkType: hard
 
-"nestjs-twilio@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "nestjs-twilio@npm:2.1.0"
-  peerDependencies:
-    "@nestjs/common": ^8.0.0
-    "@nestjs/core": ^8.0.0
-    twilio: ^3.63.1
-  checksum: b2d71246869aac7b8e48615373c339891d5d5e9023be3b39014c1da026242513a1dc0c1632284a480b67ebb8c8136045a508184b8d93df2c0afa6ecb90a3e433
-  languageName: node
-  linkType: hard
-
 "next-tick@npm:~1.0.0":
   version: 1.0.0
   resolution: "next-tick@npm:1.0.0"
@@ -11220,7 +11209,6 @@ nestjs-graphql-dataloader@^0.1.28:
     mongoose: ^5.11.15
     nestjs-graphql-dataloader: "patch:nestjs-graphql-dataloader@^0.1.28#./add-nestjs-dataloader-types.diff"
     nestjs-pino: ^1.2.0
-    nestjs-twilio: ^2.1.0
     passport: ^0.4.1
     passport-headerapikey: ^1.2.2
     passport-jwt: ^4.0.0

@@ -1,16 +1,24 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
+import {
+  Injectable,
+  Inject,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { MESSAGING_OPTIONS } from './messaging.constants';
+import { MessagingOptions } from './messaging.options';
+import { Twilio } from 'twilio';
 
 @Injectable()
 export class MessagingService {
+  private readonly twilioClient: Twilio;
   constructor(
-    @InjectTwilio()
-    private readonly client: TwilioClient,
-  ) {}
+    @Inject(MESSAGING_OPTIONS) private readonly options: MessagingOptions,
+  ) {
+    this.twilioClient = new Twilio(options.accountSid, options.authToken);
+  }
 
   async sendSMS(to: string, body: string): Promise<string> {
     try {
-      const result = await this.client.messages.create({
+      const result = await this.twilioClient.messages.create({
         body,
         to,
         from: process.env.TWILIO_PHONE_NUMBER,

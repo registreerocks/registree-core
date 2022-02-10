@@ -33,7 +33,10 @@ import {
   IdentifyingDataOptions,
   IdentifyingDataOptionsFactory,
 } from 'src/identifying-data/identifying-data.options';
-import { TwilioModuleOptions, TwilioOptionsFactory } from 'nestjs-twilio';
+import {
+  MessagingOptions,
+  MessagingOptionsFactory,
+} from '../messaging/messaging.options';
 
 @Injectable()
 export class AppConfigService
@@ -46,7 +49,7 @@ export class AppConfigService
     Auth0DataOptionsFactory,
     LinkingDataOptionsFactory,
     IdentifyingDataOptionsFactory,
-    TwilioOptionsFactory {
+    MessagingOptionsFactory {
   constructor(
     @Inject(AuthConfig.KEY)
     private readonly authConfig: ConfigType<typeof AuthConfig>,
@@ -121,8 +124,11 @@ export class AppConfigService
     return this.pricingConfig;
   }
 
-  createTwilioOptions(): TwilioModuleOptions {
-    return this.twilioConfig;
+  createMessagingOptions(): MessagingOptions {
+    return {
+      accountSid: this.twilioConfig.accountSid,
+      authToken: this.twilioConfig.authToken,
+    };
   }
 
   createMongooseOptions(): MongooseModuleOptions {

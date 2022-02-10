@@ -1,7 +1,7 @@
 import { Resolver, Mutation } from '@nestjs/graphql';
 import { MessagingService } from '../messaging.service';
 
-@Resolver()
+@Resolver(_of => String)
 export class MessagingResolver {
   constructor(private readonly messagingService: MessagingService) {}
 
