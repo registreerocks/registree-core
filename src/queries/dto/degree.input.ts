@@ -13,7 +13,7 @@ export class DegreeInput {
   @Min(1)
   absolute?: number;
 
-  // TODO: fail if both or no absolute, average and percentage
+  // TODO: fail if all or no absolute, average and percentage
 
   @Field(_type => Int, { nullable: true })
   @ValidateIf(
