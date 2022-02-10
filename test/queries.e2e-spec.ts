@@ -324,7 +324,7 @@ describe('queries (e2e)', () => {
         Object {
           "data": null,
           "errors": Array [
-            [GraphQLError: Amount is smaller than in previous selection],
+            [GraphQLError: Amount is invalid. Amount cannot result in fewer students being queried.],
           ],
           "extensions": undefined,
           "http": Object {
