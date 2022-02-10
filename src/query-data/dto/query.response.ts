@@ -55,4 +55,5 @@ export type DetailsDto = {
   percentage: number;
   university_id: string;
   university_name: string;
+  average: number;
 };
