@@ -214,6 +214,7 @@ type Mutation {
   createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
   deleteAttachments(attachmentIds: [ID!]!, queryId: ID!): EventQuery!
   expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+  sendBulkSMS(message: String!, numbers: [String!]!): String!
   sendSMS(body: String!, to: String!): String!
   setQueryInviteToAttendedAndLink(queryId: ID!): EventQuery!
   setQueryInviteToViewed(queryId: ID!): EventQuery!

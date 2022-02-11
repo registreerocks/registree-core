@@ -20,4 +20,20 @@ export class MessagingResolver {
   ): Promise<string> {
     return this.messagingService.sendSMS(to, body);
   }
+
+  @Mutation(_returns => String)
+  async sendBulkSMS(
+    @Args({
+      name: 'numbers',
+      type: () => [String],
+    })
+    numbers: string[],
+    @Args({
+      name: 'message',
+      type: () => String,
+    })
+    message: string,
+  ): Promise<string> {
+    return this.messagingService.sendBulkSMS(numbers, message);
+  }
 }

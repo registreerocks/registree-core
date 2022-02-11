@@ -9,7 +9,7 @@ import {
 import { MESSAGING_OPTIONS } from './messaging.constants';
 
 @Module({
-  providers: [MessagingService, MessagingResolver],
+  providers: [MessagingResolver, MessagingService],
   exports: [MessagingService],
 })
 export class MessagingModule {
