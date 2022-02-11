@@ -12,6 +12,7 @@ export interface CreateQueryRequest extends JsonObject {
 type QueryDetails = {
   absolute?: number;
   percentage?: number;
+  average?: number;
   degree_id: string;
   degree_name: string;
 };

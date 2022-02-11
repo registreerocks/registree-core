@@ -14,6 +14,8 @@ describe('DegreeInput', () => {
        - property degreeId has failed the following constraints: isString 
       An instance of DegreeInput has failed the validation:
        - property absolute has failed the following constraints: isDefined, min 
+      An instance of DegreeInput has failed the validation:
+       - property average has failed the following constraints: isDefined, max, min 
       "
     `);
   });

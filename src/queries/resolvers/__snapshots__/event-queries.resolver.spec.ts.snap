@@ -116,7 +116,7 @@ type DegreeSelection {
   degree: Degree!
 }
 
-union Amount = Absolute | Percentage
+union Amount = Absolute | Percentage | Average
 
 type Absolute {
   absolute: Int!
@@ -124,6 +124,10 @@ type Absolute {
 
 type Percentage {
   percentage: Int!
+}
+
+type Average {
+  average: Int!
 }
 
 type PageInfo {
@@ -235,6 +239,7 @@ input DegreeInput {
   degreeId: String!
   absolute: Int
   percentage: Int
+  average: Int
 }
 
 \\"\\"\\"The \`Upload\` scalar type represents a file upload.\\"\\"\\"

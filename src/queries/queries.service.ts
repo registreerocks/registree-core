@@ -20,7 +20,7 @@ import { DegreeSelection } from './models/degree-selection.model';
 import _ from 'lodash';
 import { Percentage } from 'src/common/percentage.model';
 import { Absolute } from 'src/common/absolute.model';
-import { getUnionValue } from 'src/common/amount.union';
+import { getUnionValue, getDegreeAmountAsUnion } from 'src/common/amount.union';
 import { IdentifyingDataService } from 'src/identifying-data/identifying-data.service';
 import { LinkingDataService } from 'src/linking-data/linking-data.service';
 import { UniversitiesService } from 'src/universities/universities.service';
@@ -31,6 +31,8 @@ import { CustomersService } from 'src/customers/customers.service';
 import { UpdateStudentLink } from 'src/query-data/dto/update-student-link.request';
 import { UserInputError } from 'apollo-server-express';
 import { EventQueryResponse } from 'src/query-data/dto/event-query.response';
+import { Average } from 'src/common/average.model';
+import assert from 'assert';
 
 @Injectable()
 export class QueriesService {
@@ -252,6 +254,7 @@ export class QueriesService {
       degree_id: d.degreeId,
       absolute: d.absolute,
       percentage: d.percentage,
+      average: d.average,
       degree_name: degrees.find(deg => deg.id === d.degreeId)?.name || '',
     })),
   });
@@ -279,6 +282,7 @@ export class QueriesService {
         degree_id: d.degreeId,
         absolute: d.absolute,
         percentage: d.percentage,
+        average: d.average,
         degree_name: degrees.find(deg => deg.id === d.degreeId)?.name || '',
       })),
     },
@@ -309,9 +313,7 @@ export class QueriesService {
       .map(
         (d): Omit<MergedSelection, 'prevParams'> => ({
           id: d.degreeId,
-          newParams: d.absolute
-            ? { absolute: d.absolute, amountType: 'Absolute' }
-            : { percentage: d.percentage || 0, amountType: 'Percentage' },
+          newParams: getDegreeAmountAsUnion(d),
         }),
       )
       .keyBy(d => d.id)
@@ -337,13 +339,31 @@ export class QueriesService {
     );
     if (!amountTypesMatch) throw new ValidationError('Amount type changed.');
 
-    const newAmountGtePrevAmount = _.every(mergedQueryParameters, s =>
+    const updateAmountsValid = _.every(mergedQueryParameters, s =>
       s.prevParams
-        ? getUnionValue(s.newParams) >= getUnionValue(s.prevParams)
+        ? this.validUpdateAmountValues(s.newParams, s.prevParams)
         : true,
     );
-    if (!newAmountGtePrevAmount)
-      throw new ValidationError('Amount is smaller than in previous selection');
+    if (!updateAmountsValid)
+      throw new ValidationError(
+        'Amount is invalid. Amount cannot result in fewer students being queried.',
+      );
+  }
+
+  private validUpdateAmountValues(
+    newParams: Absolute | Percentage | Average,
+    prevParams: Absolute | Percentage | Average,
+  ) {
+    assert(newParams.amountType == prevParams.amountType);
+    if (
+      newParams.amountType == 'Absolute' ||
+      newParams.amountType == 'Percentage'
+    ) {
+      return getUnionValue(newParams) >= getUnionValue(prevParams);
+    } else {
+      // For Average queries the new cut-off should be lower than the previous cut-off
+      return getUnionValue(newParams) <= getUnionValue(prevParams);
+    }
   }
 
   private async retrieveQueryParameters(queryId: string) {
@@ -389,6 +409,6 @@ export class QueriesService {
 
 type MergedSelection = {
   id: string;
-  newParams: Percentage | Absolute;
-  prevParams: Percentage | Absolute;
+  newParams: Percentage | Absolute | Average;
+  prevParams: Percentage | Absolute | Average;
 };
