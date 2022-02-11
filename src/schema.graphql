@@ -64,10 +64,12 @@ input CreateEventQueryInput {
   degrees: [DegreeInput!]!
   endDate: DateTime!
   eventType: String!
+  gender: [String!]
   information: String!
   message: String
   name: String!
   password: String
+  race: [String!]
   startDate: DateTime!
 }
 
@@ -242,7 +244,9 @@ type Query {
 type QueryDetails {
   academicYearOfStudyList: [AcademicYearOfStudy!]!
   faculties: [Faculty!]!
+  gender: [String!]!
   parameters: [DegreeSelection!]!
+  race: [String!]!
   results(after: String, before: String, filter: QueryTranscriptFilter, first: Int, last: Int): QueryTranscriptConnection!
   updatedAt: DateTime!
 }

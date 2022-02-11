@@ -52,6 +52,16 @@ export class CreateEventQueryInput {
   @ArrayUnique()
   academicYearOfStudyList!: AcademicYearOfStudy[];
 
+  @Field(_type => [String], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  race?: string[];
+
+  @Field(_type => [String], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  gender?: string[];
+
   // TODO: Enum or | type
   @Field()
   @MinLength(1)

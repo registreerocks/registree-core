@@ -13,6 +13,8 @@ type QueryDetails = {
   absolute?: number;
   percentage?: number;
   average?: number;
+  race?: string[];
+  gender?: string[];
   degree_id: string;
   degree_name: string;
 };

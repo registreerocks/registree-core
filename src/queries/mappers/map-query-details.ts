@@ -18,4 +18,8 @@ export const mapQueryDetails = ({
   academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
   rawResults: mapRawResults(results, responses),
   updatedAt: new Date(timestamp),
+  // The race and gender parameters is the same across all degrees. The reason it is part of the query parameters
+  // is because of how the query-db-api is structured
+  race: details[0].race || [],
+  gender: details[0].gender || [],
 });
