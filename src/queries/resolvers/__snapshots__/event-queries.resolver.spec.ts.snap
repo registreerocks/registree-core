@@ -175,6 +175,8 @@ type QueryDetails {
   faculties: [Faculty!]!
   results: [QueryTranscriptConnection!]!
   updatedAt: DateTime!
+  race: [String!]!
+  gender: [String!]!
 }
 
 \\"\\"\\"The academic year of study a student is in.\\"\\"\\"
@@ -230,6 +232,8 @@ input CreateEventQueryInput {
   message: String
   degrees: [DegreeInput!]!
   academicYearOfStudyList: [AcademicYearOfStudy!]!
+  race: [String!]
+  gender: [String!]
   eventType: String!
   attachments: [Upload!]
   password: String
