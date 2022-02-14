@@ -66,6 +66,8 @@ async function withScenario(
       academicYearOfStudyList: [],
       rawResults: [],
       updatedAt: new Date(),
+      race: [],
+      gender: [],
     },
   };
   const mockQueriesService: Partial<QueriesService> = {

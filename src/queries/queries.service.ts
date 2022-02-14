@@ -282,6 +282,8 @@ export class QueriesService {
         degree_id: d.degreeId,
         absolute: d.absolute,
         percentage: d.percentage,
+        race: input.race,
+        gender: input.gender,
         average: d.average,
         degree_name: degrees.find(deg => deg.id === d.degreeId)?.name || '',
       })),

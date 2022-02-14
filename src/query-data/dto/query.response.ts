@@ -56,4 +56,6 @@ export type DetailsDto = {
   university_id: string;
   university_name: string;
   average: number;
+  race: string[];
+  gender: string[];
 };

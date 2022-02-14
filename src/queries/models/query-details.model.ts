@@ -23,4 +23,10 @@ export class QueryDetails {
 
   @Field()
   updatedAt!: Date;
+
+  @Field(_type => [String])
+  race!: string[];
+
+  @Field(_type => [String])
+  gender!: string[];
 }
