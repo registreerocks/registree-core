@@ -7,11 +7,11 @@ export interface UpdateUserResponse extends JsonObject {
   verify_email?: boolean;
   name?: string;
   app_metadata: Metadata;
-  calendlyLink?: string;
 }
 
 type Metadata = {
   roles: string[];
   db_id: string;
   privacyPolicy?: string;
+  calendlyLink?: string;
 };
