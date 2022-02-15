@@ -159,6 +159,16 @@ type EventQueryEdge {
   node: EventQuery!
 }
 
+type EventSummary {
+  acceptedCount: Int!
+  attendedCount: Int!
+  eventId: ID!
+  eventName: String!
+  invitedCount: Int!
+  respondedCount: Int!
+  viewedCount: Int!
+}
+
 input ExpandEventQueryInput {
   academicYearOfStudyList: [AcademicYearOfStudy!]!
   degrees: [DegreeInput!]!
@@ -233,6 +243,7 @@ type Query {
   getContact: Contact!
   getCustomer(customerId: ID!): Customer!
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
+  getEventSummaries(customerId: ID!): [EventSummary!]!
   getFaculty(facultyId: ID!): Faculty!
   getQueries(after: String, before: String, customerId: ID!, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!

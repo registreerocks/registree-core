@@ -33,6 +33,8 @@ import { UserInputError } from 'apollo-server-express';
 import { EventQueryResponse } from 'src/query-data/dto/event-query.response';
 import { Average } from 'src/common/average.model';
 import assert from 'assert';
+import { EventSummary } from './models/event-summary.model';
+import { mapEventSummary } from './mappers/map-event-summary';
 
 @Injectable()
 export class QueriesService {
@@ -50,6 +52,12 @@ export class QueriesService {
     const response = await this.queryDataService.getCustomerQueries(customerId);
     const mappedResponse = response.map(mapEventQuery);
     return orderBy(mappedResponse, [r => r.eventDetails.startDate], ['desc']);
+  }
+
+  async getEventSummaries(customerId: string): Promise<EventSummary[]> {
+    const response = await this.queryDataService.getCustomerQueries(customerId);
+    const mappedResponse = response.map(mapEventSummary);
+    return mappedResponse;
   }
 
   async getStudentQueries(studentNumber: string): Promise<EventQuery[]> {
