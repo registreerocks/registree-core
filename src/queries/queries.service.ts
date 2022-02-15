@@ -116,9 +116,8 @@ export class QueriesService {
       this.createQueryRequestMapper(input, customerId, attachments, degrees),
     );
 
-    const numbers = await this.queryDataService.getNumbers(queryId);
-
     if (input.smsMessage != null) {
+      const numbers = await this.queryDataService.getNumbers(queryId);
       await this.messagingService.sendBulkSMS(numbers, input.smsMessage);
     }
 
