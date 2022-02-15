@@ -1,6 +1,5 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { MessagingService } from './messaging.service';
-import { MessagingResolver } from './resolvers/messaging.resolver';
 import {
   MessagingAsyncOptions,
   MessagingOptions,
@@ -9,7 +8,7 @@ import {
 import { MESSAGING_OPTIONS } from './messaging.constants';
 
 @Module({
-  providers: [MessagingResolver, MessagingService],
+  providers: [MessagingService],
   exports: [MessagingService],
 })
 export class MessagingModule {

@@ -177,7 +177,6 @@ type QueryDetails {
   updatedAt: DateTime!
   race: [String!]!
   gender: [String!]!
-  smsMessage: String!
 }
 
 \\"\\"\\"The academic year of study a student is in.\\"\\"\\"

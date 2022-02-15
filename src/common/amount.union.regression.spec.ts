@@ -68,7 +68,6 @@ async function withScenario(
       updatedAt: new Date(),
       race: [],
       gender: [],
-      smsMessage: '',
     },
   };
   const mockQueriesService: Partial<QueriesService> = {
