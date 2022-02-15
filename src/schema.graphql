@@ -71,6 +71,7 @@ input CreateEventQueryInput {
   name: String!
   password: String
   race: [String!]
+  smsMessage: String
   startDate: DateTime!
 }
 
@@ -262,6 +263,7 @@ type QueryDetails {
   parameters: [DegreeSelection!]!
   race: [String!]!
   results(after: String, before: String, filter: QueryTranscriptFilter, first: Int, last: Int): QueryTranscriptConnection!
+  smsMessage: String!
   updatedAt: DateTime!
 }
 

@@ -293,6 +293,7 @@ export class QueriesService {
         race: input.race,
         gender: input.gender,
         average: d.average,
+        smsMessage: input.smsMessage,
         degree_name: degrees.find(deg => deg.id === d.degreeId)?.name || '',
       })),
     },

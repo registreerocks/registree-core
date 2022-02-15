@@ -29,4 +29,7 @@ export class QueryDetails {
 
   @Field(_type => [String])
   gender!: string[];
+
+  @Field()
+  smsMessage!: string;
 }

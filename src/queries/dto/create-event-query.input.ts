@@ -37,8 +37,8 @@ export class CreateEventQueryInput {
   information!: string;
 
   @Field({ nullable: true })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   message?: string;
 
   @Field(_type => [DegreeInput])
@@ -61,6 +61,11 @@ export class CreateEventQueryInput {
   @IsArray()
   @IsOptional()
   gender?: string[];
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  smsMessage?: string;
 
   // TODO: Enum or | type
   @Field()

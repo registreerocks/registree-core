@@ -15,6 +15,7 @@ type QueryDetails = {
   average?: number;
   race?: string[];
   gender?: string[];
+  smsMessage?: string;
   degree_id: string;
   degree_name: string;
 };

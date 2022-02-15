@@ -22,4 +22,5 @@ export const mapQueryDetails = ({
   // is because of how the query-db-api is structured
   race: (details[0] && details[0].race) || [],
   gender: (details[0] && details[0].gender) || [],
+  smsMessage: (details[0] && details[0].smsMessage) || '',
 });
