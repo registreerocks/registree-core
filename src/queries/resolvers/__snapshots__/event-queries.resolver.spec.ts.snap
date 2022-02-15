@@ -216,9 +216,20 @@ type EventQueryConnection {
   totalCount: Int!
 }
 
+type EventSummary {
+  eventId: ID!
+  eventName: String!
+  invitedCount: Int!
+  acceptedCount: Int!
+  attendedCount: Int!
+  respondedCount: Int!
+  viewedCount: Int!
+}
+
 type Query {
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
   getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getEventSummaries(customerId: ID!): [EventSummary!]!
   getStudentQueries(filter: StudentQueryFilter, after: String, before: String, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
 }
