@@ -21,6 +21,8 @@ import { QueryTranscriptResolver } from './resolvers/query-transcript.resolver';
 import { UniversitiesModule } from 'src/universities/universities.module';
 import { DegreeSelectionResolver } from './resolvers/degree-selection.resolver';
 import { InvitationResolver } from './resolvers/invitation.resolver';
+import { MessagingAsyncOptions } from '../messaging/messaging.options';
+import { MessagingModule } from '../messaging/messaging.module';
 
 @Module({
   imports: [UniversitiesModule],
@@ -42,7 +44,8 @@ export class QueriesModule {
       PricingAsyncOptions &
       Auth0DataAsyncOptions &
       IdentifyingDataAsyncOptions &
-      LinkingDataAsyncOptions,
+      LinkingDataAsyncOptions &
+      MessagingAsyncOptions,
   ): DynamicModule {
     return {
       module: QueriesModule,
@@ -54,6 +57,7 @@ export class QueriesModule {
         CustomersModule.forRootAsync(options),
         IdentifyingDataModule.forRootAsync(options),
         LinkingDataModule.forRootAsync(options),
+        MessagingModule.forRootAsync(options),
       ],
     };
   }

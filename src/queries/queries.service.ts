@@ -35,6 +35,7 @@ import { Average } from 'src/common/average.model';
 import assert from 'assert';
 import { EventSummary } from './models/event-summary.model';
 import { mapEventSummary } from './mappers/map-event-summary';
+import { MessagingService } from '../messaging/messaging.service';
 
 @Injectable()
 export class QueriesService {
@@ -46,6 +47,7 @@ export class QueriesService {
     private readonly linkingDataService: LinkingDataService,
     private readonly universitiesService: UniversitiesService,
     private readonly customersService: CustomersService,
+    private readonly messagingService: MessagingService,
   ) {}
 
   async getCustomerQueries(customerId: string): Promise<EventQuery[]> {
@@ -113,6 +115,12 @@ export class QueriesService {
     const queryId = await this.queryDataService.createQuery(
       this.createQueryRequestMapper(input, customerId, attachments, degrees),
     );
+
+    const numbers = await this.queryDataService.getNumbers(queryId);
+
+    if (input.smsMessage != null) {
+      await this.messagingService.sendBulkSMS(numbers, input.smsMessage);
+    }
 
     const response = await this.queryDataService.getQuery(queryId);
     return mapEventQuery(response);
