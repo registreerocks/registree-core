@@ -95,7 +95,10 @@ export class Auth0DataService {
       );
       return result.data;
     } catch (err) {
-      throw new ServerError('Failed to get Auth0 users with query', err);
+      throw new ServerError(
+        'Failed to get Auth0 users with calendly query',
+        err,
+      );
     }
   }
 
