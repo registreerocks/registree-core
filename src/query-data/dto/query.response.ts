@@ -58,5 +58,4 @@ export type DetailsDto = {
   average: number;
   race: string[];
   gender: string[];
-  smsMessage: string;
 };
