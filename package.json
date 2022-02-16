@@ -57,7 +57,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
     "src": "link:src",
-    "transliteration": "^2.1.11"
+    "transliteration": "^2.1.11",
+    "twilio": "^3.73.1"
   },
   "devDependencies": {
     "@apollo/gateway": "0.17.0",

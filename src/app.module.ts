@@ -27,6 +27,7 @@ import { ErrorContextInterceptor } from './common/error-context.interceptor';
 import { StudentLinkingModule } from './student-linking/student-linking.module';
 import { HealthController } from './health/health.controller';
 import { TerminusModule } from '@nestjs/terminus';
+import { MessagingModule } from './messaging/messaging.module';
 
 @Module({
   imports: [
@@ -98,6 +99,9 @@ import { TerminusModule } from '@nestjs/terminus';
       useExisting: AppConfigService,
     }),
     TerminusModule,
+    MessagingModule.forRootAsync({
+      useExisting: AppConfigService,
+    }),
   ],
   controllers: [AppController, HealthController],
   providers: [

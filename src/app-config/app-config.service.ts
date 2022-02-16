@@ -11,6 +11,7 @@ import { UploadOptionsFactory, UploadOptions } from 'src/upload/upload.options';
 import { StorageConfig } from './config/storage.config';
 import { AuthOptionsFactory, AuthOptions } from 'src/auth/auth.options';
 import { PricingConfig } from './config/pricing.config';
+import { TwilioConfig } from './config/twilio.config';
 import {
   PricingOptionsFactory,
   PricingOptions,
@@ -32,6 +33,10 @@ import {
   IdentifyingDataOptions,
   IdentifyingDataOptionsFactory,
 } from 'src/identifying-data/identifying-data.options';
+import {
+  MessagingOptions,
+  MessagingOptionsFactory,
+} from '../messaging/messaging.options';
 
 @Injectable()
 export class AppConfigService
@@ -43,7 +48,8 @@ export class AppConfigService
     MongooseOptionsFactory,
     Auth0DataOptionsFactory,
     LinkingDataOptionsFactory,
-    IdentifyingDataOptionsFactory {
+    IdentifyingDataOptionsFactory,
+    MessagingOptionsFactory {
   constructor(
     @Inject(AuthConfig.KEY)
     private readonly authConfig: ConfigType<typeof AuthConfig>,
@@ -59,6 +65,9 @@ export class AppConfigService
 
     @Inject(PricingConfig.KEY)
     private readonly pricingConfig: ConfigType<typeof PricingConfig>,
+
+    @Inject(TwilioConfig.KEY)
+    private readonly twilioConfig: ConfigType<typeof TwilioConfig>,
   ) {}
 
   createAuthOptions(): AuthOptions {
@@ -113,6 +122,13 @@ export class AppConfigService
 
   createPricingOptions(): PricingOptions {
     return this.pricingConfig;
+  }
+
+  createMessagingOptions(): MessagingOptions {
+    return {
+      accountSid: this.twilioConfig.accountSid,
+      authToken: this.twilioConfig.authToken,
+    };
   }
 
   createMongooseOptions(): MongooseModuleOptions {

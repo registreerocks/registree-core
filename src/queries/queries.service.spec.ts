@@ -7,6 +7,7 @@ import { IdentifyingDataService } from 'src/identifying-data/identifying-data.se
 import { LinkingDataService } from 'src/linking-data/linking-data.service';
 import { UniversitiesService } from 'src/universities/universities.service';
 import { CustomersService } from 'src/customers/customers.service';
+import { MessagingService } from '../messaging/messaging.service';
 
 describe('QueriesService', () => {
   let service: QueriesService;
@@ -41,6 +42,10 @@ describe('QueriesService', () => {
         },
         {
           provide: CustomersService,
+          useValue: {},
+        },
+        {
+          provide: MessagingService,
           useValue: {},
         },
       ],

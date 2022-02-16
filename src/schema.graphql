@@ -71,6 +71,7 @@ input CreateEventQueryInput {
   name: String!
   password: String
   race: [String!]
+  smsMessage: String
   startDate: DateTime!
 }
 
