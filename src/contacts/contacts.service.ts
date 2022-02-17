@@ -36,6 +36,11 @@ export class ContactsService {
     return mapContact(user);
   }
 
+  async getCalendlyContacts(): Promise<Contact[]> {
+    const contacts = await this.auth0DataService.getCalendlyUsers();
+    return contacts.map(mapContact);
+  }
+
   async updateContact(
     userId: string,
     input: UpdateContactInput,

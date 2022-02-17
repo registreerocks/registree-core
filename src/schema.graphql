@@ -241,6 +241,7 @@ type Query {
 
   """Get academic years of study to display."""
   getAcademicYearOfStudyLabels: [AcademicYearOfStudyLabel!]!
+  getCalendlyContacts: [Contact!]!
   getContact: Contact!
   getCustomer(customerId: ID!): Customer!
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!

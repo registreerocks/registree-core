@@ -81,6 +81,27 @@ export class Auth0DataService {
     }
   }
 
+  async getCalendlyUsers(): Promise<GetUserResponse[]> {
+    const accessToken = await this.authService.getManagementToken();
+    const searchQuery = `app_metadata.calendlyLink:* AND identities.connection:${this.options.connection}`;
+    try {
+      const result = await this.axiosInstance.get<GetUserResponse[]>(
+        `/users?q=${searchQuery}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return result.data;
+    } catch (err) {
+      throw new ServerError(
+        'Failed to get Auth0 users with calendly query',
+        err,
+      );
+    }
+  }
+
   async updateUser(
     userId: string,
     request: UpdateUserRequest,
