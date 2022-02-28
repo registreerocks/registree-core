@@ -79,4 +79,8 @@ export class CreateEventQueryInput {
   @IsOptional()
   @IsString()
   password?: string;
+
+  @Field()
+  @MinLength(1)
+  eventPlatform!: string;
 }

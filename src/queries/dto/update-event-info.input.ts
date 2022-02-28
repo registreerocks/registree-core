@@ -26,4 +26,7 @@ export class UpdateEventInfoInput {
 
   @Field({ nullable: true })
   password?: string;
+
+  @Field({ nullable: true })
+  eventPlatform?: string;
 }

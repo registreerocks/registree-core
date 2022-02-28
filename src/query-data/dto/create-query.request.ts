@@ -30,5 +30,6 @@ type Event = {
   name: string;
   start_date: string;
   type: string;
+  eventPlatform: string;
   password?: string;
 };
