@@ -26,6 +26,7 @@ export function arbitraryCreateEventQueryInput(): fc.Arbitrary<
         eventType: fc.string({ minLength: 1 }),
         // TODO: attachments?
         password: fc.string(),
+        eventPlatform: fc.string({ minLength: 1 }),
       },
       {
         requiredKeys: [
@@ -37,6 +38,7 @@ export function arbitraryCreateEventQueryInput(): fc.Arbitrary<
           'degrees',
           'academicYearOfStudyList',
           'eventType',
+          'eventPlatform',
         ],
       },
     )
@@ -79,6 +81,7 @@ export function arbitraryInvalidCreateEventQueryInput(): fc.Arbitrary<
     eventType: notFullString,
     // TODO: attachments?
     password: notOptionalString,
+    eventPlatform: notFullString,
   };
   // First, try individual invalid fields, then combinations of them.
   const invalidRecords = fc.oneof(
