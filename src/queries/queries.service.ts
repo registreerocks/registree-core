@@ -290,6 +290,7 @@ export class QueriesService {
       name: input.name,
       start_date: format(input.startDate, appConstants.dateFormat),
       type: input.eventType,
+      eventPlatform: input.eventPlatform,
       password: input.password,
     },
     query: {
@@ -321,6 +322,7 @@ export class QueriesService {
       ? format(input.startDate, appConstants.dateFormat)
       : undefined,
     type: input.eventType,
+    eventPlatform: input.eventPlatform,
   });
 
   private checkInputQueryParameters(
