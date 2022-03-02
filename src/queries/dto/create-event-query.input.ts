@@ -72,6 +72,10 @@ export class CreateEventQueryInput {
   @MinLength(1)
   eventType!: string;
 
+  @Field()
+  @MinLength(1)
+  eventPlatform!: string;
+
   @Field(_type => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[];
 
