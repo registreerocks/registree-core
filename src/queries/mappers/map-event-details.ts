@@ -15,6 +15,7 @@ export const mapEventDetails = (
     ? eventResponse.attachments.map(a => ({ ...a, url: a.id }))
     : [],
   eventType: eventResponse.type,
+  eventPlatform: eventResponse.eventPlatform,
   information: eventResponse.info,
   name: eventResponse.name,
   invites: Object.entries(queryResponse.responses).map(mapInvitation),

@@ -11,4 +11,5 @@ export interface UpdateEventRequest extends JsonObject {
   start_date?: string;
   type?: string;
   password?: string;
+  eventPlatform?: string;
 }
