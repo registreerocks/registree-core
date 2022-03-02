@@ -106,6 +106,7 @@ type EventDetails {
   message: String
   name: String!
   eventType: String!
+  eventPlatform: String!
   invites: [Invitation!]!
   metrics: EventMetrics!
   password: String
@@ -247,6 +248,7 @@ input CreateEventQueryInput {
   gender: [String!]
   smsMessage: String
   eventType: String!
+  eventPlatform: String!
   attachments: [Upload!]
   password: String
 }

@@ -43,6 +43,7 @@ describe('queries (e2e)', () => {
       degrees: [],
       academicYearOfStudyList: [],
       eventType: 'dummy eventType',
+      eventPlatform: 'dummy eventPlatform',
     };
 
     const result: ExecutionResult<{ quote: Quote }> = await ctx.client.query({
@@ -110,6 +111,7 @@ describe('queries (e2e)', () => {
         degrees: [],
         academicYearOfStudyList: [],
         eventType: 'dummy eventType',
+        eventPlatform: 'dummy eventPlatform',
       };
 
       const result = await ctx.client.mutate<

@@ -26,6 +26,8 @@ describe('CreateEventQueryInput', () => {
        - property academicYearOfStudyList has failed the following constraints: arrayUnique, isEnum 
       An instance of CreateEventQueryInput has failed the validation:
        - property eventType has failed the following constraints: minLength 
+      An instance of CreateEventQueryInput has failed the validation:
+       - property eventPlatform has failed the following constraints: minLength 
       "
     `);
   });

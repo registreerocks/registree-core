@@ -24,6 +24,7 @@ export function arbitraryCreateEventQueryInput(): fc.Arbitrary<
         degrees: fc.array(arbitraryDegreeInput()),
         academicYearOfStudyList: fc.shuffledSubarray(academicYearOfStudyValues),
         eventType: fc.string({ minLength: 1 }),
+        eventPlatform: fc.string({ minLength: 1 }),
         // TODO: attachments?
         password: fc.string(),
       },
@@ -37,6 +38,7 @@ export function arbitraryCreateEventQueryInput(): fc.Arbitrary<
           'degrees',
           'academicYearOfStudyList',
           'eventType',
+          'eventPlatform',
         ],
       },
     )
@@ -77,6 +79,7 @@ export function arbitraryInvalidCreateEventQueryInput(): fc.Arbitrary<
     degrees: notDegrees,
     academicYearOfStudyList: notAcademicYearOfStudyList,
     eventType: notFullString,
+    eventPlatform: notFullString,
     // TODO: attachments?
     password: notOptionalString,
   };
