@@ -251,6 +251,7 @@ input CreateEventQueryInput {
   eventPlatform: String!
   attachments: [Upload!]
   password: String
+  eventPlatform: String!
 }
 
 input DegreeInput {
