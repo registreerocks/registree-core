@@ -2841,10 +2841,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/validator@npm:^13.1.3":
-  version: 13.1.3
-  resolution: "@types/validator@npm:13.1.3"
-  checksum: 3ffecee869a8bfef7e9cda47bc37e7e074c2b1e1ab90dfabf345ee7e15818bd3272b575afe490b096b597d22c3a7a4ce0d3708d59cadd368f63f443cdb13c66d
+"@types/validator@npm:^13.7.10":
+  version: 13.7.10
+  resolution: "@types/validator@npm:13.7.10"
+  checksum: 7b142c08019f484d62c9f3074231f640c24311558f157dd253a60810dd0cb29e41ec64ca210a192b54f6de51f4fe016bfeb2c30f90fa49c9337ed54a9d8e02aa
   languageName: node
   linkType: hard
 
@@ -4675,14 +4675,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"class-validator@npm:^0.13.1":
-  version: 0.13.1
-  resolution: "class-validator@npm:0.13.1"
+"class-validator@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "class-validator@npm:0.14.0"
   dependencies:
-    "@types/validator": ^13.1.3
-    libphonenumber-js: ^1.9.7
-    validator: ^13.5.2
-  checksum: 1d77f869792e83baef67d18220baf1e1a413a43efbd454ed359e0da691462e6d7d869e73de3ce5bb4a67206084338e5e4323e9e54dd8bc967c6fadb4e9ac44c2
+    "@types/validator": ^13.7.10
+    libphonenumber-js: ^1.10.14
+    validator: ^13.7.0
+  checksum: f62e4a0ad24cee68f4b2bc70d32b96de90cb598f96bde362b4dbf4234151af8eb6ae225458312a38fc49fa3959844cf61c60e731a8205e9a570454cff8de2710
   languageName: node
   linkType: hard
 
@@ -8828,10 +8828,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"libphonenumber-js@npm:^1.9.7":
-  version: 1.9.10
-  resolution: "libphonenumber-js@npm:1.9.10"
-  checksum: d3d564a410dae911794a669bbe134651dc450e2e896c50394db63bfc950926d0a52893556513772bcd95871fc927096fa11a08e98c281fa6e3d52bf578a2c2a6
+"libphonenumber-js@npm:^1.10.14":
+  version: 1.10.18
+  resolution: "libphonenumber-js@npm:1.10.18"
+  checksum: df0a4b8adfb79666636913f6da730ffc3bc037094e35be492d2f7a23ef26754d65a7afa5f64e04f5c5c2883193fa10bd4bea966fd28edcf0c72ddd13bd4b3625
   languageName: node
   linkType: hard
 
@@ -11186,7 +11186,7 @@ nestjs-graphql-dataloader@^0.1.28:
     aws-sdk: ^2.770.0
     axios: ^0.21.1
     class-transformer: ^0.4.0
-    class-validator: ^0.13.1
+    class-validator: ^0.14.0
     dataloader: ^2.0.0
     date-fns: ^2.16.1
     dotenv: ^10.0.0
@@ -13408,7 +13408,7 @@ typescript@^3.9.7:
   languageName: node
   linkType: hard
 
-"validator@npm:^13.5.2":
+"validator@npm:^13.7.0":
   version: 13.7.0
   resolution: "validator@npm:13.7.0"
   checksum: 2b83283de1222ca549a7ef57f46e8d49c6669213348db78b7045bce36a3b5843ff1e9f709ebf74574e06223461ee1f264f8cc9a26a0060a79a27de079d8286ef
