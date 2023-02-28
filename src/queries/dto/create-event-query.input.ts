@@ -1,9 +1,12 @@
 import { InputType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import { AcademicYearOfStudy } from '../models/academic-year-of-study.model';
 import { DegreeInput } from './degree.input';
 import {
+  ArrayUnique,
   IsArray,
   IsDate,
+  IsEnum,
   IsOptional,
   IsString,
   MinLength,
@@ -34,8 +37,8 @@ export class CreateEventQueryInput {
   information!: string;
 
   @Field({ nullable: true })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   message?: string;
 
   @Field(_type => [DegreeInput])
@@ -44,10 +47,34 @@ export class CreateEventQueryInput {
   @Type(_of => DegreeInput)
   degrees!: DegreeInput[];
 
+  @Field(_type => [AcademicYearOfStudy])
+  @IsEnum(AcademicYearOfStudy, { each: true })
+  @ArrayUnique()
+  academicYearOfStudyList!: AcademicYearOfStudy[];
+
+  @Field(_type => [String], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  race?: string[];
+
+  @Field(_type => [String], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  gender?: string[];
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  smsMessage?: string;
+
   // TODO: Enum or | type
   @Field()
   @MinLength(1)
   eventType!: string;
+
+  @Field()
+  @MinLength(1)
+  eventPlatform!: string;
 
   @Field(_type => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[];

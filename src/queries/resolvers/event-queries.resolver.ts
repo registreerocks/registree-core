@@ -27,6 +27,7 @@ import { Loader } from 'nestjs-graphql-dataloader';
 import DataLoader from 'dataloader';
 import { ServerError } from 'src/common/errors/server.error';
 import { paginateArray } from 'src/common/pagination/paginate-array';
+import { EventSummary } from '../models/event-summary.model';
 
 @Resolver(_of => EventQuery)
 export class EventQueriesResolver {
@@ -77,6 +78,13 @@ export class EventQueriesResolver {
       ...paginatedQueries,
       totalCount: queries.length,
     };
+  }
+
+  @Query(_returns => [EventSummary])
+  async getEventSummaries(
+    @Args({ name: 'customerId', type: () => ID }) customerId: string,
+  ): Promise<EventSummary[]> {
+    return this.queriesService.getEventSummaries(customerId);
   }
 
   @Query(_returns => EventQueryConnection)

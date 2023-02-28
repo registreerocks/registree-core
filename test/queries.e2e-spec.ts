@@ -5,6 +5,7 @@ import { assertDefined } from '../src/common/helpers';
 import { Quote } from '../src/pricing/models/quote.model';
 import { CreateEventQueryInput } from '../src/queries/dto/create-event-query.input';
 import { ExpandEventQueryInput } from '../src/queries/dto/expand-event-query.input';
+import { AcademicYearOfStudy } from '../src/queries/models/academic-year-of-study.model';
 import { EventQuery } from '../src/queries/models/event-query.model';
 import { Degree } from '../src/universities/models/degree.model';
 import {
@@ -40,7 +41,9 @@ describe('queries (e2e)', () => {
       endDate: new Date(2020, 2, 20, 16),
       information: 'dummy information',
       degrees: [],
+      academicYearOfStudyList: [],
       eventType: 'dummy eventType',
+      eventPlatform: 'dummy eventPlatform',
     };
 
     const result: ExecutionResult<{ quote: Quote }> = await ctx.client.query({
@@ -106,7 +109,9 @@ describe('queries (e2e)', () => {
         endDate: new Date(2020, 2, 20, 16),
         information: 'dummy information',
         degrees: [],
+        academicYearOfStudyList: [],
         eventType: 'dummy eventType',
+        eventPlatform: 'dummy eventPlatform',
       };
 
       const result = await ctx.client.mutate<
@@ -122,7 +127,10 @@ describe('queries (e2e)', () => {
 
     async function runExpandQuery(
       queryId: string,
-      queryInput: ExpandEventQueryInput = { degrees: [] },
+      queryInput: ExpandEventQueryInput = {
+        degrees: [],
+        academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
+      },
     ) {
       const expandQueryMutation = gql`
         mutation($queryInput: ExpandEventQueryInput!, $queryId: ID!) {
@@ -144,6 +152,7 @@ describe('queries (e2e)', () => {
                   description
                 }
               }
+              academicYearOfStudyList
             }
           }
         }
@@ -184,6 +193,9 @@ describe('queries (e2e)', () => {
           "data": Object {
             "expandQuery": Object {
               "queryDetails": Object {
+                "academicYearOfStudyList": Array [
+                  "YEAR_1",
+                ],
                 "parameters": Array [],
               },
             },
@@ -211,12 +223,16 @@ describe('queries (e2e)', () => {
             { degreeId: degrees[0].id, absolute: 10 },
             { degreeId: degrees[1].id, percentage: 5 },
           ],
+          academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
         }),
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
             "expandQuery": Object {
               "queryDetails": Object {
+                "academicYearOfStudyList": Array [
+                  "YEAR_1",
+                ],
                 "parameters": Array [
                   Object {
                     "amount": Object {
@@ -265,12 +281,16 @@ describe('queries (e2e)', () => {
       expect(
         await runExpandQuery(queryId, {
           degrees: [{ degreeId, absolute: 10 }],
+          academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
         }),
       ).toMatchInlineSnapshot(`
         Object {
           "data": Object {
             "expandQuery": Object {
               "queryDetails": Object {
+                "academicYearOfStudyList": Array [
+                  "YEAR_1",
+                ],
                 "parameters": Array [
                   Object {
                     "amount": Object {
@@ -300,12 +320,13 @@ describe('queries (e2e)', () => {
       expect(
         await runExpandQuery(queryId, {
           degrees: [{ degreeId: degreeId, absolute: 5 }],
+          academicYearOfStudyList: [AcademicYearOfStudy.YEAR_1],
         }),
       ).toMatchInlineSnapshot(`
         Object {
           "data": null,
           "errors": Array [
-            [GraphQLError: Amount is smaller than in previous selection],
+            [GraphQLError: Amount is invalid. Amount cannot result in fewer students being queried.],
           ],
           "extensions": undefined,
           "http": Object {

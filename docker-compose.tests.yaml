@@ -10,6 +10,5 @@ services:
   registree-core-tests:
     build:
       context: .
-      dockerfile: Dockerfile.build
       target: base
     command: ['yarn', 'test']

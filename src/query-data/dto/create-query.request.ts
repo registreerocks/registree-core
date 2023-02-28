@@ -12,6 +12,10 @@ export interface CreateQueryRequest extends JsonObject {
 type QueryDetails = {
   absolute?: number;
   percentage?: number;
+  average?: number;
+  race?: string[];
+  gender?: string[];
+  smsMessage?: string;
   degree_id: string;
   degree_name: string;
 };
@@ -26,5 +30,6 @@ type Event = {
   name: string;
   start_date: string;
   type: string;
+  eventPlatform: string;
   password?: string;
 };

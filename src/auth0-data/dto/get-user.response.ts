@@ -29,6 +29,7 @@ type Metadata = {
   uniEmail?: string;
   university?: string;
   privacyPolicy?: string;
+  calendlyLink?: string;
 };
 
 type Identity = {

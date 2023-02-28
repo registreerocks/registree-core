@@ -1,9 +1,10 @@
 version: 2.1
 orbs:
-  node: circleci/node@4.1.0
-  docker: circleci/docker@1.2.1
+  # Docs: https://circleci.com/developer/orbs/orb/circleci/node
+  node: circleci/node@4.7.0
+  docker: circleci/docker@1.7.0
   kube-orb: circleci/kubernetes@0.11.0
-  codecov: codecov/codecov@1.1.2
+  codecov: codecov/codecov@3.2.0
 
 commands:
   # The circleci/node orb doesn't support Yarn 2 natively yet.
@@ -15,30 +16,28 @@ commands:
     steps:
       # Reference: https://circleci.com/developer/orbs/orb/circleci/node#commands-install-packages
       - node/install-packages:
-          pkg-manager: yarn
-
-          # Yarn 1 default: "yarn install --frozen-lockfile"
-          # Yarn 2 deprecates "--frozen-lockfile" in favour of "--immutable"
-          override-ci-command: yarn install --immutable
-
-          # Yarn 1 default: "node_modules"
-          # Yarn 2 uses ".yarn/cache" instead
-          cache-path: .yarn/cache
+          pkg-manager: yarn-berry
 
           # Disable this while the orb lacks more useful partial cache keys.
-          #
-          # Upstream bug: https://github.com/CircleCI-Public/node-orb/issues/63
           #
           # (The current behaviour is to prefix the with the branch name,
           # which effectively clears the cache for every new branch.)
           #
           include-branch-in-cache-key: false
 
+  # Install standalone yq from https://github.com/mikefarah/yq
+  install-yq:
+    description: 'Install yq from binary for updating yaml files'
+    steps:
+      - run:
+          command: 'wget https://github.com/mikefarah/yq/releases/download/v4.13.5/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq'
+
+# XXX(Pi): The cimg/node image only supports major.minor version tags, not major-only.
+#          Issue: Docker image aliases for major version #130 <https://github.com/CircleCI-Public/cimg-node/issues/130>
 jobs:
   test:
-    executor:
-      name: node/default
-      tag: current
+    docker:
+      - image: cimg/node:16.13
     steps:
       - checkout
       - install-packages-yarn-2
@@ -51,7 +50,7 @@ jobs:
 
   test-e2e:
     docker:
-      - image: cimg/node:current
+      - image: cimg/node:16.13
       - image: circleci/mongo
     environment:
       TEST_MONGO_URI: mongodb://localhost/registree-core-test-WORKER
@@ -65,23 +64,26 @@ jobs:
       - codecov/upload:
           file: 'coverage/lcov.info'
 
+  deploy-staging:
+    docker:
+      - image: digitalocean/doctl
+    steps:
+      - install-yq
+      - run: /app/doctl auth init -t $DIGITALOCEAN_ACCESS_TOKEN
+      - run:
+          command: |
+            /app/doctl apps spec get $STAGING_APP_ID > app_spec.yaml && \
+            yq eval '.services[0].image.tag = strenv(CIRCLE_SHA1)' app_spec.yaml > updated_spec.yaml && \
+            /app/doctl apps update --wait $STAGING_APP_ID --spec=updated_spec.yaml
+
   build:
-    executor:
-      name: node/default
-      tag: current
+    docker:
+      - image: cimg/node:16.13
     steps:
       - checkout
       - install-packages-yarn-2
       - run:
           command: yarn build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '.yarn'
-            - package.json
-            - dist
-            - '.pnp.js'
-            - yarn.lock
 
 workflows:
   build-and-push:
@@ -89,7 +91,29 @@ workflows:
       - test
       - test-e2e
       - build
+
+      # Build and validate the image with goss, without pushing.
       - docker/publish:
+          name: docker-build
+          deploy: false
+          image: registree-core
+          # XXX(Pi): This needs an accessible MongoDB, so for now, just pull and start a detached one,
+          #          and use host networking to access it.
+          before_build:
+            # XXX(PI): Hack in BuildKit support. See upstream PR:
+            #          <https://github.com/CircleCI-Public/docker-orb/pull/84>
+            - run: echo 'export DOCKER_BUILDKIT=1' >> $BASH_ENV
+            - docker/pull:
+                images: 'mongo'
+            - docker/install-goss
+          after_build:
+            - run:
+                command: |
+                  docker run --rm --publish '127.0.0.1:27017:27017' --detach mongo
+                  dgoss run --network host --env-file .env.tests registree-core:$CIRCLE_SHA1
+
+      - docker/publish:
+          name: docker-publish
           filters:
             branches:
               only:
@@ -99,12 +123,23 @@ workflows:
             name: docker/machine
             # dlc: true
           requires:
+            - docker-build
             - build
-          after_checkout:
-            - attach_workspace:
-                at: .
+            - test
+            - test-e2e
+          before_build:
+            # XXX(PI): Hack in BuildKit support. See upstream PR:
+            #          <https://github.com/CircleCI-Public/docker-orb/pull/84>
+            - run: echo 'export DOCKER_BUILDKIT=1' >> $BASH_ENV
           image: registree-core
           registry: $DOCKER_REGISTRY
           docker-password: DOCKER_LOGIN
           docker-username: DOCKER_PASSWORD
           tag: $CIRCLE_SHA1
+      - deploy-staging:
+          filters:
+            branches:
+              only:
+                - staging
+          requires:
+            - docker-publish

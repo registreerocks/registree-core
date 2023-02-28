@@ -29,6 +29,9 @@ export class EventDetails {
   @Field()
   eventType!: string;
 
+  @Field()
+  eventPlatform!: string;
+
   @Field(_type => [Invitation])
   invites!: Invitation[];
 

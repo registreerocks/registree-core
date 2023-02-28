@@ -1,0 +1,280 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventQueriesResolver schema snapshot 1`] = `
+"type BillingDetails {
+  addressee: String
+  city: String
+  country: String
+  email: String
+  line1: String
+  line2: String
+  province: String
+  vat: String
+  zip: String
+}
+
+type Contact {
+  email: String
+  name: String
+  userId: ID!
+  dbId: ID!
+  calendlyLink: String
+}
+
+type Customer {
+  id: ID!
+  description: String
+  name: String!
+  billingDetails: BillingDetails!
+  contacts: [Contact!]!
+}
+
+type Degree {
+  id: ID!
+  name: String!
+  description: String!
+  faculty: Faculty!
+  level: String!
+}
+
+type GroupedDegrees {
+  name: String!
+  degrees: [Degree!]!
+}
+
+type Faculty {
+  id: ID!
+  name: String!
+  description: String!
+  university: University!
+  groupedDegrees: [GroupedDegrees!]!
+  degrees: [Degree!]!
+}
+
+type University {
+  id: ID!
+  country: String!
+  name: String!
+  physicalAddress: String!
+  shortName: String!
+  faculties: [Faculty!]!
+}
+
+type UploadedFile {
+  id: ID!
+  filename: String!
+  mimetype: String!
+  url: String!
+}
+
+type Invitation {
+  accepted: Boolean!
+  attended: Boolean!
+  respondedAt: DateTime
+  sentAt: DateTime
+  viewedAt: DateTime
+  email: String
+  invitationState: InvitationState!
+}
+
+\\"\\"\\"
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+\\"\\"\\"
+scalar DateTime
+
+enum InvitationState {
+  NONE
+  VIEWED
+  RESPONDED
+  ACCEPTED
+  ATTENDED
+}
+
+type EventMetrics {
+  acceptedCount: Int!
+  attendedCount: Int!
+  respondedCount: Int!
+  viewedCount: Int!
+}
+
+type EventDetails {
+  address: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  attachments: [UploadedFile!]!
+  information: String!
+  message: String
+  name: String!
+  eventType: String!
+  eventPlatform: String!
+  invites: [Invitation!]!
+  metrics: EventMetrics!
+  password: String
+}
+
+type DegreeSelection {
+  amount: Amount!
+  degree: Degree!
+}
+
+union Amount = Absolute | Percentage | Average
+
+type Absolute {
+  absolute: Int!
+}
+
+type Percentage {
+  percentage: Int!
+}
+
+type Average {
+  average: Int!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Student {
+  email: String!
+  name: String!
+  userId: ID!
+  studentNumber: ID!
+}
+
+type StudentLink {
+  id: ID!
+  student: Student
+}
+
+type QueryTranscript {
+  id: ID!
+  degreeAverage: Float!
+  degreeCompleted: Boolean!
+  latestTerm: Float!
+  degree: Degree!
+  studentLink: StudentLink!
+}
+
+type QueryTranscriptEdge {
+  cursor: String!
+  node: QueryTranscript!
+}
+
+type QueryTranscriptConnection {
+  edges: [QueryTranscriptEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type QueryDetails {
+  parameters: [DegreeSelection!]!
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
+  faculties: [Faculty!]!
+  results: [QueryTranscriptConnection!]!
+  updatedAt: DateTime!
+  race: [String!]!
+  gender: [String!]!
+}
+
+\\"\\"\\"The academic year of study a student is in.\\"\\"\\"
+enum AcademicYearOfStudy {
+  YEAR_1
+  YEAR_2
+  YEAR_3_PLUS
+}
+
+type RsvpCost {
+  cost: Float!
+  percent: Int!
+}
+
+type Quote {
+  numberOfStudents: Int!
+  rsvpCostBreakdown: [RsvpCost!]!
+}
+
+type EventQuery {
+  id: ID!
+  customer: Customer!
+  eventDetails: EventDetails!
+  queryDetails: QueryDetails!
+  quoteDetails: Quote!
+  currentPrice: Float!
+}
+
+type EventQueryEdge {
+  cursor: String!
+  node: EventQuery!
+}
+
+type EventQueryConnection {
+  edges: [EventQueryEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type EventSummary {
+  eventId: ID!
+  eventName: String!
+  invitedCount: Int!
+  acceptedCount: Int!
+  attendedCount: Int!
+  respondedCount: Int!
+  viewedCount: Int!
+}
+
+type Query {
+  getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
+  getQueries(customerId: ID!, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getEventSummaries(customerId: ID!): [EventSummary!]!
+  getStudentQueries(filter: StudentQueryFilter, after: String, before: String, first: Int, last: Int): EventQueryConnection!
+  getQuery(id: ID!): EventQuery!
+}
+
+input CreateEventQueryInput {
+  name: String!
+  address: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  information: String!
+  message: String
+  degrees: [DegreeInput!]!
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
+  race: [String!]
+  gender: [String!]
+  smsMessage: String
+  eventType: String!
+  eventPlatform: String!
+  attachments: [Upload!]
+  password: String
+}
+
+input DegreeInput {
+  degreeId: String!
+  absolute: Int
+  percentage: Int
+  average: Int
+}
+
+\\"\\"\\"The \`Upload\` scalar type represents a file upload.\\"\\"\\"
+scalar Upload
+
+input StudentQueryFilter {
+  invitationState: InvitationState
+}
+
+type Mutation {
+  createQuery(createEventQueryInput: CreateEventQueryInput!): EventQuery!
+  expandQuery(expandEventQueryInput: ExpandEventQueryInput!, queryId: ID!): EventQuery!
+}
+
+input ExpandEventQueryInput {
+  degrees: [DegreeInput!]!
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
+}
+"
+`;

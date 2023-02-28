@@ -11,4 +11,5 @@ export interface EventResponse extends JsonObject {
   attachments?: AttachmentDto[];
   type: string;
   password: string;
+  eventPlatform: string;
 }

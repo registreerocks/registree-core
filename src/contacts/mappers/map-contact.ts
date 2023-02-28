@@ -7,5 +7,6 @@ export const mapContact = (response: GetUserResponse): Contact => {
     email: response.email,
     userId: response.user_id,
     dbId: response.app_metadata.db_id,
+    calendlyLink: response.app_metadata.calendlyLink,
   };
 };

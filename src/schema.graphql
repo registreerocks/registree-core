@@ -6,7 +6,26 @@ type Absolute {
   absolute: Int!
 }
 
-union Amount = Absolute | Percentage
+"""The academic year of study a student is in."""
+enum AcademicYearOfStudy {
+  YEAR_1
+  YEAR_2
+  YEAR_3_PLUS
+}
+
+"""A labelled academic year of study."""
+type AcademicYearOfStudyLabel {
+  academicYearOfStudy: AcademicYearOfStudy!
+
+  """User-facing label for this year."""
+  label: String!
+}
+
+union Amount = Absolute | Average | Percentage
+
+type Average {
+  average: Int!
+}
 
 type BillingDetails {
   addressee: String
@@ -21,6 +40,7 @@ type BillingDetails {
 }
 
 type Contact {
+  calendlyLink: String
   dbId: ID!
   email: String
   name: String
@@ -39,15 +59,19 @@ input CreateCustomerInput {
 }
 
 input CreateEventQueryInput {
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
   address: String!
   attachments: [Upload!]
   degrees: [DegreeInput!]!
   endDate: DateTime!
   eventType: String!
+  gender: [String!]
   information: String!
   message: String
   name: String!
   password: String
+  race: [String!]
+  smsMessage: String
   startDate: DateTime!
 }
 
@@ -85,6 +109,7 @@ type Degree {
 
 input DegreeInput {
   absolute: Int
+  average: Int
   degreeId: String!
   percentage: Int
 }
@@ -135,7 +160,18 @@ type EventQueryEdge {
   node: EventQuery!
 }
 
+type EventSummary {
+  acceptedCount: Int!
+  attendedCount: Int!
+  eventId: ID!
+  eventName: String!
+  invitedCount: Int!
+  respondedCount: Int!
+  viewedCount: Int!
+}
+
 input ExpandEventQueryInput {
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
   degrees: [DegreeInput!]!
 }
 
@@ -202,9 +238,15 @@ type Percentage {
 type Query {
   acceptedPrivacyPolicy: Boolean!
   customer: Customer!
+
+  """Get academic years of study to display."""
+  getAcademicYearOfStudyLabels: [AcademicYearOfStudyLabel!]!
+  getCalendlyContacts: [Contact!]!
   getContact: Contact!
   getCustomer(customerId: ID!): Customer!
   getCustomers(after: String, before: String, first: Int, last: Int): CustomerConnection!
+  getEventSummaries(customerId: ID!): [EventSummary!]!
+  getFaculty(facultyId: ID!): Faculty!
   getQueries(after: String, before: String, customerId: ID!, first: Int, last: Int): EventQueryConnection!
   getQuery(id: ID!): EventQuery!
   getQuote(createEventQueryInput: CreateEventQueryInput!): Quote!
@@ -214,8 +256,11 @@ type Query {
 }
 
 type QueryDetails {
+  academicYearOfStudyList: [AcademicYearOfStudy!]!
   faculties: [Faculty!]!
+  gender: [String!]!
   parameters: [DegreeSelection!]!
+  race: [String!]!
   results(after: String, before: String, filter: QueryTranscriptFilter, first: Int, last: Int): QueryTranscriptConnection!
   updatedAt: DateTime!
 }
@@ -296,6 +341,7 @@ input UpdateBillingDetailsInput {
 }
 
 input UpdateContactInput {
+  calendlyLink: String
   email: String
   name: String
   password: String

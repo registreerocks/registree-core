@@ -13,4 +13,5 @@ type Metadata = {
   roles: string[];
   db_id: string;
   privacyPolicy?: string;
+  calendlyLink?: string;
 };

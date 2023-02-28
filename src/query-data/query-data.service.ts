@@ -108,6 +108,25 @@ export class QueryDataService {
     }
   }
 
+  async getNumbers(queryId: string): Promise<string[]> {
+    const accessToken = await this.authService.getAccessToken();
+
+    try {
+      const result = await this.axiosInstance.get<string[]>(`/query/get_cell`, {
+        params: {
+          id: queryId,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return result.data;
+    } catch (err) {
+      throw new ServerError('Failed to get numbers by query id', err);
+    }
+  }
+
   async getCustomerQueries(customerId: string): Promise<EventQueryResponse[]> {
     const accessToken = await this.authService.getAccessToken();
     try {

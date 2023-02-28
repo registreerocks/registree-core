@@ -36,4 +36,9 @@ export class ContactsResolver {
     const result = await this.contactsService.updateContact(user.userId, input);
     return result;
   }
+
+  @Query(_returns => [Contact])
+  async getCalendlyContacts(): Promise<Contact[]> {
+    return this.contactsService.getCalendlyContacts();
+  }
 }

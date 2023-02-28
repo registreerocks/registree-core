@@ -58,9 +58,16 @@ async function withScenario(
           degreeId: 'a',
           amount: { amountType: 'Absolute', absolute: 10 },
         },
+        {
+          degreeId: 'avg',
+          amount: { amountType: 'Average', average: 10 },
+        },
       ],
+      academicYearOfStudyList: [],
       rawResults: [],
       updatedAt: new Date(),
+      race: [],
+      gender: [],
     },
   };
   const mockQueriesService: Partial<QueriesService> = {
@@ -108,6 +115,9 @@ async function runTest(client: ApolloServerTestClient) {
               ... on Percentage {
                 percentage
               }
+              ... on Average {
+                average
+              }
             }
           }
         }
@@ -133,6 +143,12 @@ async function runTest(client: ApolloServerTestClient) {
             amount: {
               __typename: 'Absolute',
               absolute: 10,
+            },
+          },
+          {
+            amount: {
+              __typename: 'Average',
+              average: 10,
             },
           },
         ],

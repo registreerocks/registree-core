@@ -11,4 +11,5 @@ export interface UpdateUserRequest extends JsonObject {
 
 type Metadata = {
   privacyPolicy?: string;
+  calendlyLink?: string;
 };
